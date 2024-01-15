@@ -98,7 +98,7 @@ export default function CharacterPromotion({ character }: CharacterPromotionProp
           name="嘲讽"
           value={promotion.taunt.base + promotion.taunt.step * (level - 1)}
           sx={{ backgroundColor: '#ffffff11' }}
-          icon="/IconTaunt.png"
+          icon={import.meta.env.BASE_URL + 'IconTaunt.png'}
         />
         <PropertyItem
           key="MaxSP"
@@ -128,6 +128,7 @@ export default function CharacterPromotion({ character }: CharacterPromotionProp
           const itemData = STATE.starRailData.items[item.id];
           return (
             <Box
+              key={item.id}
               sx={{
                 display: 'flex',
                 flexDirection: 'column',

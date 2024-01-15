@@ -14,7 +14,7 @@ export default function Rarity({ rarity, height }: RarityProps) {
         margin: 0.5,
         width: 47 / (52 / height) * rarity,
         height: height,
-        backgroundImage: 'url(/rarity.png)',
+        backgroundImage: `url(${import.meta.env.BASE_URL}rarity.png)`,
         backgroundRepeat: 'repeat-x',
         backgroundSize: `auto ${height}px`
       }}

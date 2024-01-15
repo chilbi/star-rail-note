@@ -90,6 +90,7 @@ export default function LightConePromotion({ lightCone }: LightConePromotionProp
           const itemData = STATE.starRailData.items[item.id];
           return (
             <Box
+              key={item.id}
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
