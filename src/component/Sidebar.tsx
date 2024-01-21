@@ -91,7 +91,7 @@ export default function Sidebar({ uidItems, starRailDataInfoItems }: SidebarProp
           }
         }}
       />
-      <LoginLogout dev={import.meta.env.DEV} uidItems={uidItems} />
+      <LoginLogout uidItems={uidItems} />
       <NavMenu />
       {isStickySidebar && <div><ElementPathFilter /></div>}
       <Box mt="auto">

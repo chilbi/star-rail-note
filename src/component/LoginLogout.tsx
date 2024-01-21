@@ -32,14 +32,10 @@ import { STATE } from '../common/state';
 import { submitForm } from '../common/utils';
 
 interface LoginLogoutProps {
-  dev: boolean;
   uidItems: string[];
 }
 
-export default function LoginLogout({ dev, uidItems }: LoginLogoutProps) {
-  if (!dev) {
-    return <Typography level="h4">Star Rail Note</Typography>;
-  }
+export default function LoginLogout({ uidItems }: LoginLogoutProps) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, updater] = useState(false);
   const [loginUid, setLoginUid] = useState('');
