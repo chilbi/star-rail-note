@@ -1,12 +1,13 @@
 import { useCallback, useState } from 'react';
-import { SxProps } from '@mui/joy/styles/types';
 import Box from '@mui/joy/Box';
 import Slider from '@mui/joy/Slider';
 import Typography from '@mui/joy/Typography';
 
+import Promotion from './Promotion';
+import PropertyItem from './PropertyItem';
 import { STATE } from '../common/state';
 import { imageTheme } from '../common/theme';
-import { formatProperty, getPromotionLevel, getPromotionMaxLevel, getTotalPromotionMaterial, promotionMarks } from '../data/local';
+import { baseStepValue, formatProperty, getPromotionLevel, getPromotionMaxLevel, getTotalPromotionMaterial, promotionMarks } from '../data/local';
 
 interface LightConePromotionProps {
   lightCone: LightCone;
@@ -15,9 +16,9 @@ interface LightConePromotionProps {
 export default function LightConePromotion({ lightCone }: LightConePromotionProps) {
   const [level, setLevel] = useState(80);
   const lightConePromotion = STATE.starRailData.light_cone_promotions[lightCone.id];
-  const promotionLevel = getPromotionLevel(level)
-  const promotion = lightConePromotion.values[promotionLevel];
-  const totalMaterial = getTotalPromotionMaterial(promotionLevel, lightConePromotion.materials);
+  const promotion = getPromotionLevel(level);
+  const promotionValue = lightConePromotion.values[promotion];
+  const totalMaterial = getTotalPromotionMaterial(promotion, lightConePromotion.materials);
 
   const handleChange = useCallback((_: Event, value: number) => {
     setLevel(value);
@@ -25,19 +26,19 @@ export default function LightConePromotion({ lightCone }: LightConePromotionProp
 
   return (
     <>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          px: 3,
-          pt: 1.5,
-          pb: 0.5
-        }}
-      >
-        <Typography level="title-md" mr={0.5}>等级</Typography>
-        <Typography level="title-lg">{level}</Typography>
-        <Typography level="body-md">/</Typography>
-        <Typography level="body-md" textColor="#ffffff88">{getPromotionMaxLevel(level)}</Typography>
+      <Box px={3} pt={1.5} pb={0.5}>
+        <Promotion value={promotion} count={6} />
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center'
+          }}
+        >
+          <Typography level="title-md" mr={0.5}>等级</Typography>
+          <Typography level="title-lg">{level}</Typography>
+          <Typography level="body-md">/</Typography>
+          <Typography level="body-md" textColor="#ffffff88">{getPromotionMaxLevel(promotion)}</Typography>
+        </Box>
       </Box>
       <Box px={3}>
         <Slider
@@ -54,17 +55,17 @@ export default function LightConePromotion({ lightCone }: LightConePromotionProp
       </Box>
       <Box py={1}>
         {([
-          ['BaseHP', promotion.hp],
-          ['BaseAttack', promotion.atk],
-          ['BaseDefence', promotion.def]
-        ] as [string, PromotionBaseStep][]).map(([key, value], i) => {
-          const property = STATE.starRailData.properties[key];
+          ['BaseHP', promotionValue.hp],
+          ['BaseAttack', promotionValue.atk],
+          ['BaseDefence', promotionValue.def]
+        ] as [string, PromotionBaseStep][]).map(([type, baseStep], i) => {
+          const property = STATE.starRailData.properties[type];
           return (
             <PropertyItem
-              key={key}
+              key={type}
               icon={STATE.resUrl + property.icon}
               name={property.name}
-              value={formatProperty(value.base + value.step * (level - 1), property.percent)}
+              value={formatProperty(baseStepValue(baseStep, level), property.percent)}
               sx={{ backgroundColor: i === 1 ? '#ffffff11' : '#ffffff33' }}
             />
           );
@@ -72,7 +73,7 @@ export default function LightConePromotion({ lightCone }: LightConePromotionProp
       </Box>
 
       <Typography level="title-lg" textColor="warning.300" px={3} py={0.5}>
-        {`晋阶材料 ${promotionLevel}/${lightConePromotion.values.length - 1}`}
+        {`晋阶材料 ${promotion}/${lightConePromotion.values.length - 1}`}
       </Typography>
 
       <Box
@@ -104,7 +105,7 @@ export default function LightConePromotion({ lightCone }: LightConePromotionProp
                   px: 0.5,
                   pt: 0.5,
                   borderTopRightRadius: '8px',
-                  backgroundImage: imageTheme.getPreviewRarityColor(itemData.rarity)
+                  backgroundImage: imageTheme.getItemRarityImageColor(itemData.rarity)
                 }}
               >
                 <img
@@ -120,44 +121,5 @@ export default function LightConePromotion({ lightCone }: LightConePromotionProp
         })}
       </Box>
     </>
-  );
-}
-
-interface PropertyItemProps {
-  sx?: SxProps;
-  icon: string;
-  name: string;
-  value: string | number;
-}
-
-function PropertyItem({ sx = {}, icon, name, value }: PropertyItemProps) {
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        px: 1,
-        py: 0.5,
-        ...sx
-      }}
-    >
-      <Box
-        component="span"
-        sx={{
-          width: imageTheme.propertySize,
-          height: imageTheme.propertySize,
-          mr: 0.25
-        }}
-      >
-        <img
-          src={icon}
-          alt=""
-          width={imageTheme.propertySize}
-          height={imageTheme.propertySize}
-        />
-      </Box>
-      <Typography level="body-sm" textColor="common.white">{name}</Typography>
-      <Typography level="body-sm" textColor="common.white" ml="auto">{value}</Typography>
-    </Box>
   );
 }

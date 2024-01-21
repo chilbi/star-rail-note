@@ -15,6 +15,7 @@ export default function FlexItem(props: FlexItemProps) {
         flexGrow: 1,
         gap: 2,
         p: { xs: 1, sm: 2 },
+        width: { xs: '100%', sm: '50%' },
         maxWidth: { xs: '100%', sm: '50%' }
       }}
     />

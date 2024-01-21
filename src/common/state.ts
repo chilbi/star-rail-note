@@ -63,15 +63,30 @@ class State {
     return this.#starRailData == null;
   }
 
+  /** 玩家数据是否未初始化 */
+  get playerDataIsNull(): boolean {
+    return this.#starRailInfo == null || this.#starRailInfo.detailInfo == undefined;
+  }
+
   /** 当前使用的游戏数据，初始化前访问会抛出错误，在路由的loader中初始化 */
   get starRailData(): StarRailData {
-    if (this.#starRailData == null) throw new Error('starRailData is undefined');
-    return this.#starRailData;
+    if (this.#starRailData != null) {
+      return this.#starRailData;
+    }
+    throw new Error('starRailData is undefined');
   }
 
   /** 当前使用的用户数据 */
   get starRailInfo(): StarRailInfo | null {
     return this.#starRailInfo;
+  }
+
+  /** 当前使用的玩家数据，初始化前访问会抛出错误，在路由的loader中初始化 */
+  get playerData(): PlayerData {
+    if (this.#starRailInfo != null && this.#starRailInfo.detailInfo != undefined) {
+      return this.#starRailInfo.detailInfo!;
+    }
+    throw new Error('playerData is undefined');
   }
 
   get elements(): string[] {

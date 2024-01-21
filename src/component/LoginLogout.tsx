@@ -37,7 +37,9 @@ interface LoginLogoutProps {
 }
 
 export default function LoginLogout({ dev, uidItems }: LoginLogoutProps) {
-  if (dev) return <Typography level="h4">Star Rail Note</Typography>;
+  if (!dev) {
+    return <Typography level="h4">Star Rail Note</Typography>;
+  }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, updater] = useState(false);
   const [loginUid, setLoginUid] = useState('');
@@ -51,7 +53,7 @@ export default function LoginLogout({ dev, uidItems }: LoginLogoutProps) {
   }, []);
 
   const handleOpenModal = useCallback(() => {
-    setLoginUid(STATE.requestUid ?? '输入游戏UID');
+    setLoginUid(STATE.requestUid ?? STATE.localUid ?? '输入游戏UID');
     handleCloseSnackbar();
   }, [handleCloseSnackbar]);
 
@@ -82,6 +84,8 @@ export default function LoginLogout({ dev, uidItems }: LoginLogoutProps) {
       value: e.currentTarget.value
     });
   }, [fetcher]);
+
+  const headIcon = headIconUrl(STATE.starRailInfo?.detailInfo, STATE.starRailData);
   
   return (
     <>
@@ -96,7 +100,7 @@ export default function LoginLogout({ dev, uidItems }: LoginLogoutProps) {
               size="lg"
               variant={STATE.starRailInfo?.detailInfo != undefined ? 'outlined' : 'solid'}
               color={STATE.starRailInfo?.detailInfo != undefined ? 'neutral' : 'primary'}
-              src={headIconUrl(STATE.starRailInfo)}
+              src={headIcon && STATE.resUrl + headIcon}
             />
             <Typography level="title-lg" noWrap textOverflow="ellipsis" maxWidth={140}>
               {STATE.starRailInfo?.detailInfo?.nickname ?? 'Star Rail Note'}

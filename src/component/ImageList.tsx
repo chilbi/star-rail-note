@@ -25,8 +25,8 @@ export default function ImageList<T extends ImageLike>({ values, onClick }: Imag
       }}
     >
       {values.map(value => (
-        isUpSmall ? <ImagePreview key={value.id} value={value} name={nickname(value)} onClick={onClick} />
-          : <ImageIcon key={value.id} value={value} name={nickname(value)} onClick={onClick} />
+        isUpSmall ? <ImagePreview key={value.id} value={value} name={nickname(value.name)} onClick={onClick} />
+          : <ImageIcon key={value.id} value={value} name={nickname(value.name)} onClick={onClick} />
       ))}
     </Box>
   );

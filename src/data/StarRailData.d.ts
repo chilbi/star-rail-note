@@ -155,6 +155,12 @@ interface Item {
   come_from: string[];
 }
 
+interface Avatar {
+  id: string;
+  name: string;
+  icon: string;
+}
+
 interface LightConePromotionValue {
   hp: PromotionBaseStep;
   atk: PromotionBaseStep;
@@ -322,7 +328,7 @@ interface StarRailData {
   character_ranks: DataRecord<CharacterRank>;
   character_promotions: DataRecord<CharacterPromotion>;
   character_skills: DataRecord<CharacterSkill>;
-  character_skill_tress: DataRecord<CharacterSkillTree>;
+  character_skill_trees: DataRecord<CharacterSkillTree>;
   light_cones: DataRecord<LightCone>;
   light_cone_ranks: DataRecord<LightConeRank>;
   light_cone_promotions: DataRecord<LightConePromotion>;
@@ -330,6 +336,7 @@ interface StarRailData {
   paths: DataRecord<Path>;
   elements: DataRecord<ElementAttack>;
   items: DataRecord<Item>;
+  avatars: DataRecord<Avatar>;
   relics: DataRecord<Relic>;
   relic_sets: DataRecord<RelicSet>;
   relic_main_affixes: DataRecord<RelicMainAffix>;

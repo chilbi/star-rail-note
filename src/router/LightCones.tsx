@@ -1,10 +1,11 @@
 import { useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLoaderData, useNavigate } from 'react-router-dom';
 
 import ImageList from '../component/ImageList';
 import { STATE } from '../common/state';
 
 export default function Characters() {
+  useLoaderData();
   const navigate = useNavigate();
   const lightCones = useMemo(() => {
     const list = Object.keys(STATE.starRailData.light_cones)

@@ -1,9 +1,9 @@
-import { Suspense, useCallback } from 'react';
-import { Await, useLoaderData, useNavigate } from 'react-router-dom';
+import { Suspense } from 'react';
+import { Await, useLoaderData } from 'react-router-dom';
 import Box from '@mui/joy/Box';
-import IconButton from '@mui/joy/IconButton';
-import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 
+import Loading from '../component/Loding';
+import BackButton from '../component/BackButton';
 import FlexItem from '../component/FlexItem';
 import CharacterProfile from '../component/CharacterProfile';
 import CharacterSkills from '../component/CharacterSkills';
@@ -13,15 +13,12 @@ import CharacterRanks from '../component/CharacterRanks';
 import { CharacterDetailData } from './loaders';
 import { getCategorizedSkillTrees, getCategorizedSkills } from '../data/local';
 import { STATE } from '../common/state';
-import Loading from '../component/Loding';
 
 // const skillTypes: SkillType[] = ['Normal', 'BPSkill', 'Ultra', 'Talent', 'Maze'];
 
 export default function CharacterDetail() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const data = useLoaderData() as any;
-  const navigate = useNavigate();
-  const handleBack = useCallback(() => navigate(-1), [navigate]);
 
   return (
     <Suspense fallback={<Loading />}>
@@ -29,7 +26,7 @@ export default function CharacterDetail() {
         resolve={data.characterDetailData}
         children={({ character }: CharacterDetailData) => {
           const categorizedSkills = getCategorizedSkills(character.skills, STATE.starRailData.character_skills);
-          const categorizedSkillTrees = getCategorizedSkillTrees(character.skill_trees, STATE.starRailData.character_skill_tress);
+          const categorizedSkillTrees = getCategorizedSkillTrees(character.skill_trees, STATE.starRailData.character_skill_trees);
           return (
             <>
               <Box
@@ -61,19 +58,7 @@ export default function CharacterDetail() {
                 </FlexItem>
               </Box>
 
-              <IconButton
-                variant="solid"
-                color="primary"
-                onClick={handleBack}
-                sx={{
-                  position: 'absolute',
-                  right: 32,
-                  bottom: 32,
-                  zIndex: 999
-                }}
-              >
-                <ArrowBackIosNewRoundedIcon />
-              </IconButton>
+              <BackButton />
             </>
           );
         }}

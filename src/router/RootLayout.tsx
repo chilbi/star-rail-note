@@ -31,6 +31,7 @@ export default function RootLayout() {
                 sx={{
                   flex: 1,
                   pt: { xs: 'var(--Header-height)', md: '0px' },
+                  width: { xs: '100vw', md: 'calc(100vw - var(--Sidebar-width, 0))' },
                   height: '100dvh'
                 }}
               >
@@ -38,7 +39,7 @@ export default function RootLayout() {
                   ref={mainRef}
                   className="Content"
                   sx={{
-                    minWidth: 0,
+                    width: '100%',
                     height: '100%',
                     overflow: 'hidden auto'
                   }}

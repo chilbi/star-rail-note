@@ -1,25 +1,14 @@
 import { useCallback, useState } from 'react';
-import { SxProps } from '@mui/joy/styles/types';
 import Box from '@mui/joy/Box';
 import Slider from '@mui/joy/Slider';
 import Typography from '@mui/joy/Typography';
 
+import Promotion from './Promotion';
+import PropertyItem from './PropertyItem';
 import { STATE } from '../common/state';
 import { imageTheme } from '../common/theme';
-import { formatProperty, getPromotionLevel, getPromotionMaxLevel, getTotalPromotionMaterial, promotionMarks } from '../data/local';
-
-function generateHighlightLindeices(firstStep: 1 | 3, length: number) {
-  const result = [];
-  let value = 0;
-  let step = firstStep;
-  let i = length;
-  while (i-- > 0) {
-    result.push(value);
-    value += step;
-    step = step === 1 ? 3 : 1;
-  }
-  return result;
-}
+import { baseStepValue, formatProperty, getPromotionLevel, getPromotionMaxLevel, getTotalPromotionMaterial, promotionMarks } from '../data/local';
+import { generateHighlightLindeices } from '../common/utils';
 
 const highlightIndeices = generateHighlightLindeices(1, 4);
 
@@ -30,9 +19,9 @@ interface CharacterPromotionProps {
 export default function CharacterPromotion({ character }: CharacterPromotionProps) {
   const [level, setLevel] = useState(80);
   const characterPromotion = STATE.starRailData.character_promotions[character.id];
-  const promotionLevel = getPromotionLevel(level)
-  const promotion = characterPromotion.values[promotionLevel];
-  const totalMaterial = getTotalPromotionMaterial(promotionLevel, characterPromotion.materials);
+  const promotion = getPromotionLevel(level);
+  const promotionValue = characterPromotion.values[promotion];
+  const totalMaterial = getTotalPromotionMaterial(promotion, characterPromotion.materials);
 
   const handleChange = useCallback((_: Event, value: number) => {
     setLevel(value);
@@ -40,19 +29,19 @@ export default function CharacterPromotion({ character }: CharacterPromotionProp
 
   return (
     <>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          px: 3,
-          pt: 1.5,
-          pb: 0.5
-        }}
-      >
-        <Typography level="title-md" mr={0.5}>等级</Typography>
-        <Typography level="title-lg">{level}</Typography>
-        <Typography level="body-md">/</Typography>
-        <Typography level="body-md" textColor="#ffffff88">{getPromotionMaxLevel(level)}</Typography>
+      <Box px={3} pt={1.5} pb={0.5}>
+        <Promotion value={promotion} count={6} />
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center'
+          }}
+        >
+          <Typography level="title-md" mr={0.5}>等级</Typography>
+          <Typography level="title-lg">{level}</Typography>
+          <Typography level="body-md">/</Typography>
+          <Typography level="body-md" textColor="#ffffff88">{getPromotionMaxLevel(promotion)}</Typography>
+        </Box>
       </Box>
       <Box px={3}>
         <Slider
@@ -75,20 +64,20 @@ export default function CharacterPromotion({ character }: CharacterPromotionProp
         }}
       >
         {([
-          ['BaseHP', promotion.hp],
-          ['BaseAttack', promotion.atk],
-          ['BaseDefence', promotion.def],
-          ['BaseSpeed', promotion.spd],
-          ['CriticalChanceBase', promotion.crit_rate],
-          ['CriticalDamageBase', promotion.crit_dmg]
-        ] as [string, PromotionBaseStep][]).map(([key, value], i) => {
-          const property = STATE.starRailData.properties[key];
+          ['BaseHP', promotionValue.hp],
+          ['BaseAttack', promotionValue.atk],
+          ['BaseDefence', promotionValue.def],
+          ['BaseSpeed', promotionValue.spd],
+          ['CriticalChanceBase', promotionValue.crit_rate],
+          ['CriticalDamageBase', promotionValue.crit_dmg]
+        ] as [string, PromotionBaseStep][]).map(([type, baseStep], i) => {
+          const property = STATE.starRailData.properties[type];
           return (
             <PropertyItem
-              key={key}
+              key={type}
               icon={STATE.resUrl + property.icon}
               name={property.name}
-              value={formatProperty(value.base + value.step * (level - 1), property.percent)}
+              value={formatProperty(baseStepValue(baseStep, level), property.percent)}
               sx={{ backgroundColor: highlightIndeices.some(idx => idx === i) ? '#ffffff33' : '#ffffff11' }}
             />
           );
@@ -96,7 +85,7 @@ export default function CharacterPromotion({ character }: CharacterPromotionProp
         <PropertyItem
           key="Taunt"
           name="嘲讽"
-          value={promotion.taunt.base + promotion.taunt.step * (level - 1)}
+          value={baseStepValue(promotionValue.taunt, level)}
           sx={{ backgroundColor: '#ffffff11' }}
           icon={import.meta.env.BASE_URL + 'IconTaunt.png'}
         />
@@ -110,7 +99,7 @@ export default function CharacterPromotion({ character }: CharacterPromotionProp
       </Box>
 
       <Typography level="title-lg" textColor="warning.300" px={3} py={0.5}>
-        {`晋阶材料 ${promotionLevel}/${characterPromotion.values.length - 1}`}
+        {`晋阶材料 ${promotion}/6`}
       </Typography>
       
       <Box
@@ -142,7 +131,7 @@ export default function CharacterPromotion({ character }: CharacterPromotionProp
                   px: 0.5,
                   pt: 0.5,
                   borderTopRightRadius: '8px',
-                  backgroundImage: imageTheme.getPreviewRarityColor(itemData.rarity)
+                  backgroundImage: imageTheme.getItemRarityImageColor(itemData.rarity)
                 }}
               >
                 <img
@@ -158,44 +147,5 @@ export default function CharacterPromotion({ character }: CharacterPromotionProp
         })}
       </Box>
     </>
-  );
-}
-
-interface PropertyItemProps {
-  sx?: SxProps;
-  icon: string;
-  name: string;
-  value: string | number;
-}
-
-function PropertyItem({ sx = {}, icon, name, value }: PropertyItemProps) {
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        px: 1,
-        py: 0.5,
-        ...sx
-      }}
-    >
-      <Box
-        component="span"
-        sx={{
-          width: imageTheme.propertySize,
-          height: imageTheme.propertySize,
-          mr: 0.25
-        }}
-      >
-        <img
-          src={icon}
-          alt=""
-          width={imageTheme.propertySize}
-          height={imageTheme.propertySize}
-        />
-      </Box>
-      <Typography level="body-sm" textColor="common.white">{name}</Typography>
-      <Typography level="body-sm" textColor="common.white" ml="auto">{value}</Typography>
-    </Box>
   );
 }

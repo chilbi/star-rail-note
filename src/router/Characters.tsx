@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLoaderData, useNavigate } from 'react-router-dom';
 
 import { STATE } from '../common/state';
 import ImageList from '../component/ImageList';
@@ -20,6 +20,7 @@ const characterOrderList: number[] = [
 ];
 
 export default function Characters() {
+  useLoaderData();
   const navigate = useNavigate();
   const characters = useMemo(() => {
     const list = characterOrderList.slice();

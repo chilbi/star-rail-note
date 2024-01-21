@@ -35,6 +35,7 @@ interface SkillInfo {
   simple_desc: string;
   desc: string;
   icon: string;
+  rankLevelUp?: number;
 }
 
 interface SkillTreeInfo {
@@ -46,16 +47,8 @@ interface SkillTreeInfo {
   parent?: string;
 }
 
-interface AttributeInfo {
-  field: string;
-  name: string;
-  icon: string;
-  value: number;
-  display: string;
-  percent: boolean;
-}
-
-interface PropertyInfo {
+interface AttributeInfo extends Property {
+  from: string;
   type: string;
   field: string;
   name: string;
@@ -65,7 +58,9 @@ interface PropertyInfo {
   percent: boolean;
 }
 
-interface SubAffixInfo {
+interface PropertyInfo extends AttributeInfo {}
+
+interface SubAffixInfo extends PropertyInfo {
   count: number;
   step: number;
 }
@@ -73,12 +68,13 @@ interface SubAffixInfo {
 interface RelicInfo {
   id: string;
   name: string;
+  type: string;
   set_id: string;
   set_name: string;
   rarity: number;
   level: number;
   icon: string;
-  main_affix?: PropertyInfo;
+  main_affix: PropertyInfo;
   sub_affix: SubAffixInfo[];
 }
 
@@ -98,10 +94,11 @@ interface LightConeInfo {
   rank: number;
   level: number;
   promotion: number;
+  desc: string;
   icon: string;
   preview: string;
   portrait: string;
-  path?: PathInfo;
+  path: PathInfo;
   attributes: AttributeInfo[];
   properties: PropertyInfo[];
 }
@@ -132,6 +129,12 @@ interface PlayerInfo {
   space_info?: SpaceInfo;
 }
 
+interface TotalPropertyInfo extends PropertyInfo {
+  base: PropertyInfo;
+  addedRatio?: PropertyInfo;
+  delta?: PropertyInfo;
+}
+
 interface CharacterInfo {
   id: string;
   name: string;
@@ -143,8 +146,8 @@ interface CharacterInfo {
   preview: string;
   portrait: string;
   rank_icons: string[];
-  path?: PathInfo;
-  element?: ElementInfo;
+  path: PathInfo;
+  element: ElementInfo;
   skills: SkillInfo[];
   skill_trees: SkillTreeInfo[];
   light_cone?: LightConeInfo;
@@ -153,6 +156,7 @@ interface CharacterInfo {
   attributes: AttributeInfo[];
   additions: AttributeInfo[];
   properties: PropertyInfo[];
+  total_properties: TotalPropertyInfo[];
 }
 
 /** https://api.mihomo.me/sr_info_parsed/{uid}?lang=cn&version=v2 */

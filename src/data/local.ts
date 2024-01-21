@@ -1,8 +1,8 @@
 import { Mark } from '@mui/base/useSlider';
 
 import Database from './Database';
-import { fetchStarRailData, fetchStarRailInfo } from './remote';
-import { STATE } from '../common/state';
+import { fetchJson, fetchStarRailData, fetchStarRailDataInfo, fetchStarRailInfo } from './remote';
+import Decimal from 'decimal.js';
 
 interface DataCache {
   starRailData: Record<number/*timestamp*/, StarRailData | undefined>;
@@ -19,6 +19,28 @@ const cache: DataCache = {
 const starRailDataDB = new Database<number, StarRailData>('star_rail_data_db', 'star_rail_data');
 /** 用户数据库，用户ID作为主键 */
 const starRailInfoDB = new Database<string, StarRailInfo>('star_rail_info_db', 'star_rail_info');
+
+// 修复数据
+starRailDataDB.keys().then(keys => {
+  keys.forEach(key => {
+    starRailDataDB.get(key).then(data => {
+      if (data && data.character_skill_trees == undefined && data['character_skill_tress' as 'character_skill_trees'] != undefined) {
+        data.character_skill_trees = data['character_skill_tress' as 'character_skill_trees'];
+        starRailDataDB.set(key, data);
+      }
+      if (data && data.avatars == undefined) {
+        fetchStarRailDataInfo().then(info => {
+          fetchJson<DataRecord<Avatar>>(
+            `https://api.github.com/repos/Mar-7th/StarRailRes/contents/${info.folder}/cn/avatars.json`
+          ).then(avatars => {
+            data.avatars = avatars;
+            starRailDataDB.set(key, data);
+          });
+        });
+      }
+    });
+  });
+});
 
 /** 获取indexedDB中的所有游戏数据的版本信息 */
 export function getStarRailDataInfoItems(): Promise<StarRailDataInfo[]> {
@@ -84,25 +106,72 @@ export function deleteStarRailInfo(uid: string): Promise<void> {
   return starRailInfoDB.del(uid);
 }
 
+/** 合并新旧的支援角色，存在旧的就替换，否则新添加进去 */
+function mergeCharacters(oldData: PlayerData | undefined, newData: PlayerData): CharacterDetailData[] {
+  const mergedList: CharacterDetailData[] = [];
+  if (oldData) {
+    if (oldData.assistAvatarDetail) {
+      mergedList.push(oldData.assistAvatarDetail);
+    }
+    if (oldData.avatarDetailList && oldData.avatarDetailList.length > 0) {
+      oldData.avatarDetailList.forEach(data => {
+        const index = mergedList.findIndex(value => value.avatarId === data.avatarId);
+        if (index > -1) {
+          mergedList[index] = data;
+        } else {
+          mergedList.push(data);
+        }
+      });
+    }
+  }
+  if (newData.assistAvatarDetail) {
+    const index = mergedList.findIndex(value => value.avatarId === newData.assistAvatarDetail!.avatarId);
+    if (index > -1) {
+      mergedList[index] = newData.assistAvatarDetail;
+    } else {
+      mergedList.push(newData.assistAvatarDetail);
+    }
+  }
+  if (newData.avatarDetailList && newData.avatarDetailList.length > 0) {
+    newData.avatarDetailList.forEach(data => {
+      const index = mergedList.findIndex(value => value.avatarId === data.avatarId);
+      if (index > -1) {
+        mergedList[index] = data;
+      } else {
+        mergedList.push(data);
+      }
+    });
+  }
+  return mergedList;
+}
+
 /** 从远程获取用户数据，更新indexedDB中的用户数据，并更新内存缓存的用户数据 */
 export function updateStarRailInfo(uid: string): Promise<StarRailInfo | undefined> {
-  return fetchStarRailInfo(uid)
-    .then(info => {
-      if (info?.detailInfo?.uid === parseInt(uid)) {
-        return starRailInfoDB.set(uid, info)
+  return Promise.all([starRailInfoDB.get(uid), fetchStarRailInfo(uid)])
+    .then(([oldData, newData]) => {
+      if (newData?.detailInfo?.uid === parseInt(uid)) {
+        // 合并新旧数据，把assistAvatarDetail都添加在avatarDetailList了
+        newData.detailInfo.avatarDetailList = mergeCharacters(oldData?.detailInfo, newData.detailInfo);
+        return starRailInfoDB.set(uid, newData)
           .then(() => {
-            cache.starRailInfo[uid] = info;
-            return info;
+            cache.starRailInfo[uid] = newData;
+            return newData;
           });
       }
-      return info;
+      return newData;
     });
 }
 
 /** 跨域远程获取用户数据失败的解决方法，由用户手动复制json更新用户数据 */
 export function updateStarRailInfoWithJson(json: StarRailInfo): Promise<StarRailInfo> {
-  return starRailInfoDB.set(json.detailInfo!.uid.toString(), json)
-    .then(() => json);
+  const uid = json.detailInfo!.uid.toString();
+  return starRailInfoDB.get(uid)
+    .then(oldData => {
+      // 合并新旧数据，把assistAvatarDetail都添加在avatarDetailList了
+      json.detailInfo!.avatarDetailList = mergeCharacters(oldData?.detailInfo, json.detailInfo!);
+      return starRailInfoDB.set(uid, json)
+        .then(() => json);
+    });
 }
 
 /** 获取用户数据，优先级：内存缓存 > indexedDB > 远程数据 */
@@ -125,16 +194,33 @@ export async function getStarRailInfo(uid: string): Promise<StarRailInfo | undef
 
 /** 游戏数据的版本时间格式化 */
 export function versionDate(timestamp: number): string {
-  return new Date(timestamp * 1000).toLocaleDateString();
+  return new Date(new Decimal(timestamp).mul(1000).toNumber()).toLocaleDateString();
 }
 
 function percentValue(value: number): number {
-  return parseFloat((value * 1000000).toFixed()) / 10000;
+  return new Decimal(value).mul(100).toNumber();
 }
 
-/** 格式化显示属性值，百分比最高保留两位小数，非百分比向下取整 */
-export function formatProperty(value: number, percent: boolean): string | number {
-  return percent ? Math.floor(parseFloat((value * 10000).toFixed())) / 100 + '%' : Math.floor(value);
+export function baseStepValue(baseStep: PromotionBaseStep, level: number): number {
+  return new Decimal(baseStep.base).plus(
+    new Decimal(baseStep.step).mul(level - 1)
+  ).toNumber();
+}
+
+function toFixed(decimal: Decimal, decimalPlaces: number): string {
+  return decimal.toFixed(decimalPlaces, Decimal.ROUND_DOWN);
+}
+
+/** 格式化显示属性值，百分比最高保留一位小数，非百分比向下取整 */
+export function formatProperty(
+  value: number,
+  percent: boolean,
+  percentDecimalPlaces: number = 1,
+  NonPercentDecimalPlaces: number = 0
+): string {
+  return percent
+    ? toFixed(new Decimal(value).mul(100), percentDecimalPlaces) + '%'
+    : toFixed(new Decimal(value), NonPercentDecimalPlaces);
 }
 
 interface ReplacementParam {
@@ -152,8 +238,9 @@ export function formatParam(param: ReplacementParam): string {
   } else if (param.format.startsWith('f')) {
     value = param.percent ? percentValue(param.value) : param.value;
     const fractionDigits = parseInt(param.format.slice(1));
-    const pow = Math.pow(10, isNaN(fractionDigits) ? 0 : fractionDigits);
-    value = Math.floor(value * pow) / pow;
+    // const pow = Math.pow(10, isNaN(fractionDigits) ? 0 : fractionDigits);
+    // value = Math.floor(value * pow) / pow;
+    value = toFixed(new Decimal(value), isNaN(fractionDigits) ? 0 : fractionDigits);
   } else {
     throw new Error('unkonw format: ' + param.format);
   }
@@ -281,15 +368,27 @@ export interface ImageLike {
   element?: string;
 }
 
+const nicknameRegExp = /{NICKNAME}/gi;
+
 /** 处理开拓者的名称 */
-export function nickname(value: ImageLike, name = '开拓者'): string {
-  return value.name === '{NICKNAME}' ? name : value.name;
+export function nickname(desc: string, name = '开拓者'): string {
+  return desc.replace(nicknameRegExp, name);
+}
+
+interface HeadIconLike {
+  headIcon: number;
 }
 
 /** 处理用户头像 */
-export function headIconUrl(starRailInfo?: StarRailInfo | undefined | null): string | undefined {
-  const headIcon = starRailInfo?.detailInfo?.headIcon;
+export function headIconUrl(playerData: HeadIconLike | undefined, starRailData: StarRailData): string | undefined {
+  const headIcon = playerData?.headIcon;
   if (headIcon) {
+    if (starRailData.avatars) {
+      const avatar = starRailData.avatars[headIcon];
+      if (avatar) {
+        return avatar.icon;
+      }
+    }
     let icon: number | string;
     const headIconNum = parseInt(headIcon as unknown as string);
     if (isNaN(headIconNum)) {
@@ -298,7 +397,7 @@ export function headIconUrl(starRailInfo?: StarRailInfo | undefined | null): str
       const iconId = headIconNum - 200000;
       icon = (iconId > 1000 && iconId < 2000) || (iconId > 8000 && iconId < 9000) ? iconId : headIcon;
     }
-    return `${STATE.resUrl}icon/avatar/${icon}.png`;
+    return `icon/avatar/${icon}.png`;
   }
   return undefined;
 }
@@ -310,25 +409,16 @@ export const promotionLevels: number[] = [20, 30, 40, 50, 60, 70];
 export const promotionMarks: Mark[] = promotionLevels.map(value => ({ value }));
 
 /** 获取晋阶等级 */
-export function getPromotionLevel(level: number): number {
-  let index, value, i;
-  const len = promotionLevels.length;
-  for (i = 0; i < len; i++) {
-    index = len - 1 - i;
-    value = promotionLevels[index];
-    if (level > value) return index + 1;
+export function getPromotionLevel(charaLevel: number): number {
+  if (charaLevel < 21) {
+    return 0;
   }
-  return 0;
+  return Math.ceil(charaLevel / 10 - 2);
 }
 
 /** 获取当前晋阶的最高等级 */
-export function getPromotionMaxLevel(level: number): number {
-  const len = promotionLevels.length;
-  for (let i = 0; i < len; i++) {
-    const value = promotionLevels[len - 1 - i];
-    if (level > value) return value + 10;
-  }
-  return promotionLevels[0];
+export function getPromotionMaxLevel(promotionLevel: number): number {
+  return promotionLevel * 10 + 20;
 }
 
 /** 获取累计晋阶所需的材料 */
@@ -417,4 +507,13 @@ export const skillDefaultMaxLevelMap: Record<SkillType, number> = {
   'Talent': 10,
   'Maze': 1,
   'MazeNormal': 1
+};
+
+export const relicTypeMap: Record<string, string> = {
+  'HEAD': '头部',
+  'HAND': '手部',
+  'BODY': '躯干',
+  'FOOT': '脚部',
+  'NECK': '位面球',
+  'OBJECT': '连接绳'
 };

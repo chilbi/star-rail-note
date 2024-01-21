@@ -5,11 +5,12 @@ import Divider from '@mui/joy/Divider';
 import FlexItem from '../component/FlexItem';
 import BlackSheet from '../component/BlackSheet';
 import Rarity from '../component/Rarity';
-import { STATE } from '../common/state';
-import { imageTheme } from '../common/theme';
 import LightConePromotion from './LightConePromotion';
 import LightConeRanks from './LightConeRanks';
 import GuideOverview from './GuideOverview';
+import { STATE } from '../common/state';
+import { imageTheme } from '../common/theme';
+import { nickname } from '../data/local';
 
 interface LightConeProfileProps {
   lightCone: LightCone;
@@ -123,7 +124,7 @@ function LightConeDesc({ lightCone }: LightConeProfileProps) {
     <>
       <Divider sx={{ '--Divider-childPosition': '24px', my: 1 }}>光锥故事</Divider>
       <Box px={3}>
-        {lightCone.desc.split('\n').map((text, i) => (
+        {nickname(lightCone.desc).split('\n').map((text, i) => (
           <Typography key={i} level="body-sm" lineHeight="2.5em">{text}</Typography>
         ))}
       </Box>

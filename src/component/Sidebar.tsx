@@ -37,7 +37,7 @@ export default function Sidebar({ uidItems, starRailDataInfoItems }: SidebarProp
         flexShrink: 0,
         display: 'flex',
         flexDirection: 'column',
-        gap: 2,
+        gap: 1,
         borderRight: '1px solid',
         borderColor: 'divider',
         backgroundColor: { md: '#00000066' },
@@ -91,11 +91,13 @@ export default function Sidebar({ uidItems, starRailDataInfoItems }: SidebarProp
           }
         }}
       />
-      <LoginLogout dev uidItems={uidItems} />
-      <DataSelect starRailDataInfoItems={starRailDataInfoItems} />
-      <ResUrlSelect />
+      <LoginLogout dev={import.meta.env.DEV} uidItems={uidItems} />
       <NavMenu />
-      {isStickySidebar && <Box><ElementPathFilter /></Box>}
+      {isStickySidebar && <div><ElementPathFilter /></div>}
+      <Box mt="auto">
+        <DataSelect starRailDataInfoItems={starRailDataInfoItems} />
+        <ResUrlSelect />
+      </Box>
     </Sheet>
   );
 }

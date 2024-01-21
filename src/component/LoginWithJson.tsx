@@ -81,6 +81,8 @@ export default function LoginWithJson({ loginUid, onClose }: LoginWithJsonProps)
     }
   }, [step]);
 
+  const headIcon = headIconUrl(jsonRef.current?.detailInfo, STATE.starRailData);
+
   return (
     <>
       <Stepper orientation="vertical">
@@ -131,7 +133,7 @@ export default function LoginWithJson({ loginUid, onClose }: LoginWithJsonProps)
           <Typography level="title-md" py={1}>登录</Typography>
           <Stack direction="column" spacing={1} sx={{ maxWidth: '100%', overflow: 'hidden' }}>
             <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
-              <Avatar src={headIconUrl(jsonRef.current)} />
+              <Avatar src={headIcon && STATE.resUrl + headIcon} />
               <Typography level="title-sm">
                 {jsonRef.current ? jsonRef.current.detailInfo?.nickname : <Skeleton animation={false}>游戏玩家的昵称</Skeleton>}
               </Typography>

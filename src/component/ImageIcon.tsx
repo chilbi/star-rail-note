@@ -20,7 +20,7 @@ export default function ImageIcon<T extends ImageLike>({ value, name, onClick }:
         // 稀有度背景颜色
         position: 'relative',
         borderTopRightRadius: '8px',
-        backgroundImage: imageTheme.getPreviewRarityColor(value.rarity),
+        backgroundImage: imageTheme.getItemRarityImageColor(value.rarity),
         cursor: 'pointer'
       }}
     >

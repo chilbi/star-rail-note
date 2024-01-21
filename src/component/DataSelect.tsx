@@ -57,8 +57,9 @@ export default function DataSelect({ starRailDataInfoItems }: DataSelectProps) {
 
   return (
     <div>
-      <Typography level="body-xs" mb={1}>数据库版本</Typography>
+      <Typography level="body-xs" py={1}>数据库版本</Typography>
       <Select
+        color="primary"
         value={STATE.starRailData.timestamp}
         startDecorator={<StorageRoundedIcon />}
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -82,9 +83,9 @@ export default function DataSelect({ starRailDataInfoItems }: DataSelectProps) {
       <Snackbar
         open={STATE.messageOfFetchData !== null}
         size="md"
-        variant="outlined"
+        variant="solid"
         color="primary"
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         onClose={handleCloseMessage}
       >
         <Typography level="body-md">{STATE.messageOfFetchData ?? ''}</Typography>
@@ -92,9 +93,9 @@ export default function DataSelect({ starRailDataInfoItems }: DataSelectProps) {
       <Snackbar
         open={STATE.errorOfFetchData !== null}
         size="md"
-        variant="outlined"
+        variant="solid"
         color="danger"
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         onClose={handleCloseError}
       >
         {STATE.errorOfFetchData && <FetchDataErrorMessage />}

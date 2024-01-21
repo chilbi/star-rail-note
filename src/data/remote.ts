@@ -8,7 +8,7 @@ const jsonRequest = {
   headers: { 'Content-Type': 'application/json' }
 };
 
-function fetchJson<T>(url: string): Promise<T> {
+export function fetchJson<T>(url: string): Promise<T> {
   return fetch(url, jsonRequest)
     .then(response => response.json())
     .then<T>(json => JSON.parse(decodeBase64(json.content)));
@@ -56,7 +56,6 @@ export function fetchStarRailDataInfo(): Promise<StarRailDataInfo> {
 export async function fetchStarRailData(starRailDataInfo?: StarRailDataInfo): Promise<StarRailData> {
   const latestStarRailDataInfo = starRailDataInfo ? starRailDataInfo : await fetchStarRailDataInfo();
   const { version, folder, timestamp } = latestStarRailDataInfo;
-  // const url = `./mirror/${folder}/cn/`;
   const url = STATE.dataUrl + folder + '/cn/';
   return Promise.all([
     fetchJson<DataRecord<Character>>(url + 'characters.json'),
@@ -73,6 +72,7 @@ export async function fetchStarRailData(starRailDataInfo?: StarRailDataInfo): Pr
     fetchJson<DataRecord<Path>>(url + 'paths.json'),
     fetchJson<DataRecord<ElementAttack>>(url + 'elements.json'),
     fetchJson<DataRecord<Item>>(url + 'items.json'),
+    fetchJson<DataRecord<Avatar>>(url + 'avatars.json'),
 
     fetchJson<DataRecord<Relic>>(url + 'relics.json'),
     fetchJson<DataRecord<RelicSet>>(url + 'relic_sets.json'),
@@ -84,7 +84,7 @@ export async function fetchStarRailData(starRailDataInfo?: StarRailDataInfo): Pr
       character_ranks,
       character_promotions,
       character_skills,
-      character_skill_tress,
+      character_skill_trees,
       light_cones,
       light_cone_ranks,
       light_cone_promotions,
@@ -92,6 +92,7 @@ export async function fetchStarRailData(starRailDataInfo?: StarRailDataInfo): Pr
       paths,
       elements,
       items,
+      avatars,
       relics,
       relic_sets,
       relic_main_affixes,
@@ -103,7 +104,7 @@ export async function fetchStarRailData(starRailDataInfo?: StarRailDataInfo): Pr
       character_ranks,
       character_promotions,
       character_skills,
-      character_skill_tress,
+      character_skill_trees,
       light_cones,
       light_cone_ranks,
       light_cone_promotions,
@@ -111,6 +112,7 @@ export async function fetchStarRailData(starRailDataInfo?: StarRailDataInfo): Pr
       paths,
       elements,
       items,
+      avatars,
       relics,
       relic_sets,
       relic_main_affixes,

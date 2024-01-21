@@ -74,6 +74,6 @@ export const imageTheme = {
     5: '#ffcf70',
     6: '#ffffff'
   } as Record<number, string>,
-  getPreviewRarityColor: (rarity: number) =>
+  getItemRarityImageColor: (rarity: number) =>
     `linear-gradient(${imageTheme.itemRarityColors[rarity - 1][0]}, ${imageTheme.itemRarityColors[rarity - 1][1]})`
 };

@@ -6,10 +6,13 @@ import Characters from './Characters';
 import CharacterDetail from './CharacterDetail';
 import LightCones from './LightCones';
 import LightConeDetail from './LightConeDetail';
+import MyCharacters from './MyCharacters';
 import {
   characterDetailLoader,
   lightConeDetailLoader,
-  rootLayoutLoader
+  playerDataLoader,
+  rootLayoutLoader,
+  starRailDataLoader
 } from './loaders';
 import {
   rootLayoutAction
@@ -28,7 +31,13 @@ export const router = createHashRouter([
         children: [
           {
             index: true,
+            loader: starRailDataLoader,
             Component: Characters
+          },
+          {
+            path: 'my-characters',
+            loader: playerDataLoader,
+            Component: MyCharacters
           },
           {
             path: 'character/:id',
@@ -37,6 +46,7 @@ export const router = createHashRouter([
           },
           {
             path: 'light-cones',
+            loader: starRailDataLoader,
             Component: LightCones
           },
           {

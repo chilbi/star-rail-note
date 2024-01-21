@@ -98,3 +98,16 @@ export function toggleSidebar() {
     }
   }
 }
+
+export function generateHighlightLindeices(firstStep: 1 | 3, length: number) {
+  const result = [];
+  let value = 0;
+  let step = firstStep;
+  let i = length;
+  while (i-- > 0) {
+    result.push(value);
+    value += step;
+    step = step === 1 ? 3 : 1;
+  }
+  return result;
+}

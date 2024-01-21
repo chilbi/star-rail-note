@@ -16,7 +16,7 @@ export interface RootLayoutData {
 
 export async function rootLayoutLoader(): Promise<RootLayoutData> {
   // await new Promise(resolve => setTimeout(() => resolve(true), 3000));
-  let starRailData: StarRailData | undefined;
+  let starRailData: StarRailData | undefined = undefined;
   try {
     starRailData = await getStarRailData(STATE.requestTimestamp);
   } catch {
@@ -26,9 +26,12 @@ export async function rootLayoutLoader(): Promise<RootLayoutData> {
     throw new Error(errorMap['404'] + ' starRailData');
   }
   const starRailDataInfoItems = await getStarRailDataInfoItems();
-  let starRailInfo: StarRailInfo | undefined;
+  let starRailInfo: StarRailInfo | undefined = undefined;
   try {
-    starRailInfo = STATE.requestUid ? await getStarRailInfo(STATE.requestUid) : undefined;
+    if (STATE.requestUid) {
+      starRailInfo = await getStarRailInfo(STATE.requestUid);
+      STATE.requestUid = null;
+    }
   } catch (e) {
     STATE.setErrorStarRailInfo(e as Error);
   }
@@ -73,4 +76,20 @@ export async function lightConeDetailLoader({ params }: LoaderFunctionArgs): Pro
   const lightCone = STATE.starRailData.light_cones[id];
   if (!lightCone) throw new Error('Invalid id of lightCone');
   return { lightCone };
+}
+
+export interface LoadStarRailData {
+  starRailData: StarRailData | undefined;
+}
+
+export async function starRailDataLoader(): Promise<LoadStarRailData> {
+  return { starRailData: STATE.starRailDataIsNull ? undefined : STATE.starRailData };
+}
+
+export interface LoadPlayerData {
+  playerData: PlayerData | undefined;
+}
+
+export async function playerDataLoader(): Promise<LoadPlayerData> {
+  return { playerData: STATE.starRailInfo?.detailInfo };
 }

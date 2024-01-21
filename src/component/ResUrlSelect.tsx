@@ -17,8 +17,9 @@ export default function ResUrlSelect() {
   
   return (
     <div>
-      <Typography level="body-xs" mb={1}>图片来源</Typography>
+      <Typography level="body-xs" py={1}>图片来源</Typography>
       <Select
+        color="primary"
         value={STATE.localResUrl ?? STATE.resUrlArr[0]}
         startDecorator={<ImageRoundedIcon />}
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
