@@ -271,10 +271,10 @@ function SubAffixPromotionTable() {
 
   const handleCntChange = useCallback((_: Event, value: number) => {
     setCnt(value);
-    if (step > cnt * 2) {
-      setStep(cnt * 2);
+    if (step > value * 2) {
+      setStep(value * 2);
     }
-  }, [step, cnt]);
+  }, [step]);
 
   const handleStepChange = useCallback((_: Event, value: number) => setStep(value), []);
 
