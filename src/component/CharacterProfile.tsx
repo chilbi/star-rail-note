@@ -15,7 +15,7 @@ export default function CharacterProfile({ character }: CharacterProfileProps) {
   return (
     <Box position="relative">
       <CharacterPortrait portrait={character.portrait} />
-      <GuideOverview value={character} name="角色" />
+      {character.guide_overview.length > 0 && <GuideOverview guideOverview={character.guide_overview} name="角色" />}
       <BlackSheet sx={{ mt: '256px' }}>
         <CharacterIntro
           name={nickname(character.name)}

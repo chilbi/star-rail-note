@@ -147,7 +147,7 @@ export default function LoginLogout({ uidItems }: LoginLogoutProps) {
             size="sm"
             required
             defaultValue={STATE.localUid ?? undefined}
-            placeholder="输入游戏UID"//108791037
+            placeholder="输入游戏UID"
             slotProps={{ input: { id : 'login_uid_input' } }}
             endDecorator={
               <IconButton size="sm" color="primary" type="submit" name="action_type" value="login">

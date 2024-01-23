@@ -78,6 +78,21 @@ export async function lightConeDetailLoader({ params }: LoaderFunctionArgs): Pro
   return { lightCone };
 }
 
+export interface RelicSetDetailData {
+  relicSet: RelicSet;
+}
+
+export async function RelicSetDetailLoader({ params }: LoaderFunctionArgs): Promise<RelicSetDetailData> {
+  const id = params.id;
+  if (!id) throw new Error('Invalid id of relicSet');
+  if (STATE.starRailDataIsNull) {
+    await rootLayoutLoader();
+  }
+  const relicSet = STATE.starRailData.relic_sets[id];
+  if (!relicSet) throw new Error('Invalid id of relicSet');
+  return { relicSet };
+}
+
 export interface LoadStarRailData {
   starRailData: StarRailData | undefined;
 }

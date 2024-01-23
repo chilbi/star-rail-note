@@ -27,7 +27,7 @@ export default function LightConeProfile({ lightCone }: LightConeProfileProps) {
     >
       <FlexItem>
         <LightConePortrait lightCone={lightCone} />
-        <GuideOverview value={lightCone} name="光锥" />
+        {lightCone.guide_overview.length > 0 && <GuideOverview guideOverview={lightCone.guide_overview} name="光锥" />}
       </FlexItem>
       <FlexItem>
         <BlackSheet>

@@ -201,12 +201,6 @@ function percentValue(value: number): number {
   return new Decimal(value).mul(100).toNumber();
 }
 
-export function baseStepValue(baseStep: PromotionBaseStep, level: number): number {
-  return new Decimal(baseStep.base).plus(
-    new Decimal(baseStep.step).mul(level - 1)
-  ).toNumber();
-}
-
 function toFixed(decimal: Decimal, decimalPlaces: number): string {
   return decimal.toFixed(decimalPlaces, Decimal.ROUND_DOWN);
 }
@@ -221,6 +215,37 @@ export function formatProperty(
   return percent
     ? toFixed(new Decimal(value).mul(100), percentDecimalPlaces) + '%'
     : toFixed(new Decimal(value), NonPercentDecimalPlaces);
+}
+
+export function baseStepValue(baseStep: PromotionBaseStep, level: number): number {
+  return new Decimal(baseStep.base).plus(
+    new Decimal(baseStep.step).mul(level - 1)
+  ).toNumber();
+}
+
+export function relicMainValue(mainAffix: MainAffix, level: number): number {
+  return new Decimal(mainAffix.base).plus(
+    new Decimal(mainAffix.step).mul(level)
+  ).toNumber();
+}
+
+export function relicMainValueFormula(mainAffix: MainAffix, level: number, percent: boolean): string {
+  const base = formatProperty(mainAffix.base, percent, 2, 2);
+  const step = formatProperty(mainAffix.step, percent, 2, 2);
+  return `${base} + ${step} * ${level} = `;
+}
+
+export function relicSubValue(subAffix: SubAffix, cnt: number, step: number): number {
+  return new Decimal(subAffix.base)
+    .mul(cnt)
+    .plus(new Decimal(subAffix.step).mul(step))
+    .toNumber();
+}
+
+export function relicSubValueFormula(subAffix: SubAffix, cnt: number, step: number, percent: boolean): string {
+  const base = formatProperty(subAffix.base, percent, 2, 2);
+  const subStep = formatProperty(subAffix.step, percent, 2, 2);
+  return `${base} * ${cnt} + ${subStep} * ${step} = `;
 }
 
 interface ReplacementParam {
@@ -516,4 +541,14 @@ export const relicTypeMap: Record<string, string> = {
   'FOOT': '脚部',
   'NECK': '位面球',
   'OBJECT': '连接绳'
+};
+
+export const setMap: Record<number, string> = {
+  1: '一件套：',
+  2: '二件套：',
+  3: '三件套：',
+  4: '四件套：',
+  5: '五件套：',
+  6: '六件套：',
+  7: '七件套：'
 };

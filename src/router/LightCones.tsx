@@ -4,7 +4,7 @@ import { useLoaderData, useNavigate } from 'react-router-dom';
 import ImageList from '../component/ImageList';
 import { STATE } from '../common/state';
 
-export default function Characters() {
+export default function LightCones() {
   useLoaderData();
   const navigate = useNavigate();
   const lightCones = useMemo(() => {

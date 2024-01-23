@@ -1,5 +1,4 @@
-import Decimal from 'decimal.js';
-import { baseStepValue, formatProperty, headIconUrl } from './local';
+import { baseStepValue, formatProperty, headIconUrl, relicMainValue, relicSubValue } from './local';
 
 export function parseInfo(playerData: PlayerData, starRailData: StarRailData, elements: string[]): StarRailInfoParsed {
   let avatar: Avatar | undefined = undefined;
@@ -265,9 +264,7 @@ function parseRelicInfo(relicData: RelicData, starRailData: StarRailData): Relic
   const relicSubAffixes = starRailData.relic_sub_affixes[relic.sub_affix_id].affixes;
   const mainAffix = starRailData.relic_main_affixes[relic.main_affix_id].affixes[relicData.mainAffixId];
   const mainProperty = starRailData.properties[mainAffix.property];
-  const mainValue = new Decimal(mainAffix.base).plus(
-    new Decimal(mainAffix.step).mul(relicLevel)
-  ).toNumber();
+  const mainValue = relicMainValue(mainAffix, relicLevel);
   const mainDisplay = formatProperty(mainValue, mainProperty.percent, 2, 2);
   const main_affix: PropertyInfo = Object.assign({}, mainProperty, {
     value: mainValue,
@@ -278,10 +275,7 @@ function parseRelicInfo(relicData: RelicData, starRailData: StarRailData): Relic
     const subStep = subAffixData.step || 0;
     const subAffix = relicSubAffixes[subAffixData.affixId];
     const subProperty = starRailData.properties[subAffix.property];
-    const subValue = new Decimal(subAffix.base)
-      .mul(subAffixData.cnt)
-      .plus(new Decimal(subAffix.step).mul(subStep))
-      .toNumber();
+    const subValue = relicSubValue(subAffix, subAffixData.cnt, subStep);
     const subDisplay = formatProperty(subValue, subProperty.percent, 2, 2);
     return Object.assign({}, subProperty, {
       value: subValue,

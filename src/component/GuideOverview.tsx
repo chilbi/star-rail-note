@@ -12,25 +12,17 @@ import Viewer from 'viewerjs';
 
 import { STATE } from '../common/state';
 
-interface GuideLike {
-  guide_overview: string[];
-}
-
-interface GuideOverviewProps<T extends GuideLike> {
-  value: T;
+interface GuideOverviewProps {
+  guideOverview: string[];
   name: string;
 }
 
-export default function GuideOverview<T extends GuideLike>({ value, name }: GuideOverviewProps<T>) {
+export default function GuideOverview({ guideOverview, name }: GuideOverviewProps) {
   const viewer = useRef<Viewer>(null);
   const [open, setOpen] = useState(false);
-
   const handleOpen = useCallback(() => setOpen(true), []);
   const handleClose = useCallback(() => setOpen(false), []);
 
-  if (value.guide_overview.length < 1) {
-    return null;
-  }
   return (
     <>
       <Button
@@ -39,6 +31,7 @@ export default function GuideOverview<T extends GuideLike>({ value, name }: Guid
         onClick={handleOpen}
         sx={{
           position: 'absolute',
+          zIndex: 1,
           top: '8px',
           right: '8px',
           display: 'flex',
@@ -76,7 +69,7 @@ export default function GuideOverview<T extends GuideLike>({ value, name }: Guid
               }}
             >
               <Box sx={{ display: 'flex', gap: 2 }}>
-                {value.guide_overview.map((url, i) => (
+                {guideOverview.map((url, i) => (
                   <Box key={i} sx={{ flexGrow: 1, flexShrink: 1 }}>
                     <img src={STATE.resUrl + url} alt="" width={200} height={240} style={{ objectFit: 'cover' }} />
                   </Box>

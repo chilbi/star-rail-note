@@ -8,6 +8,7 @@ import LightCones from './LightCones';
 import LightConeDetail from './LightConeDetail';
 import MyCharacters from './MyCharacters';
 import {
+  RelicSetDetailLoader,
   characterDetailLoader,
   lightConeDetailLoader,
   playerDataLoader,
@@ -17,6 +18,8 @@ import {
 import {
   rootLayoutAction
 } from './actions';
+import RelicSets from './RelicSets';
+import RelicSetDetail from './RelicSetDetail';
 
 export const router = createHashRouter([
   {
@@ -54,6 +57,16 @@ export const router = createHashRouter([
             loader: args => defer({ lightConeDetailData: lightConeDetailLoader(args) }),
             Component: LightConeDetail
           },
+          {
+            path: 'relic-sets',
+            loader: starRailDataLoader,
+            Component: RelicSets
+          },
+          {
+            path: 'relic-set/:id',
+            loader: args => defer({ relicSetDetailData: RelicSetDetailLoader(args) }),
+            Component: RelicSetDetail
+          }
         ]
       }
     ]

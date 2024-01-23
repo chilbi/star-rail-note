@@ -4,18 +4,8 @@ import Typography from '@mui/joy/Typography';
 import BlackSheet from './BlackSheet';
 import PropertyItem from './PropertyItem';
 import { STATE } from '../common/state';
-import { relicTypeMap } from '../data/local';
+import { relicTypeMap, setMap } from '../data/local';
 import { imageTheme } from '../common/theme';
-
-const setMap: Record<number, string> = {
-  1: '一件套：',
-  2: '二件套：',
-  3: '三件套：',
-  4: '四件套：',
-  5: '五件套：',
-  6: '六件套：',
-  7: '七件套：'
-};
 
 function subAffixCount(count: number): string {
   return count > 1 ? ' ' + '+'.repeat(count - 1) : '';
@@ -51,14 +41,14 @@ export default function MyRelics({ relics, relicSets }: MyRelicsProps) {
             <Box display="flex" gap={1} mb={1}>
               <Box
                 sx={{
-                  width: 34,
-                  height: 34,
-                  p: '2px',
+                  width: 36,
+                  height: 36,
+                  p: '3px',
                   borderRadius: '50%',
                   backgroundImage: imageTheme.getItemRarityImageColor(relic.rarity)
                 }}
               >
-                <img src={STATE.resUrl + relic.icon} alt="" width={30} height={30} />
+                <img src={STATE.resUrl + relic.icon} alt="" width="100%" height="100%" />
               </Box>
               <Box flexGrow={1}>
                 <Typography level="title-sm">{relic.name}</Typography>
