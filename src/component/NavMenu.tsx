@@ -12,8 +12,8 @@ export default function NavMenu() {
     <List sx={{ flexGrow: 0 }}>
       {!STATE.playerDataIsNull && <NavMenuItem to="/my-characters" icon="icon/sign/AvatarIcon.png" text="我的角色" />}
       <NavMenuItem to="/" icon="icon/sign/NoviceAvatarIcon.png" text="角色图鉴" />
-      <NavMenuItem to="/light-cones" icon="icon/deco/DecoIcon2.png" text="光锥图鉴" />
-      <NavMenuItem to="/relic-sets" icon="icon/deco/DecoIcon2.png" text="遗器图鉴" />
+      <NavMenuItem to="/light-cones" icon="icon/sign/NoviceBookIcon.png" text="光锥图鉴" />
+      <NavMenuItem to="/relic-sets" icon="icon/sign/InventoryIcon.png" text="遗器图鉴" />
     </List>
   );
 }
