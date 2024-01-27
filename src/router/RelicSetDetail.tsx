@@ -161,8 +161,8 @@ function MainAffixSelect({ id }: MainAffixSelectProps) {
       return (
         <PropertyItem
           icon={STATE.resUrl + affix.property.icon}
-          name={affix.property.name}
-          value={showPercent(affix.property.type)}
+          name={affix.property.name + showPercent(affix.property.type)}
+          value={null}
         />
       );
     } else {
@@ -184,8 +184,8 @@ function MainAffixSelect({ id }: MainAffixSelectProps) {
         <Option key={i} value={i}>
           <PropertyItem
             icon={STATE.resUrl + affix.property.icon}
-            name={affix.property.name}
-            value={showPercent(affix.property.type)}
+            name={affix.property.name + showPercent(affix.property.type)}
+            value={null}
           />
         </Option>
       ))}
@@ -219,10 +219,10 @@ function MainAffixPromotionTable() {
   return (
     <FlexItem>
       <BlackSheet>
-        <Typography level="title-lg" component="h6" px={1} pt={2}>主词条强化</Typography>
+        <Typography level="title-lg" color="warning" component="h6" px={1} pt={2} pb={1}>主词条强化</Typography>
         <Box display="flex" alignItems="center">
-          <Typography level="title-sm" pl={1}>强化等级：</Typography>
-          <Box flexGrow={1} py={1} pr={3}>
+          <Typography level="title-sm" color="neutral" px={1}>强化等级：</Typography>
+          <Box flexGrow={1} py={1.5} pr={3}>
             <Slider
               valueLabelDisplay="on"
               min={0}
@@ -238,7 +238,7 @@ function MainAffixPromotionTable() {
           <PropertyItem
             key={i}
             icon={STATE.resUrl + affix.property.icon}
-            name={affix.property.name}
+            name={affix.property.name + showPercent(affix.property.type)}
             value={
               relicMainValueFormula(affix, level, affix.property.percent) +
               formatProperty(relicMainValue(affix, level), affix.property.percent, 2, 2)
@@ -281,10 +281,10 @@ function SubAffixPromotionTable() {
   return (
     <FlexItem>
       <BlackSheet>
-        <Typography level="title-lg" component="h6" px={1} pt={2}>副词条强化</Typography>
+        <Typography level="title-lg" color="danger" component="h6" px={1} pt={2} pb={1}>副词条强化</Typography>
         <Box display="flex" alignItems="center">
-          <Typography level="title-sm" pl={1}>强化次数：</Typography>
-          <Box flexGrow={1} py={1} pr={3}>
+          <Typography level="title-sm" color="neutral" px={1}>强化次数：</Typography>
+          <Box flexGrow={1} py={1.5} pr={3}>
             <Slider
               valueLabelDisplay="on"
               min={1}
@@ -298,8 +298,8 @@ function SubAffixPromotionTable() {
         </Box>
         
         <Box display="flex" alignItems="center">
-          <Typography level="title-sm" pl={1}>步进次数：</Typography>
-          <Box flexGrow={1} py={1} pr={3}>
+          <Typography level="title-sm" color="neutral" px={1}>步进次数：</Typography>
+          <Box flexGrow={1} py={1.5} pr={3}>
             <Slider
               valueLabelDisplay="on"
               min={0}
@@ -316,7 +316,7 @@ function SubAffixPromotionTable() {
           <PropertyItem
             key={i}
             icon={STATE.resUrl + affix.property.icon}
-            name={affix.property.name}
+            name={affix.property.name + showPercent(affix.property.type)}
             value={
               relicSubValueFormula(affix, cnt, step, affix.property.percent) +
               formatProperty(relicSubValue(affix, cnt, step), affix.property.percent, 2, 2)

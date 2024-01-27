@@ -232,7 +232,7 @@ export function relicMainValue(mainAffix: MainAffix, level: number): number {
 export function relicMainValueFormula(mainAffix: MainAffix, level: number, percent: boolean): string {
   const base = formatProperty(mainAffix.base, percent, 2, 2);
   const step = formatProperty(mainAffix.step, percent, 2, 2);
-  return `${base} + ${step} * ${level} = `;
+  return `${base} + ${step} × ${level} = `;
 }
 
 export function relicSubValue(subAffix: SubAffix, cnt: number, step: number): number {
@@ -245,7 +245,7 @@ export function relicSubValue(subAffix: SubAffix, cnt: number, step: number): nu
 export function relicSubValueFormula(subAffix: SubAffix, cnt: number, step: number, percent: boolean): string {
   const base = formatProperty(subAffix.base, percent, 2, 2);
   const subStep = formatProperty(subAffix.step, percent, 2, 2);
-  return `${base} * ${cnt} + ${subStep} * ${step} = `;
+  return `${base} × ${cnt} + ${subStep} × ${step} = `;
 }
 
 interface ReplacementParam {

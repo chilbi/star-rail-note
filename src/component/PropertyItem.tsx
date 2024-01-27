@@ -48,12 +48,14 @@ export default function PropertyItem({ sx = {}, icon, name, value }: PropertyIte
         }}
         children={name}
       />
-      <Typography
-        level="body-sm"
-        textColor="common.white"
-        ml="auto"
-        children={value}
-      />
+      {value != null && (
+        <Typography
+          level="body-sm"
+          textColor="common.white"
+          ml="auto"
+          children={value}
+        />
+      )}
     </Box>
   );
 }
