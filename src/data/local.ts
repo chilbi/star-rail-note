@@ -433,12 +433,20 @@ export const promotionLevels: number[] = [20, 30, 40, 50, 60, 70];
 /** 给Slider组件的marks属性使用 */
 export const promotionMarks: Mark[] = promotionLevels.map(value => ({ value }));
 
-/** 获取晋阶等级 */
-export function getPromotionLevel(charaLevel: number): number {
-  if (charaLevel < 21) {
+/** 根据晋阶等级获取角色或光锥等级 */
+export function getLevel(promotion: number): number {
+  if (promotion < 1) {
     return 0;
   }
-  return Math.ceil(charaLevel / 10 - 2);
+  return promotion * 10 + 10;
+}
+
+/** 根据角色或光锥等级获取晋阶等级 */
+export function getPromotion(level: number): number {
+  if (level < 21) {
+    return 0;
+  }
+  return Math.ceil(level / 10 - 2);
 }
 
 /** 获取当前晋阶的最高等级 */

@@ -5,7 +5,7 @@ import PromotionLevel from './PromotionLevel';
 import PropertyItem from './PropertyItem';
 import PromotionMaterialConsume from './PromotionMaterialConsume';
 import { STATE } from '../common/state';
-import { baseStepValue, formatProperty, getPromotionLevel, getTotalPromotionMaterial } from '../data/local';
+import { baseStepValue, formatProperty, getLevel, getPromotion, getTotalPromotionMaterial } from '../data/local';
 
 interface LightConePromotionProps {
   lightCone: LightCone;
@@ -13,13 +13,19 @@ interface LightConePromotionProps {
 
 export default function LightConePromotion({ lightCone }: LightConePromotionProps) {
   const [level, setLevel] = useState(80);
+  const [promotion, setPromotion] = useState(6);
   const lightConePromotion = STATE.starRailData.light_cone_promotions[lightCone.id];
-  const promotion = getPromotionLevel(level);
   const promotionValue = lightConePromotion.values[promotion];
   const totalMaterial = getTotalPromotionMaterial(promotion, lightConePromotion.materials);
 
-  const handleChange = useCallback((_: Event, value: number) => {
+  const handlePromotionChange = useCallback((value: number) => {
+    setPromotion(value);
+    setLevel(getLevel(value));
+  }, []);
+
+  const handleLevelChange = useCallback((_: Event, value: number) => {
     setLevel(value);
+    setPromotion(getPromotion(value));
   }, []);
 
   return (
@@ -27,7 +33,8 @@ export default function LightConePromotion({ lightCone }: LightConePromotionProp
       <PromotionLevel
         promotion={promotion}
         level={level}
-        onChange={handleChange}
+        onPromotionChagne={handlePromotionChange}
+        onLevelChange={handleLevelChange}
       />
 
       <Box py={1}>

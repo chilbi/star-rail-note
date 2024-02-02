@@ -5,7 +5,7 @@ import PromotionLevel from './PromotionLevel';
 import PromotionMaterialConsume from './PromotionMaterialConsume';
 import PropertyItem from './PropertyItem';
 import { STATE } from '../common/state';
-import { baseStepValue, formatProperty, getPromotionLevel, getTotalPromotionMaterial } from '../data/local';
+import { baseStepValue, formatProperty, getLevel, getPromotion, getTotalPromotionMaterial } from '../data/local';
 import { generateHighlightLindeices } from '../common/utils';
 
 const highlightIndeices = generateHighlightLindeices(1, 4);
@@ -16,13 +16,19 @@ interface CharacterPromotionProps {
 
 export default function CharacterPromotion({ character }: CharacterPromotionProps) {
   const [level, setLevel] = useState(80);
+  const [promotion, setPromotion] = useState(6);
   const characterPromotion = STATE.starRailData.character_promotions[character.id];
-  const promotion = getPromotionLevel(level);
   const promotionValue = characterPromotion.values[promotion];
   const totalMaterial = getTotalPromotionMaterial(promotion, characterPromotion.materials);
 
-  const handleChange = useCallback((_: Event, value: number) => {
+  const handlePromotionChange = useCallback((value: number) => {
+    setPromotion(value);
+    setLevel(getLevel(value));
+  }, []);
+
+  const handleLevelChange = useCallback((_: Event, value: number) => {
     setLevel(value);
+    setPromotion(getPromotion(value));
   }, []);
 
   return (
@@ -30,7 +36,8 @@ export default function CharacterPromotion({ character }: CharacterPromotionProp
       <PromotionLevel
         promotion={promotion}
         level={level}
-        onChange={handleChange}
+        onPromotionChagne={handlePromotionChange}
+        onLevelChange={handleLevelChange}
       />
       
       <Box
