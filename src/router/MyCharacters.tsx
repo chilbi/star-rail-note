@@ -93,12 +93,19 @@ export default function MyCharacters() {
           </FlexItem>
           {activeCharacter.light_cone && (
             <FlexItem>
-              <MyLightCone lightCone={activeCharacter.light_cone} />
+              <MyLightCone
+                lightCone={activeCharacter.light_cone}
+                characterPath={activeCharacter.path.id}
+              />
             </FlexItem>
           )}
           {activeCharacter.relics.length > 0 && (
             <FlexItem>
-              <MyRelics relics={activeCharacter.relics} relicSets={activeCharacter.relic_sets} />
+              <MyRelics
+                relics={activeCharacter.relics}
+                relicSets={activeCharacter.relic_sets}
+                relicsProperties={activeCharacter.relicsProperties}
+              />
             </FlexItem>
           )}
         </Box>

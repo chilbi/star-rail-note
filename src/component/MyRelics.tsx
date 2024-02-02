@@ -1,5 +1,14 @@
+import { useCallback, useState } from 'react';
 import Box from '@mui/joy/Box';
 import Typography from '@mui/joy/Typography';
+import Divider from '@mui/joy/Divider';
+import Tooltip from '@mui/joy/Tooltip';
+import IconButton from '@mui/joy/IconButton';
+import Modal from '@mui/joy/Modal';
+import ModalDialog from '@mui/joy/ModalDialog';
+import ModalClose from '@mui/joy/ModalClose';
+import DialogTitle from '@mui/joy/DialogTitle';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import BlackSheet from './BlackSheet';
 import PropertyItem from './PropertyItem';
@@ -14,19 +23,51 @@ function subAffixCount(count: number): string {
 interface MyRelicsProps {
   relics: RelicInfo[];
   relicSets: RelicSetInfo[];
+  relicsProperties: PropertyInfo[];
 }
 
-export default function MyRelics({ relics, relicSets }: MyRelicsProps) {
+export default function MyRelics({ relics, relicSets, relicsProperties }: MyRelicsProps) {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = useCallback(() => setOpen(true), []);
+  const handleClose = useCallback(() => setOpen(false), []);
+  
   const setIds: string[] = [];
   // relics.forEach(r => { if (r.type === "HAND") console.log(r) })
 
   return (
     <BlackSheet>
+      <Modal open={open} onClose={handleClose}>
+        <ModalDialog size="lg" color="primary" sx={{ width: '100%', maxWidth: '640px' }}>
+          <ModalClose size="lg" />
+          <DialogTitle>遗器总属性</DialogTitle>
+          <div>
+            {relicsProperties.map((property, i) => (
+              <PropertyItem
+                key={property.type}
+                icon={STATE.resUrl + property.icon}
+                name={property.name}
+                value={property.display}
+                sx={{ backgroundColor: i % 2 === 0 ? '#ffffff33' : '#ffffff11' }}
+              />
+            ))}
+          </div>
+        </ModalDialog>
+      </Modal>
+
+      <Divider sx={{ '--Divider-childPosition': '24px', mt: 2, mb: 1 }}>
+        <span>遗器属性详情</span>
+        <Tooltip title="查看遗器总属性" color="primary">
+          <IconButton onClick={handleOpen} sx={{ ml: 0.5 }}>
+            <InfoOutlinedIcon />
+          </IconButton>
+        </Tooltip>
+      </Divider>
       <Box
         sx={{
           display: 'flex',
           flexWrap: 'wrap',
-          py: 1
+          pb: 1
         }}
       >
         {relics.map(relic => (
@@ -81,23 +122,26 @@ export default function MyRelics({ relics, relicSets }: MyRelicsProps) {
       </Box>
 
       {relicSets.length > 0 && (
-        <div>
-          {relicSets.map((relicSet, i) => {
-            const notExistingSet = setIds.indexOf(relicSet.id) < 0;
-            setIds.push(relicSet.id);
-            return (
-              <Box key={i} p={1}>
-                {notExistingSet && (
-                  <Box display="flex" alignItems="center" mb={1}>
-                    <img src={STATE.resUrl + relicSet.icon} width={36} height={36} />
-                    <Typography level="title-lg" ml={1}>{relicSet.name}</Typography>
-                  </Box>
-                )}
-                <Typography level="body-md" textColor="#18ffcd" pl={2} pr={1}>{setMap[relicSet.num] + relicSet.desc}</Typography>
-              </Box>
-            );
-          })}
-        </div>
+        <>
+          <Divider sx={{ '--Divider-childPosition': '24px', my: 1 }}>遗器套装效果</Divider>
+          <div>
+            {relicSets.map((relicSet, i) => {
+              const notExistingSet = setIds.indexOf(relicSet.id) < 0;
+              setIds.push(relicSet.id);
+              return (
+                <Box key={i} p={1}>
+                  {notExistingSet && (
+                    <Box display="flex" alignItems="center" mb={1}>
+                      <img src={STATE.resUrl + relicSet.icon} width={36} height={36} />
+                      <Typography level="title-lg" ml={1}>{relicSet.name}</Typography>
+                    </Box>
+                  )}
+                  <Typography level="body-md" textColor="#18ffcd" pl={2} pr={1}>{setMap[relicSet.num] + relicSet.desc}</Typography>
+                </Box>
+              );
+            })}
+          </div>
+        </>
       )}
     </BlackSheet>
   );

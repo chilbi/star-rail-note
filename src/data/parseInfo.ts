@@ -95,7 +95,7 @@ function parseCharacterInfo(
     return Object.assign({}, skillTree, { level: skillTreeData.level });
   });
 
-  const light_cone = parseLightConeInfo(characterDetailData, starRailData);
+  const light_cone = parseLightConeInfo(characterDetailData, character.path, starRailData);
 
   let relics: RelicInfo[] = [];
   let relic_sets: RelicSetInfo[] = [];
@@ -144,6 +144,7 @@ function parseCharacterInfo(
   });
 
   const totalRecord: Record<string, PropertyInfo> = {};
+  const totalRelicsRecord: Record<string, PropertyInfo> = {};
   const spRatioBase = starRailData.properties['SPRatioBase'];
   totalRecord[spRatioBase.type] = Object.assign({}, spRatioBase, {
     value: 1.0,
@@ -159,27 +160,33 @@ function parseCharacterInfo(
   relics.forEach(relic => {
     forEachPut(totalRecord, [relic.main_affix]);
     forEachPut(totalRecord, relic.sub_affix);
+    forEachPut(totalRelicsRecord, [relic.main_affix], 2, 2);
+    forEachPut(totalRelicsRecord, relic.sub_affix, 2, 2);
   });
   relic_sets.forEach(relicSet => {
     forEachPut(totalRecord, relicSet.properties);
+    forEachPut(totalRelicsRecord, relicSet.properties, 2, 2);
   });
 
   const properties: PropertyInfo[] = Object.keys(totalRecord).map(type => totalRecord[type]);
 
-  let total_properties: TotalPropertyInfo[] = totalBaseProperties(totalRecord, starRailData.properties);
-  total_properties.push(...totalAdvancedProperies(totalRecord, starRailData.properties));
-  total_properties.push(...totalElementProperties(totalRecord, starRailData.properties, elements))
+  let relicsProperties: PropertyInfo[] = Object.keys(totalRelicsRecord).map(type => totalRelicsRecord[type]);
+  relicsProperties = relicsProperties.sort((a, b) => a.order - b.order);
+
+  let totalProperties: TotalPropertyInfo[] = totalBaseProperties(totalRecord, starRailData.properties);
+  totalProperties.push(...totalAdvancedProperies(totalRecord, starRailData.properties));
+  totalProperties.push(...totalElementProperties(totalRecord, starRailData.properties, elements))
   const maxSP: PropertyInfo = Object.assign({}, starRailData.properties['MaxSP'], {
     value: character.max_sp,
     display: character.max_sp.toString(),
     from: 'CHARACTER_PROMOTION'
   });
-  total_properties.push(Object.assign({}, maxSP, { base: maxSP }));
+  totalProperties.push(Object.assign({}, maxSP, { base: maxSP }));
   const allDamageType = totalRecord['AllDamageTypeAddedRatio'];
   if (allDamageType) {
-    total_properties.push(Object.assign({}, allDamageType, { base: allDamageType }));
+    totalProperties.push(Object.assign({}, allDamageType, { base: allDamageType }));
   }
-  total_properties = total_properties.sort((a, b) => a.order - b.order);
+  totalProperties = totalProperties.sort((a, b) => a.order - b.order);
 
   return {
     id: characterId,
@@ -202,13 +209,15 @@ function parseCharacterInfo(
     attributes,
     additions,
     properties,
-    total_properties,
+    relicsProperties,
+    totalProperties,
     totalRecord
   };
 }
 
 function parseLightConeInfo(
   characterDetailData: CharacterDetailData,
+  characterPath: string,
   starRailData: StarRailData
 ): LightConeInfo | undefined {
   let lightConeInfo: LightConeInfo | undefined = undefined;
@@ -234,11 +243,11 @@ function parseLightConeInfo(
         from: 'LIGHT_CONE_PROMOTION'
       });
     });
-    const lightConeProperties: PropertyInfo[] = toPropertyInfoList(
+    const lightConeProperties: PropertyInfo[] = characterPath === lightCone.path ? toPropertyInfoList(
       starRailData.light_cone_ranks[lightConeId].properties[lightConeRank - 1],
       starRailData,
       'LIGHT_CONE_RANK'
-    );
+    ) : [];
     lightConeInfo = {
       id: lightConeId,
       name: lightCone.name,
@@ -347,12 +356,22 @@ function toPropertyInfoList(
   });
 }
 
-function forEachPut(totalRecord: Record<string, PropertyInfo>, infoList: AttributeInfo[] | PropertyInfo[]): void {
+function forEachPut(
+  totalRecord: Record<string, PropertyInfo>,
+  infoList: AttributeInfo[] | PropertyInfo[],
+  percentDecimalPlaces: number = 1,
+  NonPercentDecimalPlaces: number = 0
+): void {
   infoList.forEach(info => {
     const exitingInfo = totalRecord[info.type];
     if (exitingInfo) {
       exitingInfo.value += info.value;
-      exitingInfo.display = formatProperty(exitingInfo.value, exitingInfo.percent);
+      exitingInfo.display = formatProperty(
+        exitingInfo.value,
+        exitingInfo.percent,
+        percentDecimalPlaces,
+        NonPercentDecimalPlaces
+      );
       exitingInfo.from += ', ' + info.from;
     } else {
       totalRecord[info.type] = Object.assign({}, info);

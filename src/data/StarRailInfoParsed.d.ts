@@ -156,7 +156,8 @@ interface CharacterInfo {
   attributes: AttributeInfo[];
   additions: AttributeInfo[];
   properties: PropertyInfo[];
-  total_properties: TotalPropertyInfo[];
+  relicsProperties: PropertyInfo[];
+  totalProperties: TotalPropertyInfo[];
   totalRecord: Record<string, PropertyInfo>;
 }
 

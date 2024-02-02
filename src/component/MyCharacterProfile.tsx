@@ -133,7 +133,7 @@ export default function MyCharacterProfile({ character }: MyCharacterProps) {
             pb: 1
           }}
         >
-          {character.total_properties.map((property, i) => (
+          {character.totalProperties.map((property, i) => (
             <PropertyItem
               key={property.type}
               icon={STATE.resUrl + property.icon}
@@ -142,8 +142,8 @@ export default function MyCharacterProfile({ character }: MyCharacterProps) {
               sx={{ backgroundColor: highlightIndeices.some(idx => idx === i) ? '#ffffff33' : '#ffffff11' }}
             />
           ))}
-          {character.total_properties.length % 2 !== 0 && (
-            <Box sx={{ backgroundColor: highlightIndeices.some(idx => idx === character.total_properties.length) ? '#ffffff33' : '#ffffff11' }} />
+          {character.totalProperties.length % 2 !== 0 && (
+            <Box sx={{ backgroundColor: highlightIndeices.some(idx => idx === character.totalProperties.length) ? '#ffffff33' : '#ffffff11' }} />
           )}
         </Box>
       </BlackSheet>

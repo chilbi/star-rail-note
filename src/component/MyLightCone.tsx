@@ -15,9 +15,10 @@ import { formatParam, formatSkill, nickname } from '../data/local';
 
 interface MyLightConeProps {
   lightCone: LightConeInfo;
+  characterPath: string;
 }
 
-export default function MyLightCone({ lightCone }: MyLightConeProps) {
+export default function MyLightCone({ lightCone, characterPath }: MyLightConeProps) {
   const navigate = useNavigate();
   const lightConeRank = STATE.starRailData.light_cone_ranks[lightCone.id];
   
@@ -128,26 +129,30 @@ export default function MyLightCone({ lightCone }: MyLightConeProps) {
         })}
       </Box>
 
-      <Divider sx={{ '--Divider-childPosition': '24px', mt: 1 }}>光锥技能</Divider>
-      <Box px={3}>
-        <Typography component="h5" level="title-md" pt={1} pb={0.5}>{lightConeRank.skill}</Typography>
-        {lightConeRank.desc !== '' &&
-          <Typography component="p" level="body-md" textColor="#18ffcd" lineHeight="2em">
-            {formatSkill(lightConeRank, lightCone.rank).map((descChunk, index) => (
-              <Fragment key={index}>
-                {descChunk.param === null ? (
-                  descChunk.text
-                ) : descChunk.param === '\n' ? (
-                  <br />
-                ) : (
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  <Typography color="warning">{formatParam(descChunk.param as any)}</Typography>
-                )}
-              </Fragment>
-            ))}
-          </Typography>
-        }
-      </Box>
+      {characterPath === lightCone.path.id && (
+        <>
+          <Divider sx={{ '--Divider-childPosition': '24px', mt: 1 }}>光锥技能</Divider>
+          <Box px={3}>
+            <Typography component="h5" level="title-md" pt={1} pb={0.5}>{lightConeRank.skill}</Typography>
+            {lightConeRank.desc !== '' &&
+              <Typography component="p" level="body-md" textColor="#18ffcd" lineHeight="2em">
+                {formatSkill(lightConeRank, lightCone.rank).map((descChunk, index) => (
+                  <Fragment key={index}>
+                    {descChunk.param === null ? (
+                      descChunk.text
+                    ) : descChunk.param === '\n' ? (
+                      <br />
+                    ) : (
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      <Typography color="warning">{formatParam(descChunk.param as any)}</Typography>
+                    )}
+                  </Fragment>
+                ))}
+              </Typography>
+            }
+          </Box>
+        </>
+      )}
 
       <Divider sx={{ '--Divider-childPosition': '24px', my: 1 }}>光锥故事</Divider>
       <Box px={3}>
