@@ -1,5 +1,15 @@
+import { useCallback, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/joy/Box';
 import Typography from '@mui/joy/Typography';
+import Divider from '@mui/joy/Divider';
+import IconButton from '@mui/joy/IconButton';
+import Tooltip from '@mui/joy/Tooltip';
+import Modal from '@mui/joy/Modal';
+import ModalDialog from '@mui/joy/ModalDialog';
+import ModalClose from '@mui/joy/ModalClose';
+import DialogTitle from '@mui/joy/DialogTitle';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import BlackSheet from './BlackSheet';
 import CharacterPortrait from './CharacterPortrait';
@@ -17,6 +27,17 @@ interface MyCharacterProps {
 }
 
 export default function MyCharacterProfile({ character }: MyCharacterProps) {
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleNameClick = useCallback((e: React.MouseEvent<HTMLSpanElement>) => {
+    e.stopPropagation();
+    navigate('/character/' + character.id);
+  }, [character.id, navigate]);
+
+  const handleOpen = useCallback(() => setOpen(true), []);
+  const handleClose = useCallback(() => setOpen(false), []);
+
   return (
     <Box position="relative">
       <CharacterPortrait portrait={character.portrait} />
@@ -26,6 +47,7 @@ export default function MyCharacterProfile({ character }: MyCharacterProps) {
           rarity={character.rarity}
           element={character.element.id}
           path={character.path.id}
+          onNameClick={handleNameClick}
         />
 
         <PromotionLevelRank
@@ -34,12 +56,14 @@ export default function MyCharacterProfile({ character }: MyCharacterProps) {
           rankText={character.rank + '星魂'}
         />
 
+        <Divider sx={{ '--Divider-childPosition': '24px', my: 1 }}>技能等级</Divider>
         <Box
           sx={{
             display: 'flex',
             justifyContent: 'space-between',
             gap: 1,
-            px: 3
+            px: 3,
+            pb: 1,
           }}
         >
           {character.skills.map(skill => (
@@ -74,11 +98,39 @@ export default function MyCharacterProfile({ character }: MyCharacterProps) {
           ))}
         </Box>
 
+        <Modal open={open} onClose={handleClose}>
+          <ModalDialog size="lg" color="primary" sx={{ width: '100%', maxWidth: '640px' }}>
+            <ModalClose size="lg" />
+            <DialogTitle>基础属性</DialogTitle>
+            <div>
+              {['HP', 'Attack', 'Defence', 'Speed'].map((key, i) => {
+                const property = character.totalRecord['Base' + key];
+                return (
+                  <PropertyItem
+                    key={key}
+                    icon={STATE.resUrl + property.icon}
+                    name={property.name}
+                    value={property.display}
+                    sx={{ backgroundColor: i % 2 === 0 ? '#ffffff33' : '#ffffff11' }}
+                  />
+                );
+              })}
+            </div>
+          </ModalDialog>
+        </Modal>
+        <Divider sx={{ '--Divider-childPosition': '24px', my: 1 }}>
+          <span>属性详情</span>
+          <Tooltip title="查看基础属性" color="primary">
+            <IconButton onClick={handleOpen} sx={{ ml: 0.5 }}>
+              <InfoOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        </Divider>
         <Box
           sx={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
-            py: 1
+            pb: 1
           }}
         >
           {character.total_properties.map((property, i) => (

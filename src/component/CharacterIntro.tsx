@@ -1,6 +1,7 @@
 import { Fragment, useCallback, useState } from 'react';
 import Box from '@mui/joy/Box';
 import Typography from '@mui/joy/Typography';
+import Tooltip from '@mui/joy/Tooltip';
 import Modal from '@mui/joy/Modal';
 import ModalDialog from '@mui/joy/ModalDialog';
 import ModalClose from '@mui/joy/ModalClose';
@@ -20,9 +21,10 @@ interface CharacterIntroProps {
   rarity: number;
   element: string;
   path: string;
+  onNameClick?: React.MouseEventHandler<HTMLSpanElement>;
 }
 
-export default function CharacterIntro({ name, rarity, element, path }: CharacterIntroProps) {
+export default function CharacterIntro({ name, rarity, element, path, onNameClick }: CharacterIntroProps) {
   const [activeTab, setActiveTab] = useState<'element' | 'path' | null>(null);
   const elementData = STATE.starRailData.elements[element];
   const pathData = STATE.starRailData.paths[path];
@@ -47,7 +49,18 @@ export default function CharacterIntro({ name, rarity, element, path }: Characte
         }}
       >
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Typography level="h3">{name}</Typography>
+          {onNameClick ? (
+            <Tooltip title="查看角色图鉴" color="primary" arrow>
+              <Typography
+                level="h3"
+                onClick={onNameClick}
+                children={name}
+                sx={{ cursor: 'pointer' }}
+              />
+            </Tooltip>
+          ) : (
+            <Typography level="h3" children={name} />
+          )}
           <Rarity rarity={rarity} height={16} />
         </Box>
         <img
@@ -139,7 +152,7 @@ function ElementsPaths({ activeTab, element, path, onClose }: ElementsPathsProps
         </Tabs>
       </ModalDialog>
     </Modal>
-  )
+  );
 }
 
 interface TabPanelItemProps {

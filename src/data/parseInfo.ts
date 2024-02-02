@@ -202,7 +202,8 @@ function parseCharacterInfo(
     attributes,
     additions,
     properties,
-    total_properties
+    total_properties,
+    totalRecord
   };
 }
 

@@ -157,6 +157,7 @@ interface CharacterInfo {
   additions: AttributeInfo[];
   properties: PropertyInfo[];
   total_properties: TotalPropertyInfo[];
+  totalRecord: Record<string, PropertyInfo>;
 }
 
 /** https://api.mihomo.me/sr_info_parsed/{uid}?lang=cn&version=v2 */
