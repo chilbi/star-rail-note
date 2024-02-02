@@ -7,6 +7,7 @@ export default function Loading() {
     <Box
       sx={{
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
         gap: 1,
         position: 'fixed',
@@ -16,7 +17,7 @@ export default function Loading() {
         transform: 'translate(-50%, -50%)'
       }}>
       <CircularProgress />
-      <Typography level="h4">加载中...</Typography>
+      <Typography level="h4">加载中……</Typography>
     </Box>
-  )
+  );
 }
