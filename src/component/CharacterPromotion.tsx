@@ -1,13 +1,11 @@
 import { useCallback, useState } from 'react';
 import Box from '@mui/joy/Box';
-import Slider from '@mui/joy/Slider';
-import Typography from '@mui/joy/Typography';
 
-import Promotion from './Promotion';
+import PromotionLevel from './PromotionLevel';
+import PromotionMaterialConsume from './PromotionMaterialConsume';
 import PropertyItem from './PropertyItem';
 import { STATE } from '../common/state';
-import { imageTheme } from '../common/theme';
-import { baseStepValue, formatProperty, getPromotionLevel, getPromotionMaxLevel, getTotalPromotionMaterial, promotionMarks } from '../data/local';
+import { baseStepValue, formatProperty, getPromotionLevel, getTotalPromotionMaterial } from '../data/local';
 import { generateHighlightLindeices } from '../common/utils';
 
 const highlightIndeices = generateHighlightLindeices(1, 4);
@@ -29,33 +27,12 @@ export default function CharacterPromotion({ character }: CharacterPromotionProp
 
   return (
     <>
-      <Box px={3} pt={1.5} pb={0.5}>
-        <Promotion value={promotion} count={6} />
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center'
-          }}
-        >
-          <Typography level="title-md" mr={0.5}>等级</Typography>
-          <Typography level="title-lg">{level}</Typography>
-          <Typography level="body-md">/</Typography>
-          <Typography level="body-md" textColor="#ffffff88">{getPromotionMaxLevel(promotion)}</Typography>
-        </Box>
-      </Box>
-      <Box px={3}>
-        <Slider
-          min={1}
-          max={80}
-          marks={promotionMarks}
-          size="sm"
-          // color="neutral"
-          value={level}
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          onChange={handleChange as any}
-          sx={{ py: 1 }}
-        />
-      </Box>
+      <PromotionLevel
+        promotion={promotion}
+        level={level}
+        onChange={handleChange}
+      />
+      
       <Box
         sx={{
           display: 'grid',
@@ -98,54 +75,10 @@ export default function CharacterPromotion({ character }: CharacterPromotionProp
         />
       </Box>
 
-      <Typography level="title-lg" textColor="warning.300" px={3} py={0.5}>
-        {`晋阶材料 ${promotion}/6`}
-      </Typography>
-      
-      <Box
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-evenly',
-          alignItems: 'center',
-          gap: 0.5,
-          px: 2,
-          py: 1
-        }}
-      >
-        {totalMaterial.map(item => {
-          const itemData = STATE.starRailData.items[item.id];
-          return (
-            <Box
-              key={item.id}
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: 0.5
-              }}
-            >
-              <Box
-                key={item.id}
-                sx={{
-                  px: 0.5,
-                  pt: 0.5,
-                  borderTopRightRadius: '8px',
-                  backgroundImage: imageTheme.getItemRarityImageColor(itemData.rarity)
-                }}
-              >
-                <img
-                  src={STATE.resUrl + itemData.icon}
-                  alt={'item' + item.id}
-                  width={imageTheme.materialSize}
-                  height={imageTheme.materialSize}
-                />
-              </Box>
-              <Typography level="body-sm" textColor="common.white">{item.num}</Typography>
-            </Box>
-          );
-        })}
-      </Box>
+      <PromotionMaterialConsume
+        promotion={promotion}
+        totalMaterial={totalMaterial}
+      />
     </>
   );
 }
