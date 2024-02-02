@@ -1,8 +1,10 @@
-import { Fragment } from 'react';
+import { Fragment, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/joy/Box';
 import BlackSheet from './BlackSheet';
 import Typography from '@mui/joy/Typography';
 import Divider from '@mui/joy/Divider';
+import Tooltip from '@mui/joy/Tooltip';
 
 import Rarity from './Rarity';
 import PromotionLevelRank from './PromotionLevelRank';
@@ -16,7 +18,19 @@ interface MyLightConeProps {
 }
 
 export default function MyLightCone({ lightCone }: MyLightConeProps) {
+  const navigate = useNavigate();
   const lightConeRank = STATE.starRailData.light_cone_ranks[lightCone.id];
+  
+  const handleNameClick = useCallback((e: React.MouseEvent<HTMLSpanElement>) => {
+    e.stopPropagation();
+    navigate('/light-cone/' + lightCone.id);
+  }, [lightCone.id, navigate]);
+
+  const handlePathClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    STATE.selectedElementPath = [lightCone.path.id];
+    navigate('/light-cones');
+  }, [lightCone.path.id, navigate]);
   
   return (
     <BlackSheet>
@@ -26,16 +40,7 @@ export default function MyLightCone({ lightCone }: MyLightConeProps) {
           width: '100%',
           height: '200px',
           borderTopRightRadius: '24px',
-          overflow: 'hidden',
-          '&::after': {
-            content: '""',
-            display: 'block',
-            position: 'absolute',
-            zIndex: 3,
-            width: '100%',
-            height: '100%',
-            borderTopRightRadius: '24px'
-          }
+          overflow: 'hidden'
         }}
       >
         <img
@@ -76,14 +81,30 @@ export default function MyLightCone({ lightCone }: MyLightConeProps) {
             }
           }}
         >
-          <Box sx={{ position: 'absolute', bottom: '100%', left: '4px', height: '26px' }}>
+          <Box sx={{ position: 'absolute', bottom: '100%', left: '4px', height: '26px', cursor: 'pointer' }}>
             <Rarity rarity={lightCone.rarity} height={18} />
           </Box>
-          <Typography level="title-lg">{lightCone.name}</Typography>
-          <Box display="flex" alignItems="center">
-            <img src={STATE.resUrl + lightCone.path.icon} alt="" width="24px" height="24px" />
-            <Typography level="title-md" ml={0.5}>{lightCone.path.name}</Typography>
-          </Box>
+          <Tooltip title="查看光锥图鉴" color="primary" arrow>
+            <Typography
+              level="title-lg"
+              onClick={handleNameClick}
+              children={lightCone.name}
+              sx={{ cursor: 'pointer' }}
+            />
+          </Tooltip>
+          <Tooltip title={`查看所有${lightCone.path.name}光锥图鉴`} color="primary" arrow>
+            <Box
+              onClick={handlePathClick}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer'
+              }}
+            >
+              <img src={STATE.resUrl + lightCone.path.icon} alt="" width="24px" height="24px" />
+              <Typography level="title-md" ml={0.5}>{lightCone.path.name}</Typography>
+            </Box>
+          </Tooltip>
         </Box>
       </Box>
 

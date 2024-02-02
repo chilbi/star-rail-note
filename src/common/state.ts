@@ -89,12 +89,14 @@ class State {
     throw new Error('playerData is undefined');
   }
 
+  /** 所有战斗属性 */
   get elements(): string[] {
     if (this.#elements !== null) return this.#elements;
     this.#elements = Object.keys(this.starRailData.elements).filter(key => key !== 'Lightning');
     return this.#elements;
   }
 
+  /** 所有命途 */
   get paths(): string[] {
     if (this.#paths !== null) return this.#paths;
     this.#paths = Object.keys(this.starRailData.paths).filter(key => key !== 'Unknown');
