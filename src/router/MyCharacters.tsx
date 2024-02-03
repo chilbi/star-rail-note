@@ -5,20 +5,32 @@ import Snackbar from '@mui/joy/Snackbar';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
 import Button from '@mui/joy/Button';
+import IconButton from '@mui/joy/IconButton';
+import Tooltip from '@mui/joy/Tooltip';
+import Modal from '@mui/joy/Modal';
+import ModalDialog from '@mui/joy/ModalDialog';
+import ModalClose from '@mui/joy/ModalClose';
+import DialogTitle from '@mui/joy/DialogTitle';
+import DialogContent from '@mui/joy/DialogContent';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
+import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
 
 import BackButton from '../component/BackButton';
 import FlexItem from '../component/FlexItem';
 import MyCharacterProfile from '../component/MyCharacterProfile';
+import MyLightCone from '../component/MyLightCone';
+import MyRelics from '../component/MyRelics';
 import { STATE } from '../common/state';
 import { submitForm } from '../common/utils';
 import { imageTheme } from '../common/theme';
 import { parseInfo } from '../data/parseInfo';
-import MyLightCone from '../component/MyLightCone';
-import MyRelics from '../component/MyRelics';
 
 export default function MyCharacters() {
   useLoaderData();
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, updater] = useState(false);
 
   const starRailInfoParsed: StarRailInfoParsed | null = useMemo(() => {
     if (STATE.playerDataIsNull) {
@@ -41,6 +53,21 @@ export default function MyCharacters() {
     setActiveIndex(parseInt(e.currentTarget.getAttribute('data-index')!));
   }, []);
 
+  const handleDeleteIndex = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    STATE.deleteCharacter(parseInt(e.currentTarget.getAttribute('data-index')!));
+    updater(prev => !prev);
+  }, []);
+
+  const handleDownIndex = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    STATE.downCharacter(parseInt(e.currentTarget.getAttribute('data-index')!));
+    updater(prev => !prev);
+  }, []);
+
+  const handleUpIndex = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    STATE.upCharacter(parseInt(e.currentTarget.getAttribute('data-index')!));
+    updater(prev => !prev);
+  }, []);
+
   if (starRailInfoParsed === null) {//应该是logout
     return <Navigate to="/" />;
   }
@@ -51,35 +78,15 @@ export default function MyCharacters() {
 
   return (
     <>
-      <BackButton />
-      <Box
-        sx={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 99,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 1,
-          p: 1,
-          width: '100%',
-          overflow: 'auto hidden'
-        }}
-      >
-        {starRailInfoParsed.characters.map((characterInfo, index) => {
-          return (
-            <AvatarIcon
-              key={index}
-              index={index}
-              isActive={activeIndex === index}
-              rarity={characterInfo.rarity}
-              name={characterInfo.name}
-              icon={`icon/avatar/${characterInfo.id}.png`}
-              onClick={handleChangeActiveIndex}
-            />
-          );
-        })}
-      </Box>
+      <MyCharactersList
+        starRailInfoParsed={starRailInfoParsed}
+        activeIndex={activeIndex}
+        onActiveIndexChange={handleChangeActiveIndex}
+        onDeleteIndex={handleDeleteIndex}
+        onDownIndex={handleDownIndex}
+        onUpIndex={handleUpIndex}
+      />
+
       {activeCharacter && (
         <Box
           sx={{
@@ -110,6 +117,8 @@ export default function MyCharacters() {
           )}
         </Box>
       )}
+
+      <BackButton />
     </>
   );
 }
@@ -221,6 +230,125 @@ function AvatarIcon({ index, isActive, rarity, name, icon, onClick }: AvatarIcon
           />
         </Box>
       </Box>
+    </Box>
+  );
+}
+
+interface MyCharactersListProps {
+  starRailInfoParsed: StarRailInfoParsed;
+  activeIndex: number;
+  onActiveIndexChange: React.MouseEventHandler<HTMLDivElement>;
+  onDeleteIndex: React.MouseEventHandler<HTMLButtonElement>;
+  onDownIndex: React.MouseEventHandler<HTMLButtonElement>;
+  onUpIndex: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+function MyCharactersList({
+  starRailInfoParsed,
+  activeIndex,
+  onActiveIndexChange,
+  onDeleteIndex,
+  onDownIndex,
+  onUpIndex
+}: MyCharactersListProps) {
+  const [open, setOpen] = useState(false);
+  const handleOpen = useCallback(() => setOpen(true), []);
+  const handleClose = useCallback(() => setOpen(false), []);
+
+  return (
+    <Box
+      sx={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 1,
+        p: 1,
+        width: '100%',
+        overflow: 'auto hidden'
+      }}
+    >
+      {starRailInfoParsed.characters.map((characterInfo, index) => {
+        return (
+          <AvatarIcon
+            key={index}
+            index={index}
+            isActive={activeIndex === index}
+            rarity={characterInfo.rarity}
+            name={characterInfo.name}
+            icon={`icon/avatar/${characterInfo.id}.png`}
+            onClick={onActiveIndexChange}
+          />
+        );
+      })}
+
+      <Tooltip title="管理角色" color="primary" arrow>
+        <IconButton variant="solid" color="primary" onClick={handleOpen}>
+          <EditRoundedIcon />
+        </IconButton>
+      </Tooltip>
+
+      <Modal open={open} onClose={handleClose}>
+        <ModalDialog size="lg" color="primary" sx={{ width: '100%', maxWidth: '640px' }}>
+          <ModalClose size="lg" />
+          <DialogTitle>管理角色</DialogTitle>
+          <DialogContent>
+            {starRailInfoParsed.characters.map((characterInfo, index) => {
+              return (
+                <Box
+                  key={index}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    backgroundColor: index % 2 === 0 ? '#ffffff33' : '#ffffff11'
+                  }}
+                >
+                  <Typography
+                    level="title-md"
+                    variant="solid"
+                    color="neutral"
+                    children={index + 1}
+                    sx={{
+                      mx: 1,
+                      width: 24,
+                      height: 24,
+                      borderRadius: '50%',
+                      textAlign: 'center'
+                    }}
+                  />
+                  <img src={STATE.resUrl + characterInfo.icon} alt="" width={42} height={42} />
+                  <Typography level="title-md" ml={1} mr="auto">{characterInfo.name}</Typography>
+                  <IconButton
+                    color="danger"
+                    onClick={onDeleteIndex}
+                    data-index={index}
+                  >
+                    <DeleteRoundedIcon />
+                  </IconButton>
+                  <IconButton
+                    disabled={index === starRailInfoParsed.characters.length - 1}
+                    color="primary"
+                    onClick={onDownIndex}
+                    data-index={index}
+                  >
+                    <ArrowDownwardRoundedIcon />
+                  </IconButton>
+                  <IconButton
+                    disabled={index === 0}
+                    color="primary"
+                    onClick={onUpIndex}
+                    data-index={index}
+                  >
+                    <ArrowUpwardRoundedIcon />
+                  </IconButton>
+                </Box>
+              );
+            })}
+          </DialogContent>
+        </ModalDialog>
+      </Modal>
     </Box>
   );
 }

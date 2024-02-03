@@ -1,3 +1,5 @@
+import { modifyStarRailInfo } from '../data/local';
+
 class State {
   /** 图片源的localStorage主键 */
   #keyOfResUrl: string;
@@ -152,6 +154,33 @@ class State {
   clearLocalUid() {
     localStorage.removeItem(this.#keyOfUid);
     this.#starRailInfo = null;
+  }
+
+  /** 删除角色 */
+  deleteCharacter(index: number) {
+    this.#starRailInfo!.detailInfo!.avatarDetailList! =
+      this.#starRailInfo!.detailInfo!.avatarDetailList!.filter((_, i) => i !== index);
+    modifyStarRailInfo(this.#starRailInfo!);
+  }
+
+  /** 下降角色排序 */
+  downCharacter(index: number) {
+    const characters = this.#starRailInfo!.detailInfo!.avatarDetailList!;
+    const temp = characters[index];
+    characters[index] = characters[index + 1];
+    characters[index + 1] = temp;
+    this.#starRailInfo!.detailInfo!.avatarDetailList! = characters.slice();
+    modifyStarRailInfo(this.#starRailInfo!);
+  }
+
+  /** 上升角色排序 */
+  upCharacter(index: number) {
+    const characters = this.#starRailInfo!.detailInfo!.avatarDetailList!;
+    const temp = characters[index];
+    characters[index] = characters[index - 1];
+    characters[index - 1] = temp;
+    this.#starRailInfo!.detailInfo!.avatarDetailList! = characters.slice();
+    modifyStarRailInfo(this.#starRailInfo!);
   }
 }
 

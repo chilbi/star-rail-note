@@ -110,9 +110,6 @@ export function deleteStarRailInfo(uid: string): Promise<void> {
 function mergeCharacters(oldData: PlayerData | undefined, newData: PlayerData): CharacterDetailData[] {
   const mergedList: CharacterDetailData[] = [];
   if (oldData) {
-    if (oldData.assistAvatarDetail) {
-      mergedList.push(oldData.assistAvatarDetail);
-    }
     if (oldData.avatarDetailList && oldData.avatarDetailList.length > 0) {
       oldData.avatarDetailList.forEach(data => {
         const index = mergedList.findIndex(value => value.avatarId === data.avatarId);
@@ -123,13 +120,13 @@ function mergeCharacters(oldData: PlayerData | undefined, newData: PlayerData): 
         }
       });
     }
-  }
-  if (newData.assistAvatarDetail) {
-    const index = mergedList.findIndex(value => value.avatarId === newData.assistAvatarDetail!.avatarId);
-    if (index > -1) {
-      mergedList[index] = newData.assistAvatarDetail;
-    } else {
-      mergedList.push(newData.assistAvatarDetail);
+    if (oldData.assistAvatarDetail) {
+      const index = mergedList.findIndex(value => value.avatarId === oldData.assistAvatarDetail!.avatarId);
+      if (index > -1) {
+        mergedList[index] = oldData.assistAvatarDetail;
+      } else {
+        mergedList.push(oldData.assistAvatarDetail);
+      }
     }
   }
   if (newData.avatarDetailList && newData.avatarDetailList.length > 0) {
@@ -141,6 +138,14 @@ function mergeCharacters(oldData: PlayerData | undefined, newData: PlayerData): 
         mergedList.push(data);
       }
     });
+  }
+  if (newData.assistAvatarDetail) {
+    const index = mergedList.findIndex(value => value.avatarId === newData.assistAvatarDetail!.avatarId);
+    if (index > -1) {
+      mergedList[index] = newData.assistAvatarDetail;
+    } else {
+      mergedList.push(newData.assistAvatarDetail);
+    }
   }
   return mergedList;
 }
@@ -172,6 +177,11 @@ export function updateStarRailInfoWithJson(json: StarRailInfo): Promise<StarRail
       return starRailInfoDB.set(uid, json)
         .then(() => json);
     });
+}
+
+export function modifyStarRailInfo(starRailInfo: StarRailInfo): Promise<void> {
+  const uid = starRailInfo.detailInfo!.uid.toString();
+  return starRailInfoDB.set(uid, starRailInfo);
 }
 
 /** 获取用户数据，优先级：内存缓存 > indexedDB > 远程数据 */
