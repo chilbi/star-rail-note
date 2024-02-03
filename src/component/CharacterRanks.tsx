@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import Box from '@mui/joy/Box';
 import Typography from '@mui/joy/Typography';
 
@@ -58,7 +59,14 @@ function CharacterRank({ rank }: CharacterRankProps) {
       </Box>
       <Box>
         <Typography level="title-lg" py={1}>{rank.name}</Typography>
-        <Typography component="p" level="body-md">{rank.desc}</Typography>
+        <Typography component="p" level="body-md">
+          {rank.desc.split('\\n').map((text, i, arr) => (
+            <Fragment key={i}>
+              {text}
+              {i !== arr.length - 1 && <br />}
+            </Fragment>
+          ))}
+        </Typography>
       </Box>
     </Box>
   );

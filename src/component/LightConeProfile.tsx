@@ -48,6 +48,7 @@ function LightConePortrait({ lightCone }: LightConeProfileProps) {
       sx={{
         position: 'relative',
         mx: 'auto',
+        width: '100%',
         maxWidth: 280,
         transform: 'rotateZ(8deg)',
         '&::before': {
@@ -61,14 +62,24 @@ function LightConePortrait({ lightCone }: LightConeProfileProps) {
           height: '100%',
           backgroundColor: '#ffffff11',
           transform: 'skewY(-2deg)'
+        },
+        '&::after': {
+          content: '""',
+          display: 'block',
+          width: '100%',
+          pb: 1260 / 904 * 100 + '%'
         }
       }}
     >
       <img
         src={STATE.resUrl + lightCone.portrait}
         alt={lightCone.name}
-        width="100%"
-        style={{ display: 'block' }}
+        style={{
+          position: 'absolute',
+          display: 'block',
+          width: '100%',
+          objectFit: 'cover'
+        }}
       />
     </Box>
   );
