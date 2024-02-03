@@ -11,7 +11,7 @@ export default function Loading() {
         alignItems: 'center',
         gap: 1,
         position: 'fixed',
-        zIndex: 999,
+        zIndex: 890,
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)'

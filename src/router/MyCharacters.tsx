@@ -256,40 +256,46 @@ function MyCharactersList({
   const handleClose = useCallback(() => setOpen(false), []);
 
   return (
-    <Box
-      sx={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 999,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 1,
-        p: 1,
-        width: '100%',
-        overflow: 'auto hidden'
-      }}
-    >
-      {starRailInfoParsed.characters.map((characterInfo, index) => {
-        return (
-          <AvatarIcon
-            key={index}
-            index={index}
-            isActive={activeIndex === index}
-            rarity={characterInfo.rarity}
-            name={characterInfo.name}
-            icon={`icon/avatar/${characterInfo.id}.png`}
-            onClick={onActiveIndexChange}
-          />
-        );
-      })}
-
-      <Tooltip title="管理角色" color="primary" arrow>
-        <IconButton variant="solid" color="primary" onClick={handleOpen}>
-          <EditRoundedIcon />
-        </IconButton>
-      </Tooltip>
-
+    <>
+      <Box
+        sx={{
+          position: 'sticky',
+          top: 0,
+          left: 0,
+          zIndex: 891,
+          display: 'flex',
+          alignItems: 'center',
+          // justifyContent: 'center',
+          gap: 1,
+          py: 1,
+          width: '100%',
+          overflow: 'auto hidden',
+          '&::before, &::after': {
+            content: '""',
+            display: 'block',
+            margin: 'auto'
+          }
+        }}
+      >
+        {starRailInfoParsed.characters.map((characterInfo, index) => {
+          return (
+            <AvatarIcon
+              key={index}
+              index={index}
+              isActive={activeIndex === index}
+              rarity={characterInfo.rarity}
+              name={characterInfo.name}
+              icon={`icon/avatar/${characterInfo.id}.png`}
+              onClick={onActiveIndexChange}
+            />
+          );
+        })}
+        <Tooltip title="管理角色" color="primary" arrow sx={{ mx: 1 }}>
+          <IconButton variant="solid" color="primary" onClick={handleOpen}>
+            <EditRoundedIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
       <Modal open={open} onClose={handleClose}>
         <ModalDialog size="lg" color="primary" sx={{ width: '100%', maxWidth: '640px' }}>
           <ModalClose size="lg" />
@@ -349,6 +355,6 @@ function MyCharactersList({
           </DialogContent>
         </ModalDialog>
       </Modal>
-    </Box>
+    </>
   );
 }
