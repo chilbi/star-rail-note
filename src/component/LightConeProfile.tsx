@@ -105,8 +105,7 @@ function LightConeNameRarityPath({ lightCone }: LightConeProfileProps) {
           alignItems: 'center',
           justifyContent: 'space-between',
           px: 3,
-          backgroundColor: '#ffffff33',
-          cursor: 'pointer'
+          backgroundColor: '#ffffff33'
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', py: '2px' }}>

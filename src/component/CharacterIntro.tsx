@@ -5,6 +5,7 @@ import Tooltip from '@mui/joy/Tooltip';
 import Modal from '@mui/joy/Modal';
 import ModalDialog from '@mui/joy/ModalDialog';
 import ModalClose from '@mui/joy/ModalClose';
+import DialogTitle from '@mui/joy/DialogTitle';
 import Tabs from '@mui/joy/Tabs';
 import TabList from '@mui/joy/TabList';
 import Tab from '@mui/joy/Tab';
@@ -131,10 +132,12 @@ function ElementsPaths({ activeTab, element, path, onClose }: ElementsPathsProps
       <ModalDialog size="lg" color="primary" sx={{ width: '100%', maxWidth: '640px' }}>
         <ModalClose size="lg" />
         <Tabs defaultValue={activeTab}>
-          <TabList>
-            <Tab value="element">战斗属性</Tab>
-            <Tab value="path">命途</Tab>
-          </TabList>
+          <DialogTitle>
+            <TabList>
+              <Tab value="element">战斗属性</Tab>
+              <Tab value="path">命途</Tab>
+            </TabList>
+          </DialogTitle>
           <TabPanelItem
             value="element"
             valueText="战斗属性"
