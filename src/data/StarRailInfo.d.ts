@@ -110,6 +110,8 @@ interface PlayerData {
   assistAvatarDetail?: CharacterDetailData;
   /** 展示角色信息 */
   avatarDetailList?: CharacterDetailData[];
+  /** 2.0 支援角色信息 */
+  assistAvatarList?: CharacterDetailData[];
 }
 
 /** https://api.mihomo.me/sr_info/{uid}?lang=cn&version=v2 */

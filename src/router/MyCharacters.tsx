@@ -41,7 +41,8 @@ export default function MyCharacters() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     STATE.starRailInfo?.detailInfo?.uid,
-    STATE.starRailInfo?.detailInfo?.assistAvatarDetail,
+    // STATE.starRailInfo?.detailInfo?.assistAvatarDetail,
+    STATE.starRailInfo?.detailInfo?.assistAvatarList,
     STATE.starRailInfo?.detailInfo?.avatarDetailList
   ]);
 

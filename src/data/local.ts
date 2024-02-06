@@ -128,6 +128,16 @@ function mergeCharacters(oldData: PlayerData | undefined, newData: PlayerData): 
         mergedList.push(oldData.assistAvatarDetail);
       }
     }
+    if (oldData.assistAvatarList && oldData.assistAvatarList.length > 0) {
+      oldData.assistAvatarList.forEach(data => {
+        const index = mergedList.findIndex(value => value.avatarId === data.avatarId);
+        if (index > -1) {
+          mergedList[index] = data;
+        } else {
+          mergedList.push(data);
+        }
+      });
+    }
   }
   if (newData.avatarDetailList && newData.avatarDetailList.length > 0) {
     newData.avatarDetailList.forEach(data => {
@@ -147,6 +157,16 @@ function mergeCharacters(oldData: PlayerData | undefined, newData: PlayerData): 
       mergedList.push(newData.assistAvatarDetail);
     }
   }
+  if (newData.assistAvatarList && newData.assistAvatarList.length > 0) {
+    newData.assistAvatarList.forEach(data => {
+      const index = mergedList.findIndex(value => value.avatarId === data.avatarId);
+      if (index > -1) {
+        mergedList[index] = data;
+      } else {
+        mergedList.push(data);
+      }
+    });
+  }
   return mergedList;
 }
 
@@ -155,7 +175,7 @@ export function updateStarRailInfo(uid: string): Promise<StarRailInfo | undefine
   return Promise.all([starRailInfoDB.get(uid), fetchStarRailInfo(uid)])
     .then(([oldData, newData]) => {
       if (newData?.detailInfo?.uid === parseInt(uid)) {
-        // 合并新旧数据，把assistAvatarDetail都添加在avatarDetailList了
+        // 合并新旧数据，把assistAvatarList都添加在avatarDetailList了
         newData.detailInfo.avatarDetailList = mergeCharacters(oldData?.detailInfo, newData.detailInfo);
         return starRailInfoDB.set(uid, newData)
           .then(() => {
@@ -172,7 +192,7 @@ export function updateStarRailInfoWithJson(json: StarRailInfo): Promise<StarRail
   const uid = json.detailInfo!.uid.toString();
   return starRailInfoDB.get(uid)
     .then(oldData => {
-      // 合并新旧数据，把assistAvatarDetail都添加在avatarDetailList了
+      // 合并新旧数据，把assistAvatarList都添加在avatarDetailList了
       json.detailInfo!.avatarDetailList = mergeCharacters(oldData?.detailInfo, json.detailInfo!);
       return starRailInfoDB.set(uid, json)
         .then(() => json);

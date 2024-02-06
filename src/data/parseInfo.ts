@@ -52,6 +52,9 @@ function parseCharacterInfo(
 ): CharacterInfo {
   const characterId = characterDetailData.avatarId.toString();
   const character = starRailData.characters[characterId];
+  if (character == undefined) {
+    throw new Error(`数据库中查找不到id为${characterId}的角色，请尝试更新数据库。`);
+  }
   const characterLevel = characterDetailData.level || 1;
   const characterRank = characterDetailData.rank || 0;
   const characterPromotion = characterDetailData.promotion || 0;
@@ -224,6 +227,9 @@ function parseLightConeInfo(
   if (characterDetailData.equipment && characterDetailData.equipment.tid) {
     const lightConeId = characterDetailData.equipment.tid.toString();
     const lightCone = starRailData.light_cones[lightConeId];
+    if (lightCone == undefined) {
+      throw new Error(`数据库中查找不到id为${lightCone}的光锥，请尝试更新数据库。`);
+    }
     const lightConeLevel = characterDetailData.equipment.level || 1;
     const lightConeRank = characterDetailData.equipment.rank || 1;
     const lightConePromotion = characterDetailData.equipment.promotion || 0;
@@ -269,6 +275,9 @@ function parseLightConeInfo(
 
 function parseRelicInfo(relicData: RelicData, starRailData: StarRailData): RelicInfo {
   const relic = starRailData.relics[relicData.tid];
+  if (relic == undefined) {
+    throw new Error(`数据库中查找不到id为${relicData.tid}的遗器，请尝试更新数据库。`);
+  }
   const relicLevel = relicData.level || 0;
   const relicSet = starRailData.relic_sets[relic.set_id];
   const relicSubAffixes = starRailData.relic_sub_affixes[relic.sub_affix_id].affixes;
@@ -314,6 +323,9 @@ function parseRelicSetInfoList(relicList: RelicData[], starRailData: StarRailDat
   let relicSetInfoList: RelicSetInfo[] = [];
   relicList.forEach(relicData => {
     const relic = starRailData.relics[relicData.tid];
+    if (relic == undefined) {
+      throw new Error(`数据库中查找不到id为${relicData.tid}的遗器，请尝试更新数据库。`);
+    }
     const relicSet = starRailData.relic_sets[relic.set_id];
     const existingSet = relicSetInfoList.find(info => info.id === relicSet.id);
     if (existingSet) {
