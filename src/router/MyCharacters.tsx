@@ -270,6 +270,9 @@ function MyCharactersList({
           gap: 1,
           py: 1,
           width: '100%',
+          borderBottom: '1px solid',
+          borderColor: 'divider',
+          backgroundColor: '#00000066',
           overflow: 'auto hidden',
           '&::before, &::after': {
             content: '""',

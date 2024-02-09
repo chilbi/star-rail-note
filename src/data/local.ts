@@ -235,12 +235,12 @@ function toFixed(decimal: Decimal, decimalPlaces: number): string {
   return decimal.toFixed(decimalPlaces, Decimal.ROUND_DOWN);
 }
 
-/** 格式化显示属性值，百分比最高保留一位小数，非百分比向下取整 */
+/** 格式化显示属性值，百分比和非百分比的值都保留两位小数 */
 export function formatProperty(
   value: number,
   percent: boolean,
-  percentDecimalPlaces: number = 1,
-  NonPercentDecimalPlaces: number = 0
+  percentDecimalPlaces: number = 2,
+  NonPercentDecimalPlaces: number = 2
 ): string {
   return percent
     ? toFixed(new Decimal(value).mul(100), percentDecimalPlaces) + '%'

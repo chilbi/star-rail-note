@@ -13,6 +13,7 @@ interface ImageListProps<T extends ImageLike> {
 
 export default function ImageList<T extends ImageLike>({ values, onClick }: ImageListProps<T>) {
   const isUpSmall = useMedia(`(min-width: ${theme.breakpoints.values.sm}px)`);
+  const ImagePreviewOrIcon = isUpSmall ? ImagePreview : ImageIcon;
 
   return (
     <Box
@@ -25,8 +26,7 @@ export default function ImageList<T extends ImageLike>({ values, onClick }: Imag
       }}
     >
       {values.map(value => (
-        isUpSmall ? <ImagePreview key={value.id} value={value} name={nickname(value.name)} onClick={onClick} />
-          : <ImageIcon key={value.id} value={value} name={nickname(value.name)} onClick={onClick} />
+        <ImagePreviewOrIcon key={value.id} value={value} name={nickname(value.name)} onClick={onClick} />
       ))}
     </Box>
   );
