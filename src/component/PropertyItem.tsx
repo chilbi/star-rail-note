@@ -40,6 +40,8 @@ export default function PropertyItem({ sx = {}, icon, name, value }: PropertyIte
         level="body-sm"
         textColor="common.white"
         sx={{
+          display: 'flex',
+          alignItems: 'center',
           maxWidth: 120,
           overflow: 'hidden',
           textWrap: 'nowrap',

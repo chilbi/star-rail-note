@@ -104,26 +104,25 @@ export default function ImageIcon<T extends ImageLike>({ value, name, onClick }:
         <Rarity rarity={value.rarity} height={12} />
       </Box>
       <Typography
-        fontSize="10px"
-        lineHeight="14px"
-        textColor="common.white"
-        textAlign="center"
+        level="title-sm"
+        children={name}
         sx={{
           position: 'absolute',
           zIndex: 2,
           bottom: '1px',
           left: 0,
           right: 0,
-          backgroundColor: '#000000',
-          width: '100%',
+          fontSize: '10px',
+          lineHeight: '14px',
+          textAlign: 'center',
+          color: '#ffffff',
+          backgroundColor: '#00000099',
           overflow: 'hidden',
           textWrap: 'nowrap',
           whiteSpace: 'nowrap',
           textOverflow: 'ellipsis'
         }}
-      >
-        {name}
-      </Typography>
+      />
       <Box
         sx={{
           // 鼠标悬浮边框和颜色

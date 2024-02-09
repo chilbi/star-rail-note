@@ -1,33 +1,25 @@
-import { useCallback, useState } from 'react';
+import { useCallback} from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/joy/Box';
+import Button from '@mui/joy/Button';
 import Typography from '@mui/joy/Typography';
 import Divider from '@mui/joy/Divider';
-import IconButton from '@mui/joy/IconButton';
-import Tooltip from '@mui/joy/Tooltip';
-import Modal from '@mui/joy/Modal';
-import ModalDialog from '@mui/joy/ModalDialog';
-import ModalClose from '@mui/joy/ModalClose';
-import DialogTitle from '@mui/joy/DialogTitle';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import SyncAltRoundedIcon from '@mui/icons-material/SyncAltRounded';
 
 import BlackSheet from './BlackSheet';
 import CharacterPortrait from './CharacterPortrait';
 import CharacterIntro from './CharacterIntro';
-import PropertyItem from './PropertyItem';
+import PromotionLevelRank from './PromotionLevelRank';
+import MyCharacterProperties from './MyCharacterProperties';
 import { STATE } from '../common/state';
 import { nickname } from '../data/local';
-import { generateHighlightLindeices } from '../common/utils';
-import PromotionLevelRank from './PromotionLevelRank';
 
-const highlightIndeices = generateHighlightLindeices(1, 17);
-
-interface MyCharacterProps {
+interface MyCharacterProfileProps {
   character: CharacterInfo;
+  onToggle: () => void;
 }
 
-export default function MyCharacterProfile({ character }: MyCharacterProps) {
-  const [open, setOpen] = useState(false);
+export default function MyCharacterProfile({ character, onToggle }: MyCharacterProfileProps) {
   const navigate = useNavigate();
 
   const handleNameClick = useCallback((e: React.MouseEvent<HTMLSpanElement>) => {
@@ -35,12 +27,22 @@ export default function MyCharacterProfile({ character }: MyCharacterProps) {
     navigate('/character/' + character.id);
   }, [character.id, navigate]);
 
-  const handleOpen = useCallback(() => setOpen(true), []);
-  const handleClose = useCallback(() => setOpen(false), []);
-
   return (
     <Box position="relative">
       <CharacterPortrait portrait={character.portrait} />
+      <Button
+        size="sm"
+        variant="soft"
+        onClick={onToggle}
+        startDecorator={<SyncAltRoundedIcon />}
+        children="精简"
+        sx={{
+          position: 'absolute',
+          zIndex: 1,
+          top: '8px',
+          right: '8px',
+        }}
+      />
       <BlackSheet sx={{ mt: '256px' }}>
         <CharacterIntro
           name={nickname(character.name)}
@@ -78,6 +80,7 @@ export default function MyCharacterProfile({ character }: MyCharacterProps) {
               <img src={STATE.resUrl + skill.icon} width={28} height={28} />
               <Typography
                 level="body-xs"
+                children={skill.type_text}
                 textColor="common.black"
                 lineHeight="1.3em"
                 sx={{
@@ -86,7 +89,6 @@ export default function MyCharacterProfile({ character }: MyCharacterProps) {
                   borderRadius: '1em',
                   backgroundColor: '#ffffff'
                 }}
-                children={skill.type_text}
               />
               <Typography
                 level="body-xs"
@@ -98,54 +100,7 @@ export default function MyCharacterProfile({ character }: MyCharacterProps) {
           ))}
         </Box>
 
-        <Modal open={open} onClose={handleClose}>
-          <ModalDialog size="lg" color="primary" sx={{ width: '100%', maxWidth: '640px' }}>
-            <ModalClose size="lg" />
-            <DialogTitle>基础属性</DialogTitle>
-            <div>
-              {['HP', 'Attack', 'Defence', 'Speed'].map((key, i) => {
-                const property = character.totalRecord['Base' + key];
-                return (
-                  <PropertyItem
-                    key={key}
-                    icon={STATE.resUrl + property.icon}
-                    name={property.name}
-                    value={property.display}
-                    sx={{ backgroundColor: i % 2 === 0 ? '#ffffff33' : '#ffffff11' }}
-                  />
-                );
-              })}
-            </div>
-          </ModalDialog>
-        </Modal>
-        <Divider sx={{ '--Divider-childPosition': '24px', my: 1 }}>
-          <span>属性详情</span>
-          <Tooltip title="查看基础属性" color="primary">
-            <IconButton onClick={handleOpen} sx={{ ml: 0.5 }}>
-              <InfoOutlinedIcon />
-            </IconButton>
-          </Tooltip>
-        </Divider>
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            pb: 1
-          }}
-        >
-          {character.totalProperties.map((property, i) => (
-            <PropertyItem
-              key={property.type}
-              icon={STATE.resUrl + property.icon}
-              name={property.name}
-              value={property.display}
-              sx={{ backgroundColor: highlightIndeices.some(idx => idx === i) ? '#ffffff33' : '#ffffff11' }}
-            />
-          ))}
-          {character.totalProperties.length % 2 !== 0 && (
-            <Box sx={{ backgroundColor: highlightIndeices.some(idx => idx === character.totalProperties.length) ? '#ffffff33' : '#ffffff11' }} />
-          )}
-        </Box>
+        <MyCharacterProperties character={character} />
       </BlackSheet>
     </Box>
   );

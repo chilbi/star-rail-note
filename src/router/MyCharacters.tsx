@@ -20,6 +20,7 @@ import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
 import BackButton from '../component/BackButton';
 import FlexItem from '../component/FlexItem';
 import MyCharacterProfile from '../component/MyCharacterProfile';
+import MyCharacterSimplified from '../component/MyCharacterSimplified';
 import MyLightCone from '../component/MyLightCone';
 import MyRelics from '../component/MyRelics';
 import { STATE } from '../common/state';
@@ -29,6 +30,7 @@ import { parseInfo } from '../data/parseInfo';
 
 export default function MyCharacters() {
   useLoaderData();
+  const [isDetail, setIsDetail] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, updater] = useState(false);
 
@@ -49,6 +51,8 @@ export default function MyCharacters() {
   const activeCharacter: CharacterInfo | undefined = useMemo(() => {
     return starRailInfoParsed?.characters[activeIndex];
   }, [activeIndex, starRailInfoParsed]);
+
+  const handleToggleIsDetail = useCallback(() => setIsDetail(prev => !prev), []);
 
   const handleChangeActiveIndex = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     setActiveIndex(parseInt(e.currentTarget.getAttribute('data-index')!));
@@ -96,15 +100,23 @@ export default function MyCharacters() {
             p: { md: 1 }
           }}
         >
-          <FlexItem>
-            <MyCharacterProfile character={activeCharacter} />
-          </FlexItem>
-          {activeCharacter.light_cone && (
+          {isDetail ? (
+            <>
+              <FlexItem>
+                <MyCharacterProfile character={activeCharacter} onToggle={handleToggleIsDetail} />
+              </FlexItem>
+              {activeCharacter.light_cone && (
+                <FlexItem>
+                  <MyLightCone
+                    lightCone={activeCharacter.light_cone}
+                    characterPath={activeCharacter.path.id}
+                  />
+                </FlexItem>
+              )}
+            </>
+          ) : (
             <FlexItem>
-              <MyLightCone
-                lightCone={activeCharacter.light_cone}
-                characterPath={activeCharacter.path.id}
-              />
+              <MyCharacterSimplified character={activeCharacter} onToggle={handleToggleIsDetail} />
             </FlexItem>
           )}
           {activeCharacter.relics.length > 0 && (

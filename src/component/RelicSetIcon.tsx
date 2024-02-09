@@ -50,6 +50,8 @@ export default function RelicSetIcon({ relicSet, onClick }: RelicSetIconProps) {
         />
       </Box>
       <Typography
+        level="title-sm"
+        children={relicSet.name}
         fontSize="10px"
         lineHeight="14px"
         textColor="common.white"
@@ -60,16 +62,14 @@ export default function RelicSetIcon({ relicSet, onClick }: RelicSetIconProps) {
           bottom: '1px',
           left: 0,
           right: 0,
-          backgroundColor: '#000000',
+          backgroundColor: '#00000099',
           width: '100%',
           overflow: 'hidden',
           textWrap: 'nowrap',
           whiteSpace: 'nowrap',
           textOverflow: 'ellipsis'
         }}
-      >
-        {relicSet.name}
-      </Typography>
+      />
       <Box
         sx={{
           // 鼠标悬浮边框和颜色

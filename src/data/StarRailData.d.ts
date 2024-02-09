@@ -240,7 +240,7 @@ interface RelicMainAffix {
 
 // value = base * info.cnt + step * info.step;
 // info.cnt 取值范围为 [1, 6]，且4条副词条的cnt合计最大为9
-// info.step 取值范围为 [info.cnt * 0, info.cnt * step_num]
+// info.step 取值范围为 [info.cnt * 0, info.cnt * 2]
 interface SubAffix {
   affix_id: string;
   property: string;

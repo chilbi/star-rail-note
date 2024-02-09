@@ -15,10 +15,11 @@ import PropertyItem from './PropertyItem';
 import { STATE } from '../common/state';
 import { relicTypeMap, setMap } from '../data/local';
 import { imageTheme } from '../common/theme';
+import { SubAffixRate } from './SubAffixRate';
 
-function subAffixCount(count: number): string {
-  return count > 1 ? ' ' + '+'.repeat(count - 1) : '';
-}
+// function subAffixCount(count: number): string {
+//   return count > 1 ? ' ' + '+'.repeat(count - 1) : '';
+// }
 
 interface MyRelicsProps {
   relics: RelicInfo[];
@@ -71,53 +72,7 @@ export default function MyRelics({ relics, relicSets, relicsProperties }: MyReli
         }}
       >
         {relics.map(relic => (
-          <Box
-            key={relic.id}
-            sx={{
-              flexGrow: 1,
-              p: 1,
-              width: { xs: '100%', sm: '50%' }
-            }}
-          >
-            <Box display="flex" gap={1} mb={1}>
-              <Box
-                sx={{
-                  width: 36,
-                  height: 36,
-                  p: '3px',
-                  borderRadius: '50%',
-                  backgroundImage: imageTheme.getItemRarityImageColor(relic.rarity)
-                }}
-              >
-                <img src={STATE.resUrl + relic.icon} alt="" width="100%" height="100%" />
-              </Box>
-              <Box flexGrow={1}>
-                <Typography level="title-sm">{relic.name}</Typography>
-                <Box display="flex" justifyContent="space-between">
-                  <Typography level="body-sm">{relicTypeMap[relic.type]}</Typography>
-                  <Typography level="title-sm" color="warning">+{relic.level}</Typography>
-                </Box>
-              </Box>
-            </Box>
-
-            <div>
-              <PropertyItem
-                icon={STATE.resUrl + relic.main_affix.icon}
-                name={relic.main_affix.name}
-                value={relic.main_affix.display}
-                sx={{ backgroundColor: imageTheme.previewRarityColors[relic.rarity] + '66' }}
-              />
-              {relic.sub_affix.map((affix, i) => (
-                <PropertyItem
-                  key={i}
-                  icon={STATE.resUrl + affix.icon}
-                  name={<>{affix.name}<Typography level="body-xs" color="warning">{subAffixCount(affix.count)}</Typography></>}
-                  value={affix.display}
-                  sx={{ backgroundColor: i % 2 === 0 ? '#ffffff11' : '#ffffff33' }}
-                />
-              ))}
-            </div>
-          </Box>
+          <MyRelic key={relic.id} relic={relic} />
         ))}
       </Box>
 
@@ -144,5 +99,60 @@ export default function MyRelics({ relics, relicSets, relicsProperties }: MyReli
         </>
       )}
     </BlackSheet>
+  );
+}
+
+interface MyRelicProps {
+  relic: RelicInfo;
+}
+
+function MyRelic({ relic }: MyRelicProps) {
+  return (
+    <Box
+      sx={{
+        flexGrow: 1,
+        p: 1,
+        width: { xs: '100%', sm: '50%' }
+      }}
+    >
+      <Box display="flex" gap={1} mb={1}>
+        <Box
+          sx={{
+            width: 36,
+            height: 36,
+            p: '3px',
+            borderRadius: '50%',
+            backgroundImage: imageTheme.getItemRarityImageColor(relic.rarity)
+          }}
+        >
+          <img src={STATE.resUrl + relic.icon} alt="" width="100%" height="100%" />
+        </Box>
+        <Box flexGrow={1}>
+          <Typography level="title-sm">{relic.name}</Typography>
+          <Box display="flex" justifyContent="space-between">
+            <Typography level="body-sm">{relicTypeMap[relic.type]}</Typography>
+            <Typography level="title-sm" color="warning">+{relic.level}</Typography>
+          </Box>
+        </Box>
+      </Box>
+
+      <div>
+        <PropertyItem
+          icon={STATE.resUrl + relic.main_affix.icon}
+          name={relic.main_affix.name}
+          value={relic.main_affix.display}
+          sx={{ backgroundColor: imageTheme.previewRarityColors[relic.rarity] + '66' }}
+        />
+        {relic.sub_affix.map((affix, i) => (
+          <PropertyItem
+            key={i}
+            icon={STATE.resUrl + affix.icon}
+            name={<>{affix.name}<SubAffixRate count={affix.count} step={affix.step} /></>}
+            value={affix.display}
+            sx={{ backgroundColor: i % 2 === 0 ? '#ffffff11' : '#ffffff33' }}
+          />
+        ))}
+      </div>
+    </Box>
   );
 }

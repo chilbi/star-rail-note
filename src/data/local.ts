@@ -248,13 +248,13 @@ export function formatProperty(
 }
 
 export function baseStepValue(baseStep: PromotionBaseStep, level: number): number {
-  return new Decimal(baseStep.base).plus(
+  return new Decimal(baseStep.base).add(
     new Decimal(baseStep.step).mul(level - 1)
   ).toNumber();
 }
 
 export function relicMainValue(mainAffix: MainAffix, level: number): number {
-  return new Decimal(mainAffix.base).plus(
+  return new Decimal(mainAffix.base).add(
     new Decimal(mainAffix.step).mul(level)
   ).toNumber();
 }
@@ -268,7 +268,7 @@ export function relicMainValueFormula(mainAffix: MainAffix, level: number, perce
 export function relicSubValue(subAffix: SubAffix, cnt: number, step: number): number {
   return new Decimal(subAffix.base)
     .mul(cnt)
-    .plus(new Decimal(subAffix.step).mul(step))
+    .add(new Decimal(subAffix.step).mul(step))
     .toNumber();
 }
 
@@ -276,6 +276,13 @@ export function relicSubValueFormula(subAffix: SubAffix, cnt: number, step: numb
   const base = formatProperty(subAffix.base, percent, 2, 2);
   const subStep = formatProperty(subAffix.step, percent, 2, 2);
   return `${base} × ${cnt} + ${subStep} × ${step} = `;
+}
+
+export function addedValue(property: TotalPropertyInfo): string {
+  return formatProperty(
+    new Decimal(property.value).sub(new Decimal(property.base.value)).toNumber(),
+    property.percent
+  );
 }
 
 interface ReplacementParam {

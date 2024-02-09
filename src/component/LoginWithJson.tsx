@@ -64,7 +64,7 @@ export default function LoginWithJson({ loginUid, onClose }: LoginWithJsonProps)
         STATE.requestUid = uidStr;
         STATE.setLocalUid(uidStr, jsonRef.current!);
         onClose(e, 'closeClick');
-        navigate('/', { replace: true });
+        navigate('/my-characters', { replace: true });
       });
     }
   }, [navigate, onClose]);
