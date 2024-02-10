@@ -125,6 +125,9 @@ export default function MyCharacters() {
                 relics={activeCharacter.relics}
                 relicSets={activeCharacter.relic_sets}
                 relicsProperties={activeCharacter.relicsProperties}
+                recommendAffixes={activeCharacter.recommendAffixes}
+                relicScoreRecord={activeCharacter.relicScoreRecord}
+                totalRelicScore={activeCharacter.totalRelicScore}
               />
             </FlexItem>
           )}

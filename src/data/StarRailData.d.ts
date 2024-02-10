@@ -212,9 +212,34 @@ interface Path {
   icon: string;
 }
 
+type AffixTypes =
+  'HPDelta' |
+  'HPAddedRatio' |
+  'AttackDelta' |
+  'AttackAddedRatio' |
+  'DefenceDelta' |
+  'DefenceAddedRatio' |
+  'SpeedDelta' |
+
+  'CriticalChanceBase' |
+  'CriticalDamageBase' |
+  'BreakDamageAddedRatioBase' |
+  'HealRatioBase' |
+  'SPRatioBase' |
+  'StatusProbabilityBase' |
+  'StatusResistanceBase' |
+
+  'PhysicalAddedRatio' |
+  'FireAddedRatio' |
+  'IceAddedRatio' |
+  'ThunderAddedRatio' |
+  'WindAddedRatio' |
+  'QuantumAddedRatio' |
+  'ImaginaryAddedRatio';
+
 /** 属性 */
 interface Property {
-  type: string;
+  type: AffixTypes | string;
   name: string;
   field: string;
   affix: boolean;
@@ -227,7 +252,7 @@ interface Property {
 // value = base + step * info.level;
 interface MainAffix {
   affix_id: string;
-  property: string;
+  property: AffixTypes;
   base: number;
   step: number;
 }
@@ -243,7 +268,7 @@ interface RelicMainAffix {
 // info.step 取值范围为 [info.cnt * 0, info.cnt * 2]
 interface SubAffix {
   affix_id: string;
-  property: string;
+  property: AffixTypes;
   base: number;
   step: number;
   step_num: number;
@@ -265,13 +290,15 @@ interface RelicSet {
   guide_overview: string;
 }
 
+type RelicTypes = 'HEAD' | 'HAND' | 'BODY' | 'FOOT' | 'NECK' | 'OBJECT';
+
 /** 遗器 */
 interface Relic {
   id: string;
   set_id: string;
   name: string;
   rarity: number;
-  type: string;
+  type: RelicTypes;
   max_level: number;
   main_affix_id: string;
   sub_affix_id: string;

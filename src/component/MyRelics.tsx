@@ -16,6 +16,7 @@ import SubAffixRate from './SubAffixRate';
 import { STATE } from '../common/state';
 import { relicTypeMap, setMap, showPercent } from '../data/local';
 import { imageTheme } from '../common/theme';
+import { getRecommendAffixesText } from '../data/parseRelicScore';
 
 // function subAffixCount(count: number): string {
 //   return count > 1 ? ' ' + '+'.repeat(count - 1) : '';
@@ -25,11 +26,13 @@ interface MyRelicsProps {
   relics: RelicInfo[];
   relicSets: RelicSetInfo[];
   relicsProperties: PropertyInfo[];
+  recommendAffixes: RecommendAffix[];
+  relicScoreRecord: Record<RelicTypes, RelicScore>;
+  totalRelicScore: TotalRelicScore;
 }
 
-export default function MyRelics({ relics, relicSets, relicsProperties }: MyRelicsProps) {
+export default function MyRelics({ relics, relicSets, relicsProperties, recommendAffixes, relicScoreRecord, totalRelicScore }: MyRelicsProps) {
   const [open, setOpen] = useState(false);
-
   const handleOpen = useCallback(() => setOpen(true), []);
   const handleClose = useCallback(() => setOpen(false), []);
   
@@ -56,6 +59,12 @@ export default function MyRelics({ relics, relicSets, relicsProperties }: MyReli
         </ModalDialog>
       </Modal>
 
+      <Divider sx={{ '--Divider-childPosition': '24px', mt: 2, mb: 1 }}>遗器词条完成度</Divider>
+      <Box display="flex" alignItems="center">
+        <Typography level="body-sm" textColor="text.primary" px={3}>{getRecommendAffixesText(recommendAffixes, STATE.starRailData)}</Typography>
+        <Typography level="h3" color="danger" ml="auto" mr={3}>{totalRelicScore.display}</Typography>
+      </Box>
+
       <Divider sx={{ '--Divider-childPosition': '24px', mt: 2, mb: 1 }}>
         <span>遗器属性详情</span>
         <Tooltip title="查看遗器总属性" color="primary">
@@ -75,7 +84,12 @@ export default function MyRelics({ relics, relicSets, relicsProperties }: MyReli
         }}
       >
         {relics.map(relic => (
-          <MyRelic key={relic.id} relic={relic} />
+          <MyRelic
+            key={relic.id}
+            relic={relic}
+            relicScore={relicScoreRecord[relic.type]}
+            recommendAffixes={recommendAffixes}
+          />
         ))}
       </Box>
 
@@ -107,9 +121,11 @@ export default function MyRelics({ relics, relicSets, relicsProperties }: MyReli
 
 interface MyRelicProps {
   relic: RelicInfo;
+  relicScore: RelicScore;
+  recommendAffixes: RecommendAffix[];
 }
 
-function MyRelic({ relic }: MyRelicProps) {
+function MyRelic({ relic, relicScore, recommendAffixes }: MyRelicProps) {
   return (
     <Box mb={1}>
       <Box display="flex" gap={0.5} mb={0.5}>
@@ -129,7 +145,7 @@ function MyRelic({ relic }: MyRelicProps) {
           <Box display="flex" alignItems="center">
             <Typography level="body-sm">{relicTypeMap[relic.type]}</Typography>
             <Typography level="body-xs" color="warning" ml={0.25}>{'+' + relic.level}</Typography>
-            <Typography level="body-xs" color="danger" ml="auto"></Typography>
+            <Typography level="body-xs" color="danger" ml="auto">{relicScore.display}</Typography>
           </Box>
         </Box>
       </Box>
@@ -139,6 +155,7 @@ function MyRelic({ relic }: MyRelicProps) {
           icon={STATE.resUrl + relic.main_affix.icon}
           name={relic.main_affix.name}
           value={relic.main_affix.display}
+          textColor={!relicScore.isHeadOrHand && recommendAffixes.some(value => value.type === relic.main_affix.type) ? 'warning.400' : undefined }
           sx={{ backgroundColor: imageTheme.previewRarityColors[relic.rarity] + '66' }}
         />
         {relic.sub_affix.map((affix, i) => (
@@ -147,6 +164,7 @@ function MyRelic({ relic }: MyRelicProps) {
             icon={STATE.resUrl + affix.icon}
             name={<>{affix.name}<SubAffixRate count={affix.count} step={affix.step} /></>}
             value={affix.display}
+            textColor={recommendAffixes.some(value => value.type === affix.type) ? 'warning.400' : undefined}
             sx={{ backgroundColor: i % 2 === 0 ? '#ffffff11' : '#ffffff33' }}
           />
         ))}

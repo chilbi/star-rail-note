@@ -569,7 +569,7 @@ export function getTotalSkillTreeProperties(skillTrees: CharacterSkillTree[]): P
   return result;
 }
 
-const ratioTypes = ['HPAddedRatio', 'AttackAddedRatio', 'DefenceAddedRatio']
+const ratioTypes = ['HPAddedRatio', 'AttackAddedRatio', 'DefenceAddedRatio'];
 
 export function showPercent(type: string): string {
   return ratioTypes.indexOf(type) < 0 ? '' : '百分比';
@@ -586,7 +586,7 @@ export const skillDefaultMaxLevelMap: Record<SkillType, number> = {
   'MazeNormal': 1
 };
 
-export const relicTypeMap: Record<string, string> = {
+export const relicTypeMap: Record<RelicTypes, string> = {
   'HEAD': '头部',
   'HAND': '手部',
   'BODY': '躯干',

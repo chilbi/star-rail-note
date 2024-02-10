@@ -68,7 +68,7 @@ interface SubAffixInfo extends PropertyInfo {
 interface RelicInfo {
   id: string;
   name: string;
-  type: string;
+  type: RelicTypes;
   set_id: string;
   set_name: string;
   rarity: number;
@@ -135,6 +135,31 @@ interface TotalPropertyInfo extends PropertyInfo {
   delta?: PropertyInfo;
 }
 
+interface RecommendAffix {
+  type: AffixTypes;
+  weight: number;
+}
+
+interface RelicScore {
+  myMainScore: number;
+  mySubScore: number;
+  bestMainScore: number;
+  bestSubScore: number;
+  isBestMain: boolean;
+  isHeadOrHand: boolean;
+  display: string;
+}
+
+interface TotalRelicScore {
+  myMainScore: number;
+  mySubScore: number;
+  mySetScore: number;
+  bestMainScore: number;
+  bestSubScore: number;
+  bestSetScore: number;
+  display: string;
+}
+
 interface CharacterInfo {
   id: string;
   name: string;
@@ -159,6 +184,10 @@ interface CharacterInfo {
   relicsProperties: PropertyInfo[];
   totalProperties: TotalPropertyInfo[];
   totalRecord: Record<string, PropertyInfo>;
+
+  recommendAffixes: RecommendAffix[];
+  relicScoreRecord: Record<RelicTypes, RelicScore>;
+  totalRelicScore: TotalRelicScore;
 }
 
 /** https://api.mihomo.me/sr_info_parsed/{uid}?lang=cn&version=v2 */

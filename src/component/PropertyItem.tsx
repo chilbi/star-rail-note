@@ -1,4 +1,4 @@
-import { SxProps } from '@mui/joy/styles/types';
+import { SxProps, TextColor } from '@mui/joy/styles/types';
 import Box from '@mui/joy/Box';
 import Typography from '@mui/joy/Typography';
 
@@ -8,10 +8,11 @@ interface PropertyItemProps {
   icon: string;
   name: React.ReactNode;
   value: React.ReactNode;
+  textColor?: TextColor;
   sx?: SxProps;
 }
 
-export default function PropertyItem({ sx = {}, icon, name, value }: PropertyItemProps) {
+export default function PropertyItem({ icon, name, value, textColor = 'text.primary', sx = {} }: PropertyItemProps) {
   return (
     <Box
       sx={{
@@ -38,7 +39,7 @@ export default function PropertyItem({ sx = {}, icon, name, value }: PropertyIte
       </Box>
       <Typography
         level="body-xs"
-        textColor="text.primary"
+        textColor={textColor}
         sx={{
           display: 'flex',
           alignItems: 'center',
@@ -53,7 +54,7 @@ export default function PropertyItem({ sx = {}, icon, name, value }: PropertyIte
       {value != null && (
         <Typography
           level="body-xs"
-          textColor="text.primary"
+          textColor={textColor}
           ml="auto"
           children={value}
         />

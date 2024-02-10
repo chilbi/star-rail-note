@@ -1,4 +1,6 @@
+import Decimal from 'decimal.js';
 import { baseStepValue, formatProperty, headIconUrl, relicMainValue, relicSubValue } from './local';
+import { getRecommendAffixes, parseRelicScore, standardScore } from './parseRelicScore';
 
 export function parseInfo(playerData: PlayerData, starRailData: StarRailData, elements: string[]): StarRailInfoParsed {
   let avatar: Avatar | undefined = undefined;
@@ -191,6 +193,45 @@ function parseCharacterInfo(
   }
   totalProperties = totalProperties.sort((a, b) => a.order - b.order);
 
+  const recommendAffixes = getRecommendAffixes(
+    characterId,
+    character.path,
+    character.element,
+    totalProperties,
+    starRailData
+  );
+
+
+  let myMainScore = new Decimal(0);
+  let mySubScore = new Decimal(0);
+  let mySetScore = new Decimal(standardScore.set).mul(relic_sets.length);
+  if (relic_sets.some(value => value.num === 4)) {
+    mySetScore = mySetScore.add(standardScore.set4);
+  }
+  const bestMainScore = new Decimal(standardScore.main).mul(4);
+  const bestSubScore = new Decimal(standardScore.sub).mul(6);
+  const bestSetScore = new Decimal(standardScore.set).mul(3).add(standardScore.set4);
+  const relicScoreRecord = {} as Record<RelicTypes, RelicScore>;
+  relics.forEach(relic => {
+    const relicScore = parseRelicScore(relic, recommendAffixes);
+    relicScoreRecord[relic.type] = relicScore;
+    myMainScore = myMainScore.add(relicScore.myMainScore);
+    mySubScore = mySubScore.add(relicScore.mySubScore);
+    myMainScore
+  });
+  const display = myMainScore.add(mySubScore).add(mySetScore)
+    .div(bestMainScore.add(bestSubScore).add(bestSetScore))
+    .mul(100);
+  const totalRelicScore: TotalRelicScore = {
+    myMainScore: myMainScore.toNumber(),
+    mySubScore: mySubScore.toNumber(),
+    mySetScore: mySetScore.toNumber(),
+    bestMainScore: bestMainScore.toNumber(),
+    bestSubScore: bestSubScore.toNumber(),
+    bestSetScore: bestSetScore.toNumber(),
+    display: display.toFixed(0, Decimal.ROUND_DOWN) + '%'
+  };
+
   return {
     id: characterId,
     name: character.name,
@@ -214,7 +255,11 @@ function parseCharacterInfo(
     properties,
     relicsProperties,
     totalProperties,
-    totalRecord
+    totalRecord,
+
+    recommendAffixes,
+    relicScoreRecord,
+    totalRelicScore
   };
 }
 
