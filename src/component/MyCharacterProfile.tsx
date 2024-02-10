@@ -92,7 +92,7 @@ export default function MyCharacterProfile({ character, onToggle }: MyCharacterP
               />
               <Typography
                 level="body-xs"
-                textColor="common.white"
+                textColor="text.primary"
                 pt={1}
                 children={'等级' + skill.level + (skill.rankLevelUp ? '+' + skill.rankLevelUp : '')}
               />

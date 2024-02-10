@@ -569,6 +569,13 @@ export function getTotalSkillTreeProperties(skillTrees: CharacterSkillTree[]): P
   return result;
 }
 
+const ratioTypes = ['HPAddedRatio', 'AttackAddedRatio', 'DefenceAddedRatio']
+
+export function showPercent(type: string): string {
+  return ratioTypes.indexOf(type) < 0 ? '' : '百分比';
+}
+
+
 /** 默认技能最大等级 */
 export const skillDefaultMaxLevelMap: Record<SkillType, number> = {
   'Normal': 6,

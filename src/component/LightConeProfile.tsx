@@ -135,7 +135,7 @@ function LightConeDesc({ lightCone }: LightConeProfileProps) {
       <Divider sx={{ '--Divider-childPosition': '24px', my: 1 }}>光锥故事</Divider>
       <Box px={3}>
         {nickname(lightCone.desc).split('\n').map((text, i) => (
-          <Typography key={i} level="body-sm" lineHeight="2.5em">{text}</Typography>
+          <Typography key={i} level="body-sm" textColor="text.secondary" lineHeight="2.5em">{text}</Typography>
         ))}
       </Box>
     </>

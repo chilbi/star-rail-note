@@ -37,8 +37,8 @@ export default function PropertyItem({ sx = {}, icon, name, value }: PropertyIte
         />
       </Box>
       <Typography
-        level="body-sm"
-        textColor="common.white"
+        level="body-xs"
+        textColor="text.primary"
         sx={{
           display: 'flex',
           alignItems: 'center',
@@ -52,8 +52,8 @@ export default function PropertyItem({ sx = {}, icon, name, value }: PropertyIte
       />
       {value != null && (
         <Typography
-          level="body-sm"
-          textColor="common.white"
+          level="body-xs"
+          textColor="text.primary"
           ml="auto"
           children={value}
         />

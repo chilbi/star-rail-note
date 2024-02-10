@@ -13,7 +13,7 @@ export default function PromotionMaterialConsume({ promotion, totalMaterial }: P
   return (
     <>
       <Typography
-        level="title-lg"
+        level="title-md"
         textColor="warning.300"
         children={`晋阶材料 ${promotion}/6`}
         px={3}
@@ -59,7 +59,7 @@ export default function PromotionMaterialConsume({ promotion, totalMaterial }: P
                   height={imageTheme.materialSize}
                 />
               </Box>
-              <Typography level="body-sm" textColor="common.white">{item.num}</Typography>
+              <Typography level="body-xs" textColor="text.primary">{item.num}</Typography>
             </Box>
           );
         })}

@@ -14,7 +14,7 @@ import BlackSheet from '../component/BlackSheet';
 import PropertyItem from '../component/PropertyItem';
 import { STATE } from '../common/state';
 import { RelicSetDetailData } from './loaders';
-import { formatProperty, relicMainValue, relicMainValueFormula, relicSubValue, relicSubValueFormula, relicTypeMap, setMap } from '../data/local';
+import { formatProperty, relicMainValue, relicMainValueFormula, relicSubValue, relicSubValueFormula, relicTypeMap, setMap, showPercent } from '../data/local';
 import { imageTheme } from '../common/theme';
 
 export default function RelicSetDetail() {
@@ -77,7 +77,7 @@ function SetsDetail({ relicSet }: SetsDetailProps) {
           {relicSet.desc.map((desc, i) => (
             <Typography
               key={i}
-              level="body-md"
+              level="body-sm"
               textColor="#18ffcd"
               px={3}
               py={1}
@@ -129,12 +129,6 @@ function SetsDetail({ relicSet }: SetsDetailProps) {
       </BlackSheet>
     </FlexItem>
   );
-}
-
-const ratioTypes = ['HPAddedRatio', 'AttackAddedRatio', 'DefenceAddedRatio']
-
-function showPercent(type: string): string {
-  return ratioTypes.indexOf(type) < 0 ? '' : '百分比';
 }
 
 interface MainAffixSelectProps {

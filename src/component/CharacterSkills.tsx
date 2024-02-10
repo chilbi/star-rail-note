@@ -90,7 +90,7 @@ function CharacterSkill({ isFirst, skill, level, onLevelChange }: CharacterSkill
               <Typography level="body-sm" textColor="warning.300">[{skill.effect_text}]</Typography>
             }
             {isFirst &&
-              <Typography level="body-sm" textColor="text.primary" ml="auto">
+              <Typography level="body-sm" textColor="text.secondary" ml="auto">
                 {'等级 ' + (skill.max_level > 1 ? `${level}/${skill.max_level}` : skill.max_level)}
               </Typography>
             }
@@ -113,7 +113,7 @@ function CharacterSkill({ isFirst, skill, level, onLevelChange }: CharacterSkill
         </Box>
       }
       {skill.desc !== '' &&
-        <Typography component="p" level="body-md" px={3} pt={1}>
+        <Typography component="p" level="body-sm" textColor="text.primary" px={3} pt={1}>
           {formatSkill(skill, level).map((descChunk, index) => (
             <Fragment key={index}>
               {descChunk.param === null ? (

@@ -59,7 +59,7 @@ function CharacterRank({ rank }: CharacterRankProps) {
       </Box>
       <Box>
         <Typography level="title-lg" py={1}>{rank.name}</Typography>
-        <Typography component="p" level="body-md">
+        <Typography component="p" level="body-sm" textColor="text.primary">
           {rank.desc.split('\\n').map((text, i, arr) => (
             <Fragment key={i}>
               {text}

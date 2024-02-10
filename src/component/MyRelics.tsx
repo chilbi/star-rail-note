@@ -12,10 +12,10 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import BlackSheet from './BlackSheet';
 import PropertyItem from './PropertyItem';
+import SubAffixRate from './SubAffixRate';
 import { STATE } from '../common/state';
-import { relicTypeMap, setMap } from '../data/local';
+import { relicTypeMap, setMap, showPercent } from '../data/local';
 import { imageTheme } from '../common/theme';
-import { SubAffixRate } from './SubAffixRate';
 
 // function subAffixCount(count: number): string {
 //   return count > 1 ? ' ' + '+'.repeat(count - 1) : '';
@@ -47,7 +47,7 @@ export default function MyRelics({ relics, relicSets, relicsProperties }: MyReli
               <PropertyItem
                 key={property.type}
                 icon={STATE.resUrl + property.icon}
-                name={property.name}
+                name={property.name + showPercent(property.type)}
                 value={property.display}
                 sx={{ backgroundColor: i % 2 === 0 ? '#ffffff33' : '#ffffff11' }}
               />
@@ -66,9 +66,12 @@ export default function MyRelics({ relics, relicSets, relicsProperties }: MyReli
       </Divider>
       <Box
         sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          pb: 1
+          // display: 'flex',
+          // flexWrap: 'wrap',
+          // pb: 1
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: { xs: 0.5, md: 1 }
         }}
       >
         {relics.map(relic => (
@@ -88,10 +91,10 @@ export default function MyRelics({ relics, relicSets, relicsProperties }: MyReli
                   {notExistingSet && (
                     <Box display="flex" alignItems="center" mb={1}>
                       <img src={STATE.resUrl + relicSet.icon} width={36} height={36} />
-                      <Typography level="title-lg" ml={1}>{relicSet.name}</Typography>
+                      <Typography level="title-md" ml={1}>{relicSet.name}</Typography>
                     </Box>
                   )}
-                  <Typography level="body-md" textColor="#18ffcd" pl={2} pr={1}>{setMap[relicSet.num] + relicSet.desc}</Typography>
+                  <Typography level="body-sm" textColor="#18ffcd" pl={2} pr={1}>{setMap[relicSet.num] + relicSet.desc}</Typography>
                 </Box>
               );
             })}
@@ -108,18 +111,12 @@ interface MyRelicProps {
 
 function MyRelic({ relic }: MyRelicProps) {
   return (
-    <Box
-      sx={{
-        flexGrow: 1,
-        p: 1,
-        width: { xs: '100%', sm: '50%' }
-      }}
-    >
-      <Box display="flex" gap={1} mb={1}>
+    <Box mb={1}>
+      <Box display="flex" gap={0.5} mb={0.5}>
         <Box
           sx={{
-            width: 36,
-            height: 36,
+            width: 33,
+            height: 33,
             p: '3px',
             borderRadius: '50%',
             backgroundImage: imageTheme.getItemRarityImageColor(relic.rarity)
@@ -129,9 +126,10 @@ function MyRelic({ relic }: MyRelicProps) {
         </Box>
         <Box flexGrow={1}>
           <Typography level="title-sm">{relic.name}</Typography>
-          <Box display="flex" justifyContent="space-between">
+          <Box display="flex" alignItems="center">
             <Typography level="body-sm">{relicTypeMap[relic.type]}</Typography>
-            <Typography level="title-sm" color="warning">+{relic.level}</Typography>
+            <Typography level="body-xs" color="warning" ml={0.25}>{'+' + relic.level}</Typography>
+            <Typography level="body-xs" color="danger" ml="auto"></Typography>
           </Box>
         </Box>
       </Box>

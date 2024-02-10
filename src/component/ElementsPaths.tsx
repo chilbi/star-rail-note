@@ -91,14 +91,13 @@ function TabPanelItem({ value, valueText, keys, selectedKey, dataRecord }: TabPa
                       level="body-sm"
                       variant="solid"
                       color="warning"
+                      children={'当前所选角色' + valueText}
                       ml="auto"
                       pt={0.5}
-                    >
-                      {'当前所选角色' + valueText}
-                    </Typography>
+                    />
                   }
                 </Box>
-                <Typography level="body-md" mt={1}>{item.desc}</Typography>
+                <Typography level="body-sm" textColor="text.primary" mt={1}>{item.desc}</Typography>
               </Box>
             </Box>
             {index !== keys.length - 1 && <Divider sx={{ my: 1 }} />}

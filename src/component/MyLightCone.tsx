@@ -112,7 +112,7 @@ export default function MyLightCone({ lightCone, characterPath }: MyLightConePro
       <PromotionLevelRank
         promotion={lightCone.promotion}
         level={lightCone.level}
-        rankText={'叠影' + lightCone.rank}
+        rankText={`叠影${lightCone.rank}阶`}
       />
 
       <Box py={1}>
@@ -135,7 +135,7 @@ export default function MyLightCone({ lightCone, characterPath }: MyLightConePro
           <Box px={3}>
             <Typography component="h5" level="title-md" pt={1} pb={0.5}>{lightConeRank.skill}</Typography>
             {lightConeRank.desc !== '' &&
-              <Typography component="p" level="body-md" textColor="#18ffcd" lineHeight="2em">
+              <Typography component="p" level="body-sm" textColor="#18ffcd" lineHeight="2em">
                 {formatSkill(lightConeRank, lightCone.rank).map((descChunk, index) => (
                   <Fragment key={index}>
                     {descChunk.param === null ? (
@@ -157,7 +157,7 @@ export default function MyLightCone({ lightCone, characterPath }: MyLightConePro
       <Divider sx={{ '--Divider-childPosition': '24px', my: 1 }}>光锥故事</Divider>
       <Box px={3}>
         {nickname(lightCone.desc).split('\n').map((text, i) => (
-          <Typography key={i} level="body-sm" lineHeight="2.5em">{text}</Typography>
+          <Typography key={i} level="body-sm" textColor="text.secondary" lineHeight="2.5em">{text}</Typography>
         ))}
       </Box>
     </BlackSheet>

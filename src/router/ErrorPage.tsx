@@ -58,7 +58,7 @@ export default function ErrorPage() {
             px: 'var(--Card-padding)'
           }}
         >
-          <Typography fontSize="xl3" fontWeight="xl" textColor="common.white">{status}</Typography>
+          <Typography fontSize="xl3" fontWeight="xl" textColor="text.primary">{status}</Typography>
           <Typography textColor="primary.200">{errorMap[status]}</Typography>
         </CardOverflow>
         <CardContent>

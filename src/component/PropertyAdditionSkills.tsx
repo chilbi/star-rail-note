@@ -26,6 +26,7 @@ export default function PropertyAdditionSkills({ skillTrees }: PropertyAdditionS
           <Typography level="title-lg">行迹</Typography>
           <Typography
             level="title-sm"
+            children="属性加成"
             textColor="common.black"
             sx={{
               mt: 0.5,
@@ -33,7 +34,6 @@ export default function PropertyAdditionSkills({ skillTrees }: PropertyAdditionS
               borderRadius: '1em',
               backgroundColor: '#ffffff'
             }}
-            children="属性加成"
           />
         </Box>
       </Box>

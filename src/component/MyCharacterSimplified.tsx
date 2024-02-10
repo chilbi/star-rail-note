@@ -184,7 +184,7 @@ export default function MyCharacterSimplified({ character, onToggle }: MyCharact
                     />
                     <Typography
                       level="body-xs"
-                      children={`等级${character.light_cone.level} 叠影${character.light_cone.rank}`}
+                      children={`等级${character.light_cone.level} 叠影${character.light_cone.rank}阶`}
                     />
                   </div>
                 </Box>
