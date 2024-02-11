@@ -1,6 +1,6 @@
 import Decimal from 'decimal.js';
 import { baseStepValue, formatProperty, headIconUrl, relicMainValue, relicSubValue } from './local';
-import { getRecommendAffixes, parseRelicScore, standardScore } from './parseRelicScore';
+import { getRecommendAffixes, getRecommendAffixesText, parseRelicScore, standardScore } from './parseRelicScore';
 
 export function parseInfo(playerData: PlayerData, starRailData: StarRailData, elements: string[]): StarRailInfoParsed {
   let avatar: Avatar | undefined = undefined;
@@ -201,7 +201,6 @@ function parseCharacterInfo(
     starRailData
   );
 
-
   let myMainScore = new Decimal(0);
   let mySubScore = new Decimal(0);
   let mySetScore = new Decimal(standardScore.set).mul(relic_sets.length);
@@ -229,6 +228,7 @@ function parseCharacterInfo(
     bestMainScore: bestMainScore.toNumber(),
     bestSubScore: bestSubScore.toNumber(),
     bestSetScore: bestSetScore.toNumber(),
+    recommendAffixesText: getRecommendAffixesText(recommendAffixes, starRailData),
     display: display.toFixed(0, Decimal.ROUND_DOWN) + '%'
   };
 

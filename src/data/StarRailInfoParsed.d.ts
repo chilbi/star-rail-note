@@ -157,6 +157,7 @@ interface TotalRelicScore {
   bestMainScore: number;
   bestSubScore: number;
   bestSetScore: number;
+  recommendAffixesText: string;
   display: string;
 }
 

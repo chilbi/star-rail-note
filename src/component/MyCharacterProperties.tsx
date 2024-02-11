@@ -74,6 +74,9 @@ export default function MyCharacterProperties({ character }: MyCharacterProperti
             icon={STATE.resUrl + property.icon}
             name={property.name}
             value={property.display}
+            textColor={character.recommendAffixes.some(value =>
+              [property.base.type, property.addedRatio?.type, property.delta?.type].some(type => type === value.type)
+            ) ? 'warning.400' : undefined}
             sx={{ backgroundColor: highlightIndeices.some(idx => idx === i) ? '#ffffff33' : '#ffffff11' }}
           />
         ))}

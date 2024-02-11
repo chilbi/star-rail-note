@@ -16,28 +16,17 @@ import SubAffixRate from './SubAffixRate';
 import { STATE } from '../common/state';
 import { relicTypeMap, setMap, showPercent } from '../data/local';
 import { imageTheme } from '../common/theme';
-import { getRecommendAffixesText } from '../data/parseRelicScore';
-
-// function subAffixCount(count: number): string {
-//   return count > 1 ? ' ' + '+'.repeat(count - 1) : '';
-// }
 
 interface MyRelicsProps {
-  relics: RelicInfo[];
-  relicSets: RelicSetInfo[];
-  relicsProperties: PropertyInfo[];
-  recommendAffixes: RecommendAffix[];
-  relicScoreRecord: Record<RelicTypes, RelicScore>;
-  totalRelicScore: TotalRelicScore;
+  character: CharacterInfo;
 }
 
-export default function MyRelics({ relics, relicSets, relicsProperties, recommendAffixes, relicScoreRecord, totalRelicScore }: MyRelicsProps) {
+export default function MyRelics({ character }: MyRelicsProps) {
   const [open, setOpen] = useState(false);
   const handleOpen = useCallback(() => setOpen(true), []);
   const handleClose = useCallback(() => setOpen(false), []);
   
   const setIds: string[] = [];
-  // relics.forEach(r => { if (r.type === "HAND") console.log(r) })
 
   return (
     <BlackSheet>
@@ -46,7 +35,7 @@ export default function MyRelics({ relics, relicSets, relicsProperties, recommen
           <ModalClose size="lg" />
           <DialogTitle>遗器总属性</DialogTitle>
           <div>
-            {relicsProperties.map((property, i) => (
+            {character.relicsProperties.map((property, i) => (
               <PropertyItem
                 key={property.type}
                 icon={STATE.resUrl + property.icon}
@@ -61,8 +50,8 @@ export default function MyRelics({ relics, relicSets, relicsProperties, recommen
 
       <Divider sx={{ '--Divider-childPosition': '24px', mt: 2, mb: 1 }}>遗器词条完成度</Divider>
       <Box display="flex" alignItems="center">
-        <Typography level="body-sm" textColor="text.primary" px={3}>{getRecommendAffixesText(recommendAffixes, STATE.starRailData)}</Typography>
-        <Typography level="h3" color="danger" ml="auto" mr={3}>{totalRelicScore.display}</Typography>
+        <Typography level="body-sm" textColor="text.primary" px={3}>{character.totalRelicScore.recommendAffixesText}</Typography>
+        <Typography level="h3" color="danger" ml="auto" mr={3}>{character.totalRelicScore.display}</Typography>
       </Box>
 
       <Divider sx={{ '--Divider-childPosition': '24px', mt: 2, mb: 1 }}>
@@ -83,21 +72,21 @@ export default function MyRelics({ relics, relicSets, relicsProperties, recommen
           gap: { xs: 0.5, md: 1 }
         }}
       >
-        {relics.map(relic => (
+        {character.relics.map(relic => (
           <MyRelic
             key={relic.id}
             relic={relic}
-            relicScore={relicScoreRecord[relic.type]}
-            recommendAffixes={recommendAffixes}
+            relicScore={character.relicScoreRecord[relic.type]}
+            recommendAffixes={character.recommendAffixes}
           />
         ))}
       </Box>
 
-      {relicSets.length > 0 && (
+      {character.relic_sets.length > 0 && (
         <>
           <Divider sx={{ '--Divider-childPosition': '24px', my: 1 }}>遗器套装效果</Divider>
           <div>
-            {relicSets.map((relicSet, i) => {
+            {character.relic_sets.map((relicSet, i) => {
               const notExistingSet = setIds.indexOf(relicSet.id) < 0;
               setIds.push(relicSet.id);
               return (

@@ -121,14 +121,7 @@ export default function MyCharacters() {
           )}
           {activeCharacter.relics.length > 0 && (
             <FlexItem>
-              <MyRelics
-                relics={activeCharacter.relics}
-                relicSets={activeCharacter.relic_sets}
-                relicsProperties={activeCharacter.relicsProperties}
-                recommendAffixes={activeCharacter.recommendAffixes}
-                relicScoreRecord={activeCharacter.relicScoreRecord}
-                totalRelicScore={activeCharacter.totalRelicScore}
-              />
+              <MyRelics character={activeCharacter}/>
             </FlexItem>
           )}
         </Box>
