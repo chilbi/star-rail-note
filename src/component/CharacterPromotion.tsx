@@ -6,7 +6,7 @@ import PromotionMaterialConsume from './PromotionMaterialConsume';
 import PropertyItem from './PropertyItem';
 import { STATE } from '../common/state';
 import { baseStepValue, formatProperty, getLevel, getPromotion, getTotalPromotionMaterial } from '../data/local';
-import { generateHighlightLindeices } from '../common/utils';
+import { backgroundStriped, generateHighlightLindeices } from '../common/utils';
 
 const highlightIndeices = generateHighlightLindeices(1, 4);
 
@@ -62,7 +62,7 @@ export default function CharacterPromotion({ character }: CharacterPromotionProp
               icon={STATE.resUrl + property.icon}
               name={property.name}
               value={formatProperty(baseStepValue(baseStep, level), property.percent)}
-              sx={{ backgroundColor: highlightIndeices.some(idx => idx === i) ? '#ffffff33' : '#ffffff11' }}
+              sx={backgroundStriped(highlightIndeices.some(idx => idx === i))}
             />
           );
         })}
@@ -70,7 +70,7 @@ export default function CharacterPromotion({ character }: CharacterPromotionProp
           key="Taunt"
           name="嘲讽"
           value={baseStepValue(promotionValue.taunt, level)}
-          sx={{ backgroundColor: '#ffffff11' }}
+          sx={backgroundStriped(false)}
           icon={import.meta.env.BASE_URL + 'IconTaunt.png'}
         />
         <PropertyItem
@@ -78,7 +78,7 @@ export default function CharacterPromotion({ character }: CharacterPromotionProp
           icon={STATE.resUrl + STATE.starRailData.properties['MaxSP'].icon}
           name={STATE.starRailData.properties['MaxSP'].name}
           value={character.max_sp}
-          sx={{ backgroundColor: '#ffffff11' }}
+          sx={backgroundStriped(false)}
         />
       </Box>
 

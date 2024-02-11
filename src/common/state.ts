@@ -1,4 +1,5 @@
 import { modifyStarRailInfo } from '../data/local';
+import { RecommendRelicFields, RelicFields } from '../data/parseRelicScore';
 
 class State {
   /** 图片源的localStorage主键 */
@@ -7,6 +8,8 @@ class State {
   #keyOfTimestamp: string;
   /** 用户数据的用户ID的localStorage主键 */
   #keyOfUid: string;
+  /** 用户自定义角色属性推荐的主键 */
+  #keyOfFieldsRecord: string;
   /** 当前使用的图片源 */
   #resUrl: string;
   /** 当前使用的游戏数据 */
@@ -35,6 +38,7 @@ class State {
     this.#keyOfResUrl = 'res_url';
     this.#keyOfTimestamp = 'star_rail_data_timestamp';
     this.#keyOfUid = 'star_rail_info_uid';
+    this.#keyOfFieldsRecord = 'fields_record';
     this.#resUrl = (this.localResUrl ?? this.resUrlArr[0]) + 'Mar-7th/StarRailRes/master/';
     this.#starRailData = null;
     this.#starRailInfo = null;
@@ -154,6 +158,36 @@ class State {
   clearLocalUid() {
     localStorage.removeItem(this.#keyOfUid);
     this.#starRailInfo = null;
+  }
+
+  /** 用户自定义角色属性推荐 */
+  get localFieldsRecord(): Record<string, RecommendRelicFields> | null {
+    const fields = localStorage.getItem(this.#keyOfFieldsRecord);
+    return fields ? JSON.parse(fields) : null;
+  }
+
+  /** 保存用户自定义角色属性推荐在localStorage */
+  setLocalFieldsRecord(characterId: string, fields: RecommendRelicFields) {
+    let record = this.localFieldsRecord;
+    if (record == null) record = {};
+    const noZeroFields: RecommendRelicFields = {};
+    Object.keys(fields).forEach(key => {
+      const weight = fields[key as RelicFields];
+      if (weight !== 0) {
+        noZeroFields[key as RelicFields] = weight;
+      }
+    })
+    record[characterId] = noZeroFields;
+    localStorage.setItem(this.#keyOfFieldsRecord, JSON.stringify(record));
+  }
+
+  /** 删除localStorage保存的用户自定义角色属性推荐 */
+  deleteLocalFields(characterId: string) {
+    const record = this.localFieldsRecord;
+    if (record) {
+      delete record[characterId];
+      localStorage.setItem(this.#keyOfFieldsRecord, JSON.stringify(record));
+    }
   }
 
   /** 删除角色 */

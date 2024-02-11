@@ -16,6 +16,7 @@ import { STATE } from '../common/state';
 import { RelicSetDetailData } from './loaders';
 import { formatProperty, relicMainValue, relicMainValueFormula, relicSubValue, relicSubValueFormula, relicTypeMap, setMap, showPercent } from '../data/local';
 import { imageTheme } from '../common/theme';
+import { backgroundStriped } from '../common/utils';
 
 export default function RelicSetDetail() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -237,7 +238,7 @@ function MainAffixPromotionTable() {
               relicMainValueFormula(affix, level, affix.property.percent) +
               formatProperty(relicMainValue(affix, level), affix.property.percent, 2, 2)
             }
-            sx={{ backgroundColor: i % 2 === 0 ? '#ffffff33' : '#ffffff11' }}
+            sx={backgroundStriped(i % 2 === 0)}
           />
         ))}
       </BlackSheet>
@@ -315,7 +316,7 @@ function SubAffixPromotionTable() {
               relicSubValueFormula(affix, cnt, step, affix.property.percent) +
               formatProperty(relicSubValue(affix, cnt, step), affix.property.percent, 2, 2)
             }
-            sx={{ backgroundColor: i % 2 === 0 ? '#ffffff33' : '#ffffff11' }}
+            sx={backgroundStriped(i % 2 === 0)}
           />
         ))}
       </BlackSheet>

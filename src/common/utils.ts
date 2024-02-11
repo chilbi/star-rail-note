@@ -111,3 +111,10 @@ export function generateHighlightLindeices(firstStep: 1 | 3, length: number) {
   }
   return result;
 }
+
+const light: React.CSSProperties = { backgroundColor: '#ffffff33' };
+const darkness: React.CSSProperties = { backgroundColor: '#ffffff11' };
+
+export function backgroundStriped(isLight: boolean): React.CSSProperties {
+  return isLight ? light : darkness;
+}

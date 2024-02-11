@@ -1,8 +1,13 @@
 import Decimal from 'decimal.js';
 import { baseStepValue, formatProperty, headIconUrl, relicMainValue, relicSubValue } from './local';
-import { getRecommendAffixes, getRecommendAffixesText, parseRelicScore, standardScore } from './parseRelicScore';
+import { RecommendRelicFields, getDeltaWeights, getRecommendAffixes, getRecommendAffixesText, parseRelicScore, standardScore } from './parseRelicScore';
 
-export function parseInfo(playerData: PlayerData, starRailData: StarRailData, elements: string[]): StarRailInfoParsed {
+export function parseInfo(
+  playerData: PlayerData,
+  starRailData: StarRailData,
+  localFieldsRecord: Record<string, RecommendRelicFields> | null,
+  elements: string[]
+): StarRailInfoParsed {
   let avatar: Avatar | undefined = undefined;
   if (starRailData.avatars) {
     avatar = starRailData.avatars[playerData.headIcon];
@@ -31,7 +36,7 @@ export function parseInfo(playerData: PlayerData, starRailData: StarRailData, el
 
   if (playerData.avatarDetailList && playerData.avatarDetailList.length > 0) {
     characters = playerData.avatarDetailList.map(characterDetailData =>
-      parseCharacterInfo(characterDetailData, starRailData, elements)
+      parseCharacterInfo(characterDetailData, starRailData, localFieldsRecord, elements)
     );
   }
   
@@ -50,6 +55,7 @@ const skillTypeAnchor: Record<SkillType, string> = {
 function parseCharacterInfo(
   characterDetailData: CharacterDetailData,
   starRailData: StarRailData,
+  localFieldsRecord: Record<string, RecommendRelicFields> | null,
   elements: string[]
 ): CharacterInfo {
   const characterId = characterDetailData.avatarId.toString();
@@ -193,12 +199,14 @@ function parseCharacterInfo(
   }
   totalProperties = totalProperties.sort((a, b) => a.order - b.order);
 
+  const deltaWeights = getDeltaWeights(totalProperties, starRailData);
+
   const recommendAffixes = getRecommendAffixes(
     characterId,
     character.path,
     character.element,
-    totalProperties,
-    starRailData
+    localFieldsRecord,
+    deltaWeights
   );
 
   let myMainScore = new Decimal(0);
@@ -212,15 +220,12 @@ function parseCharacterInfo(
   const bestSetScore = new Decimal(standardScore.set).mul(3).add(standardScore.set4);
   const relicScoreRecord = {} as Record<RelicTypes, RelicScore>;
   relics.forEach(relic => {
-    const relicScore = parseRelicScore(relic, recommendAffixes);
+    const relicScore = parseRelicScore(relic, recommendAffixes, deltaWeights);
     relicScoreRecord[relic.type] = relicScore;
     myMainScore = myMainScore.add(relicScore.myMainScore);
     mySubScore = mySubScore.add(relicScore.mySubScore);
     myMainScore
   });
-  const display = myMainScore.add(mySubScore).add(mySetScore)
-    .div(bestMainScore.add(bestSubScore).add(bestSetScore))
-    .mul(100);
   const totalRelicScore: TotalRelicScore = {
     myMainScore: myMainScore.toNumber(),
     mySubScore: mySubScore.toNumber(),
@@ -229,7 +234,21 @@ function parseCharacterInfo(
     bestSubScore: bestSubScore.toNumber(),
     bestSetScore: bestSetScore.toNumber(),
     recommendAffixesText: getRecommendAffixesText(recommendAffixes, starRailData),
-    display: display.toFixed(0, Decimal.ROUND_DOWN) + '%'
+    myMainScoreDisplay: myMainScore.toFixed(2, Decimal.ROUND_DOWN),
+    mySubScoreDisplay: mySubScore.toFixed(2, Decimal.ROUND_DOWN),
+    mySetScoreDisplay: mySetScore.toFixed(2, Decimal.ROUND_DOWN),
+    bestMainScoreDisplay: bestMainScore.toFixed(2, Decimal.ROUND_DOWN),
+    bestSubScoreDisplay: bestSubScore.toFixed(2, Decimal.ROUND_DOWN),
+    bestSetScoreDisplay: bestSetScore.toFixed(2, Decimal.ROUND_DOWN),
+    mainScoreDisplay: myMainScore.div(bestMainScore)
+      .mul(100).toFixed(0, Decimal.ROUND_DOWN) + '%',
+    subScoreDisplay: mySubScore.div(bestSubScore)
+      .mul(100).toFixed(0, Decimal.ROUND_DOWN) + '%',
+    setScoreDisplay: mySetScore.div(bestSetScore)
+      .mul(100).toFixed(0, Decimal.ROUND_DOWN) + '%',
+    scoreDisplay: myMainScore.add(mySubScore).add(mySetScore)
+      .div(bestMainScore.add(bestSubScore).add(bestSetScore))
+      .mul(100).toFixed(0, Decimal.ROUND_DOWN) + '%'
   };
 
   return {

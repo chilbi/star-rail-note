@@ -12,7 +12,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import PropertyItem from './PropertyItem';
 import { STATE } from '../common/state';
-import { generateHighlightLindeices } from '../common/utils';
+import { backgroundStriped, generateHighlightLindeices } from '../common/utils';
 import { addedValue } from '../data/local';
 
 const highlightIndeices = generateHighlightLindeices(1, 17);
@@ -46,7 +46,7 @@ export default function MyCharacterProperties({ character }: MyCharacterProperti
                       <Typography textColor="#0692ce" display="inline-block" width="80px" textAlign="right">{'+' + addedValue(property)}</Typography>
                     </>
                   }
-                  sx={{ backgroundColor: i % 2 === 0 ? '#ffffff33' : '#ffffff11' }}
+                  sx={backgroundStriped(i % 2 === 0)}
                 />
               );
             })}
@@ -55,7 +55,7 @@ export default function MyCharacterProperties({ character }: MyCharacterProperti
       </Modal>
       <Divider sx={{ '--Divider-childPosition': '24px', my: 1 }}>
         <span>属性详情</span>
-        <Tooltip title="查看基础属性" color="primary">
+        <Tooltip title="查看基础属性" color="primary" arrow>
           <IconButton onClick={handleOpen} sx={{ ml: 0.5 }}>
             <InfoOutlinedIcon />
           </IconButton>
@@ -77,11 +77,11 @@ export default function MyCharacterProperties({ character }: MyCharacterProperti
             textColor={character.recommendAffixes.some(value =>
               [property.base.type, property.addedRatio?.type, property.delta?.type].some(type => type === value.type)
             ) ? 'warning.400' : undefined}
-            sx={{ backgroundColor: highlightIndeices.some(idx => idx === i) ? '#ffffff33' : '#ffffff11' }}
+            sx={backgroundStriped(highlightIndeices.some(idx => idx === i))}
           />
         ))}
         {character.totalProperties.length % 2 !== 0 && (
-          <Box sx={{ backgroundColor: highlightIndeices.some(idx => idx === character.totalProperties.length) ? '#ffffff33' : '#ffffff11' }} />
+          <Box sx={backgroundStriped(highlightIndeices.some(idx => idx === character.totalProperties.length))} />
         )}
       </Box>
     </>

@@ -8,11 +8,12 @@ interface PropertyItemProps {
   icon: string;
   name: React.ReactNode;
   value: React.ReactNode;
+  children?: React.ReactNode;
   textColor?: TextColor;
   sx?: SxProps;
 }
 
-export default function PropertyItem({ icon, name, value, textColor = 'text.primary', sx = {} }: PropertyItemProps) {
+export default function PropertyItem({ icon, name, value, children, textColor = 'text.primary', sx = {} }: PropertyItemProps) {
   return (
     <Box
       sx={{
@@ -59,6 +60,7 @@ export default function PropertyItem({ icon, name, value, textColor = 'text.prim
           children={value}
         />
       )}
+      {children}
     </Box>
   );
 }

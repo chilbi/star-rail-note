@@ -12,6 +12,7 @@ import PropertyItem from './PropertyItem';
 import { STATE } from '../common/state';
 import { imageTheme } from '../common/theme';
 import { formatParam, formatSkill, nickname } from '../data/local';
+import { backgroundStriped } from '../common/utils';
 
 interface MyLightConeProps {
   lightCone: LightConeInfo;
@@ -123,7 +124,7 @@ export default function MyLightCone({ lightCone, characterPath }: MyLightConePro
               icon={STATE.resUrl + property.icon}
               name={property.name}
               value={property.display}
-              sx={{ backgroundColor: i === 1 ? '#ffffff11' : '#ffffff33' }}
+              sx={backgroundStriped(i !== 1)}
             />
           );
         })}

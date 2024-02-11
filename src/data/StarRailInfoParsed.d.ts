@@ -147,7 +147,13 @@ interface RelicScore {
   bestSubScore: number;
   isBestMain: boolean;
   isHeadOrHand: boolean;
-  display: string;
+  myMainScoreDisplay: string;
+  mySubScoreDisplay: string;
+  bestMainScoreDisplay: string;
+  bestSubScoreDisplay: string;
+  mainScoreDisplay: string;
+  subScoreDisplay: string;
+  scoreDisplay: string;
 }
 
 interface TotalRelicScore {
@@ -158,7 +164,16 @@ interface TotalRelicScore {
   bestSubScore: number;
   bestSetScore: number;
   recommendAffixesText: string;
-  display: string;
+  myMainScoreDisplay: string;
+  mySubScoreDisplay: string;
+  mySetScoreDisplay: string;
+  bestMainScoreDisplay: string;
+  bestSubScoreDisplay: string;
+  bestSetScoreDisplay: string;
+  mainScoreDisplay: string;
+  subScoreDisplay: string;
+  setScoreDisplay: string;
+  scoreDisplay: string;
 }
 
 interface CharacterInfo {

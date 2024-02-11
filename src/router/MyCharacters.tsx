@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Navigate, useFetcher, useLoaderData, useNavigate } from 'react-router-dom';
 import Box from '@mui/joy/Box';
 import Snackbar from '@mui/joy/Snackbar';
@@ -24,24 +24,26 @@ import MyCharacterSimplified from '../component/MyCharacterSimplified';
 import MyLightCone from '../component/MyLightCone';
 import MyRelics from '../component/MyRelics';
 import { STATE } from '../common/state';
-import { submitForm } from '../common/utils';
+import { backgroundStriped, submitForm } from '../common/utils';
 import { imageTheme } from '../common/theme';
 import { parseInfo } from '../data/parseInfo';
 
 export default function MyCharacters() {
   useLoaderData();
   const [isDetail, setIsDetail] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, updater] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [update, updater] = useState(false);
+  const activeIndexRef = useRef(activeIndex);
 
   const starRailInfoParsed: StarRailInfoParsed | null = useMemo(() => {
     if (STATE.playerDataIsNull) {
       return null;
     }
-    setActiveIndex(0);
-    return parseInfo(STATE.playerData, STATE.starRailData, STATE.elements);
+    setActiveIndex(activeIndexRef.current);
+    return parseInfo(STATE.playerData, STATE.starRailData, STATE.localFieldsRecord, STATE.elements);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    update,
     STATE.starRailInfo?.detailInfo?.uid,
     // STATE.starRailInfo?.detailInfo?.assistAvatarDetail,
     STATE.starRailInfo?.detailInfo?.assistAvatarList,
@@ -51,6 +53,10 @@ export default function MyCharacters() {
   const activeCharacter: CharacterInfo | undefined = useMemo(() => {
     return starRailInfoParsed?.characters[activeIndex];
   }, [activeIndex, starRailInfoParsed]);
+
+  useEffect(() => {
+    activeIndexRef.current = activeIndex;
+  }, [activeIndex]);
 
   const handleToggleIsDetail = useCallback(() => setIsDetail(prev => !prev), []);
 
@@ -121,7 +127,7 @@ export default function MyCharacters() {
           )}
           {activeCharacter.relics.length > 0 && (
             <FlexItem>
-              <MyRelics character={activeCharacter}/>
+              <MyRelics character={activeCharacter} updater={updater} />
             </FlexItem>
           )}
         </Box>
@@ -320,7 +326,7 @@ function MyCharactersList({
                   sx={{
                     display: 'flex',
                     alignItems: 'center',
-                    backgroundColor: index % 2 === 0 ? '#ffffff33' : '#ffffff11'
+                    ...(backgroundStriped(index % 2 === 0))
                   }}
                 >
                   <Typography

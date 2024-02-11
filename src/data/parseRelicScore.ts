@@ -60,6 +60,61 @@ export type RecommendRelicFields = {
   [x in RelicFields]?: number;
 }
 
+const zeroWeights: Record<RelicFields, number> = {
+  'hp': 0,
+  'atk': 0,
+  'def': 0,
+  'spd': 0,
+  'critRate': 0,
+  'critDmg': 0,
+  'bk': 0,
+  'heal': 0,
+  'sp': 0,
+  'hit': 0,
+  'res': 0,
+  'dmg': 0
+};
+
+const fieldTypeMap: Partial<Record<RelicFields, AffixTypes>> = {
+  'hp': 'HPAddedRatio',
+  'atk': 'AttackAddedRatio',
+  'def': 'DefenceAddedRatio',
+  'critRate': 'CriticalChanceBase',
+  'critDmg': 'CriticalDamageBase',
+  'heal': 'HealRatioBase',
+  'hit': 'StatusProbabilityBase',
+  'spd': 'SpeedDelta',
+  'bk': 'BreakDamageAddedRatioBase',
+  'sp': 'SPRatioBase',
+  'res': 'StatusResistanceBase'
+};
+
+const typeFieldMap: Partial<Record<AffixTypes, RelicFields>> = (() => {
+  const map: Partial<Record<AffixTypes, RelicFields>> = {};
+  Object.entries(fieldTypeMap).forEach(([field, type]) => {
+    map[type] = field as RelicFields;
+  })
+  return map;
+})();
+
+export function getFieldType(field: RelicFields, elementId: string): AffixTypes {
+  const type = fieldTypeMap[field];
+  return type ? type : elementId + 'AddedRatio' as AffixTypes;
+}
+
+export function assignWeights(recommendAffixes: RecommendAffix[]): Record<RelicFields, number> {
+  const weights = Object.assign({}, zeroWeights);
+  recommendAffixes.forEach(({ type, weight }) => {
+    const field = typeFieldMap[type];
+    if (field) {
+      weights[field] = weight;
+    } else if (type.indexOf('AddedRatio') > -1) {
+      weights['dmg'] = weight;
+    }
+  });
+  return weights;
+}
+
 export type RecommedKeys =
   'critRate_critDmg_dmg_spd_atk_sp' |
   'critRate_critDmg_spd_dmg_atk_sp' |
@@ -277,56 +332,89 @@ export const recommendCharacterRelicFields: Record<string, RecommedKeys | undefi
   '1203': 'atk_heal_spd_sp_res_hp_def'//罗刹
 };
 
+function getRecommendCharacterRelicFields(characterId: string, pathId: string): RecommendRelicFields {
+  const key = recommendCharacterRelicFields[characterId];
+  if (key) {
+    return recommendRelicFieldsRecord[key];
+  } else {
+    switch (pathId) {
+      case 'Shaman':
+        return recommendRelicFieldsRecord['spd_sp_hp_atk_def_res'];
+      case 'Warlock':
+        return recommendRelicFieldsRecord['hit_spd_dmg_sp_atk_critRate_critDmg'];
+      case 'Knight':
+        return recommendRelicFieldsRecord['def_spd_sp_hit_res_hp'];
+      case 'Priest':
+        return recommendRelicFieldsRecord['hp_heal_spd_sp_res_def'];
+      default:
+        return recommendRelicFieldsRecord['critRate_critDmg_dmg_spd_atk_sp'];
+    }
+  }
+}
+
+export function getDefaultWeights(characterId: string, pathId: string): Record<RelicFields, number> {
+  const fields = getRecommendCharacterRelicFields(characterId, pathId);
+  return Object.assign({}, zeroWeights, fields);
+}
+
+export function getDeltaWeights(
+  totalProperties: TotalPropertyInfo[],
+  starRailData: StarRailData
+): Record<AffixTypes, number> {
+  let delta: Decimal;
+  let addedRatio: Decimal;
+  const affixes = starRailData.relic_sub_affixes['5'].affixes;
+  const detalWeights = {} as Record<AffixTypes, number>;
+  // hp
+  delta = new Decimal(affixes['1'].step).mul(2).add(affixes['1'].base);
+  addedRatio = new Decimal(affixes['4'].step).mul(2).add(affixes['4'].base);
+  detalWeights['HPDelta'] = delta.div(addedRatio.mul(totalProperties[0].base.value)).toNumber();
+  // atk
+  delta = new Decimal(affixes['2'].step).mul(2).add(affixes['2'].base);
+  addedRatio = new Decimal(affixes['5'].step).mul(2).add(affixes['5'].base);
+  detalWeights['AttackDelta'] = delta.div(addedRatio.mul(totalProperties[1].base.value)).toNumber();
+  // def
+  delta = new Decimal(affixes['3'].step).mul(2).add(affixes['3'].base);
+  addedRatio = new Decimal(affixes['6'].step).mul(2).add(affixes['6'].base);
+  detalWeights['DefenceDelta'] = delta.div(addedRatio.mul(totalProperties[2].base.value)).toNumber();
+  return detalWeights;
+}
+
 export function getRecommendAffixes(
   characterId: string,
   pathId: string,
   elementId: string,
-  totalProperties: TotalPropertyInfo[],
-  starRailData: StarRailData
+  localFieldsRecord: Record<string, RecommendRelicFields> | null,
+  deltaWeights: Record<AffixTypes, number>
 ): RecommendAffix[] {
-  const key = recommendCharacterRelicFields[characterId];
-  let fields: RecommendRelicFields;
-  if (key) {
-    fields = recommendRelicFieldsRecord[key];
-  } else {
-    switch (pathId) {
-      case 'Shaman': fields = recommendRelicFieldsRecord['spd_sp_hp_atk_def_res'];
-        break;
-      case 'Warlock': fields = recommendRelicFieldsRecord['hit_spd_dmg_sp_atk_critRate_critDmg'];
-        break;
-      case 'Knight': fields = recommendRelicFieldsRecord['def_spd_sp_hit_res_hp'];
-        break;
-      case 'Priest': fields = recommendRelicFieldsRecord['hp_heal_spd_sp_res_def'];
-        break;
-      default: fields = recommendRelicFieldsRecord['critRate_critDmg_dmg_spd_atk_sp'];
-    }
-  }
-  let delta: Decimal;
-  let addedRatio: Decimal;
   let deltaWeight: number;
-  const affixes = starRailData.relic_sub_affixes['5'].affixes;
+  let fields;
+  if (localFieldsRecord) {
+    const localFields = localFieldsRecord[characterId];
+    if (localFields) {
+      fields = localFields;
+    } else {
+      fields = getRecommendCharacterRelicFields(characterId, pathId);
+    }
+  } else {
+    fields = getRecommendCharacterRelicFields(characterId, pathId);
+  }
   const recommendAffixes: RecommendAffix[] = [];
   (Object.entries(fields) as [RelicFields, number][]).forEach(([field, weight]) => {
     let type: AffixTypes;
     switch (field) {
       case 'hp':
-        delta = new Decimal(affixes['1'].step).mul(2).add(affixes['1'].base);
-        addedRatio = new Decimal(affixes['4'].step).mul(2).add(affixes['4'].base);
-        deltaWeight = delta.div(addedRatio.mul(totalProperties[0].base.value)).mul(weight).toNumber();
+        deltaWeight = new Decimal(deltaWeights['HPDelta']).mul(weight).toNumber();
         recommendAffixes.push({ type: 'HPDelta', weight: deltaWeight });
         type = 'HPAddedRatio';
         break;
       case 'atk':
-        delta = new Decimal(affixes['2'].step).mul(2).add(affixes['2'].base);
-        addedRatio = new Decimal(affixes['5'].step).mul(2).add(affixes['5'].base);
-        deltaWeight = delta.div(addedRatio.mul(totalProperties[1].base.value)).mul(weight).toNumber();
+        deltaWeight = new Decimal(deltaWeights['AttackDelta']).mul(weight).toNumber();
         recommendAffixes.push({ type: 'AttackDelta', weight: deltaWeight });
         type = 'AttackAddedRatio';
         break;
       case 'def':
-        delta = new Decimal(affixes['3'].step).mul(2).add(affixes['3'].base);
-        addedRatio = new Decimal(affixes['6'].step).mul(2).add(affixes['6'].base);
-        deltaWeight = delta.div(addedRatio.mul(totalProperties[2].base.value)).mul(weight).toNumber();
+        deltaWeight = new Decimal(deltaWeights['DefenceDelta']).mul(weight).toNumber();
         recommendAffixes.push({ type: 'DefenceDelta', weight: deltaWeight });
         type = 'DefenceAddedRatio';
         break;
@@ -377,6 +465,9 @@ export function getRecommendAffixesText(recommendAffixes: RecommendAffix[], star
       prevWeight = value.weight;
     }
   });
+  if (text === '') {
+    text = '任意属性'
+  }
   return text;
 }
 
@@ -400,7 +491,8 @@ const stepWeight = new Decimal(0.1);
 /** 获取遗器部位分数 [0, 19] */
 export function parseRelicScore(
   relic: RelicInfo,
-  recommendAffixes: RecommendAffix[]
+  recommendAffixes: RecommendAffix[],
+  deltaWeights: Record<AffixTypes, number>
 ): RelicScore {
   let myMainScore = 0;
   let mySubScore = 0;
@@ -454,9 +546,13 @@ export function parseRelicScore(
     bestSubScore = standardScore.sub;
     let _mySubScore = new Decimal(0);
     relic.sub_affix.forEach(subAffix => {
+      let weight = deltaWeights[subAffix.type as AffixTypes];
+      if (weight == undefined) {
+        weight = 1;
+      }
       _mySubScore = _mySubScore
-        .add(countWeight.mul(subAffix.count))
-        .add(stepWeight.mul(subAffix.step));
+        .add(countWeight.mul(subAffix.count).mul(weight))
+        .add(stepWeight.mul(subAffix.step).mul(weight));
     });
     mySubScore = _mySubScore.toNumber();
   } else {
@@ -477,9 +573,6 @@ export function parseRelicScore(
     .mul(standardScore.sub)
     .toNumber();
   bestSubScore = standardScore.sub;
-  const display = new Decimal(myMainScore).add(mySubScore)
-    .div(new Decimal(bestMainScore).add(bestSubScore))
-    .mul(100).toFixed(0, Decimal.ROUND_DOWN) + '%';
   return {
     myMainScore,
     mySubScore,
@@ -487,6 +580,16 @@ export function parseRelicScore(
     bestSubScore,
     isBestMain,
     isHeadOrHand,
-    display
+    myMainScoreDisplay: new Decimal(myMainScore).toFixed(2, Decimal.ROUND_DOWN),
+    mySubScoreDisplay: new Decimal(mySubScore).toFixed(2, Decimal.ROUND_DOWN),
+    bestMainScoreDisplay: new Decimal(bestMainScore).toFixed(2, Decimal.ROUND_DOWN),
+    bestSubScoreDisplay: new Decimal(bestSubScore).toFixed(2, Decimal.ROUND_DOWN),
+    mainScoreDisplay: isHeadOrHand ? '100%' : new Decimal(myMainScore).div(bestMainScore)
+      .mul(100).toFixed(0, Decimal.ROUND_DOWN) + '%',
+    subScoreDisplay: new Decimal(mySubScore).div(bestSubScore)
+      .mul(100).toFixed(0, Decimal.ROUND_DOWN) + '%',
+    scoreDisplay: new Decimal(myMainScore).add(mySubScore)
+      .div(new Decimal(bestMainScore).add(bestSubScore))
+      .mul(100).toFixed(0, Decimal.ROUND_DOWN) + '%'
   };
 }

@@ -6,6 +6,7 @@ import PropertyItem from './PropertyItem';
 import PromotionMaterialConsume from './PromotionMaterialConsume';
 import { STATE } from '../common/state';
 import { baseStepValue, formatProperty, getLevel, getPromotion, getTotalPromotionMaterial } from '../data/local';
+import { backgroundStriped } from '../common/utils';
 
 interface LightConePromotionProps {
   lightCone: LightCone;
@@ -50,7 +51,7 @@ export default function LightConePromotion({ lightCone }: LightConePromotionProp
               icon={STATE.resUrl + property.icon}
               name={property.name}
               value={formatProperty(baseStepValue(baseStep, level), property.percent)}
-              sx={{ backgroundColor: i === 1 ? '#ffffff11' : '#ffffff33' }}
+              sx={backgroundStriped(i !== 1)}
             />
           );
         })}
