@@ -301,9 +301,8 @@ export function parseRelicScore(
       bestMainScore = new Decimal(standardScore.main).mul(bestMainAffix.weight).toNumber();
       const myMainAffix = recommendMainAffixes.find(value => value.type === relic.main_affix.type);
       if (myMainAffix != undefined) {
-        myMainScore = new Decimal(standardScore.main)
+        myMainScore = new Decimal(standardScore.main).mul(myMainAffix.weight)
           .mul(levelWeihgt.mul(relic.level).add(baseWeight)).div(levelWeihgt.mul(15).add(baseWeight))
-          .mul(myMainAffix.weight).div(bestMainAffix.weight)
           .mul(relic.rarity).div(5)
           .div(bestMainScore).mul(standardScore.main)
           .toNumber();
