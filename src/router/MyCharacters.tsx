@@ -309,7 +309,16 @@ function MyCharactersList({
           );
         })}
         <Tooltip title="管理角色" color="primary" arrow sx={{ mx: 1 }}>
-          <IconButton variant="solid" color="primary" onClick={handleOpen}>
+          <IconButton
+            variant="solid"
+            color="primary"
+            onClick={handleOpen}
+            sx={{
+              position: 'sticky',
+              top: 0,
+              right: '8px'
+            }}
+          >
             <EditRoundedIcon />
           </IconButton>
         </Tooltip>
