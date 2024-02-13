@@ -58,12 +58,7 @@ export default function MyRelics({ character, updater }: MyRelicsProps) {
         </Tooltip>
       </Divider>
       <Box display="flex" alignItems="center">
-        <Typography
-          level="body-sm"
-          children={character.totalRelicScore.recommendAffixesText}
-          textColor="text.primary"
-          px={3}
-        />
+        <MyRelicsRecommendProperties propertiesGroups={character.totalRelicScore.recommendPropertiesGroups} />
         <Tooltip title="属性完成度详情" color="primary" arrow>
           <Typography
             level="h3"
@@ -154,6 +149,79 @@ export default function MyRelics({ character, updater }: MyRelicsProps) {
       />
     </BlackSheet>
   );
+}
+
+interface MyRelicsRecommendPropertiesProps {
+  propertiesGroups: RecommendPropertiesGroup[];
+}
+
+function MyRelicsRecommendProperties({ propertiesGroups }: MyRelicsRecommendPropertiesProps) {
+  if (propertiesGroups.length < 1) {
+    return (
+      <Typography
+        level="body-sm"
+        children="任意属性"
+        textColor="text.primary"
+        px={3}
+      />
+    )
+  }
+  return (
+    <Box px={3} display="flex" flexWrap="wrap" alignItems="center">
+      {propertiesGroups.map((group, i) => {
+        return (
+          <Fragment key={i}>
+            {i !== 0 && (
+              <Typography
+                level="body-xs"
+                color="warning"
+                component="span"
+                mx={0.5}
+                children="&gt;"
+              />
+            )}
+            <Typography
+              level="body-xs"
+              color="danger"
+              component="span"
+              mx={0.5}
+              children={group.weight}
+            />
+            {group.properties.map((property, index) => (
+              <Fragment key={property.type}>
+                {index !== 0 && (
+                  <Typography
+                    level="body-xs"
+                    color="warning"
+                    component="span"
+                    mx={0.5}
+                    children="="
+                  />
+                )}
+                <Typography
+                  level="body-xs"
+                  textColor="text.primary"
+                  component="span"
+                  sx={{
+                    display: 'inline-flex',
+                    alignItems: 'center'
+                  }}
+                >
+                  <img
+                    src={STATE.resUrl + property.icon}
+                    alt=""
+                    width={18}
+                    height={18}
+                  />
+                  {property.name}
+                </Typography>
+              </Fragment>
+            ))}
+          </Fragment>
+        );
+      })}
+    </Box>
+  )
 }
 
 interface MyRelicsPropertiesProps {

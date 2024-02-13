@@ -156,6 +156,11 @@ interface RelicScore {
   scoreDisplay: string;
 }
 
+interface RecommendPropertiesGroup {
+  weight: number;
+  properties: Property[];
+}
+
 interface TotalRelicScore {
   myMainScore: number;
   mySubScore: number;
@@ -163,7 +168,8 @@ interface TotalRelicScore {
   bestMainScore: number;
   bestSubScore: number;
   bestSetScore: number;
-  recommendAffixesText: string;
+  // recommendAffixesText: string;
+  recommendPropertiesGroups: RecommendPropertiesGroup[];
   myMainScoreDisplay: string;
   mySubScoreDisplay: string;
   mySetScoreDisplay: string;

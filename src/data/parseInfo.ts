@@ -1,6 +1,6 @@
 import Decimal from 'decimal.js';
 import { baseStepValue, formatProperty, headIconUrl, relicMainValue, relicSubValue } from './local';
-import { RecommendRelicFields, getDeltaWeights, getRecommendAffixes, getRecommendAffixesText, parseRelicScore, standardScore } from './parseRelicScore';
+import { RecommendRelicFields, getDeltaWeights, getRecommendAffixes,  getRecommendPropertiesGroups, parseRelicScore, standardScore } from './parseRelicScore';
 
 export function parseInfo(
   playerData: PlayerData,
@@ -233,7 +233,8 @@ function parseCharacterInfo(
     bestMainScore: bestMainScore.toNumber(),
     bestSubScore: bestSubScore.toNumber(),
     bestSetScore: bestSetScore.toNumber(),
-    recommendAffixesText: getRecommendAffixesText(recommendAffixes, starRailData),
+    // recommendAffixesText: getRecommendAffixesText(recommendAffixes, starRailData),
+    recommendPropertiesGroups: getRecommendPropertiesGroups(recommendAffixes, starRailData),
     myMainScoreDisplay: myMainScore.toFixed(2, Decimal.ROUND_DOWN),
     mySubScoreDisplay: mySubScore.toFixed(2, Decimal.ROUND_DOWN),
     mySetScoreDisplay: mySetScore.toFixed(2, Decimal.ROUND_DOWN),

@@ -1,6 +1,7 @@
 import Decimal from 'decimal.js';
+import { getRecommendFields } from './recommendFields';
 
-export const mainAffixTypes: Record<RelicTypes, AffixTypes[]> = {
+const mainAffixTypes: Record<RelicTypes, AffixTypes[]> = {
   'HEAD': ['HPDelta'],//头部固定生命
   'HAND': ['AttackDelta'],//手部固定攻击
   'BODY': [
@@ -39,7 +40,7 @@ export const mainAffixTypes: Record<RelicTypes, AffixTypes[]> = {
   ]
 };
 
-export const subAffixTypes: AffixTypes[] = [
+const subAffixTypes: AffixTypes[] = [
   'HPDelta',
   'AttackDelta',
   'DefenceDelta',
@@ -115,245 +116,8 @@ export function assignWeights(recommendAffixes: RecommendAffix[]): Record<RelicF
   return weights;
 }
 
-export type RecommedKeys =
-  'critRate_critDmg_dmg_spd_atk_sp' |
-  'critRate_critDmg_spd_dmg_atk_sp' |
-  'critRate_critDmg_spd_dmg_hp_sp' |
-  'critRate_critDmg_bk_spd_dmg_atk_sp' |
-
-  'critRate_critDmg_hit_spd_dmg_sp_atk_bk' |
-
-  'hit_spd_dmg_sp_atk_critRate_critDmg' |
-  'hit_atk_spd_dmg_sp_bk' |
-  'atk_spd_dmg_sp_bk' |
-
-  'spd_sp_hp_atk_def_res' |
-  'critDmg_spd_sp_hp_atk_def_res' |
-  'atk_spd_sp_hp_atk_def_res' |
-  'critRate_critDmg_sp_spd_atk_hp_def_res' |
-  'bk_spd_sp_hp_def_res' |
-
-  'def_spd_sp_hit_res_hp' |
-  'hp_spd_sp_res_def' |
-
-  'hp_heal_spd_sp_res_def' |
-  'atk_heal_spd_sp_res_hp_def';
-
-export type RecommendRelicFieldsRecord = Record<RecommedKeys, RecommendRelicFields>;
-
-export const recommendRelicFieldsRecord: RecommendRelicFieldsRecord = {
-  //双爆输出类型
-  //毁灭巡猎智识通用类型
-  'critRate_critDmg_dmg_spd_atk_sp': {
-    'critRate': 1,
-    'critDmg': 1,
-    'dmg': 1,
-    'spd': 0.75,
-    'atk': 0.75,
-    'sp': 0.75
-  },
-  //速度类型 希儿1102景元1204
-  'critRate_critDmg_spd_dmg_atk_sp': {
-    'critRate': 1,
-    'critDmg': 1,
-    'spd': 1,
-    'dmg': 1,
-    'atk': 0.75,
-    'sp': 0.5,
-  },
-  //生命类型 刃1205
-  'critRate_critDmg_spd_dmg_hp_sp': {
-    'critRate': 1,
-    'critDmg': 1,
-    'spd': 1,
-    'dmg': 1,
-    'hp': 0.75,
-    'sp': 0.5,
-  },
-  //击破类型 素裳1206雪衣1214
-  'critRate_critDmg_bk_spd_dmg_atk_sp': {
-    'critRate': 1,
-    'critDmg': 1,
-    'bk': 1,
-    'spd': 1,
-    'dmg': 1,
-    'atk': 0.75,
-    'sp': 0.5
-  },
-
-  //命中类型 瓦尔特1004
-  'critRate_critDmg_hit_spd_dmg_sp_atk_bk': {
-    'critRate': 1,
-    'critDmg': 1,
-    'hit': 1,
-    'spd': 1,
-    'dmg': 1,
-    'sp': 0.75,
-    'atk': 0.75,
-    'bk': 0.5
-  },
-
-  //虚无通用类型 佩拉1106银狼1006
-  'hit_spd_dmg_sp_atk_critRate_critDmg': {
-    'hit': 1,
-    'spd': 1,
-    'dmg': 1,
-    'sp': 1,
-    'atk': 0.75,
-    'critRate': 0.75,
-    'critDmg': 0.75
-  },
-  //dot输出类型 桑博1108卢卡1111桂乃芬1210黑天鹅1307
-  'hit_atk_spd_dmg_sp_bk': {
-    'hit': 1,
-    'atk': 1,
-    'spd': 1,
-    'dmg': 1,
-    'sp': 1,
-    'bk': 0.5
-  },
-  //卡芙卡1005
-  'atk_spd_dmg_sp_bk': {
-    'atk': 1,
-    'spd': 1,
-    'dmg': 1,
-    'sp': 1,
-    'bk': 0.5
-  },
-
-  //辅助类型
-  //同谐通用类型 艾丝妲1009寒鸦1215
-  'spd_sp_hp_atk_def_res': {
-    'spd': 1,
-    'sp': 1,
-    'hp': 0.5,
-    'atk': 0.5,
-    'def': 0.5,
-    'res': 0.5
-  },
-  //爆伤辅助 布洛妮娅1101花火1306
-  'critDmg_spd_sp_hp_atk_def_res': {
-    'critDmg': 1,
-    'spd': 1,
-    'sp': 1,
-    'hp': 0.5,
-    'atk': 0.5,
-    'def': 0.5,
-    'res': 0.5
-  },
-  //攻击辅助 停云1202
-  'atk_spd_sp_hp_atk_def_res': {
-    'atk': 1,
-    'spd': 1,
-    'sp': 1,
-    'hp': 0.5,
-    'def': 0.5,
-    'res': 0.5
-  },
-  //副c辅助 驭空1207
-  'critRate_critDmg_sp_spd_atk_hp_def_res': {
-    'critRate': 1,
-    'critDmg': 1,
-    'sp': 1,
-    'spd': 0.75,
-    'atk': 0.75,
-    'hp': 0.5,
-    'def': 0.5,
-    'res': 0.5
-  },
-  //击破辅助 阮梅1303
-  'bk_spd_sp_hp_def_res': {
-    'bk': 1,
-    'sp': 1,
-    'spd': 0.75,
-    'hp': 0.5,
-    'def': 0.5,
-    'res': 0.5
-  },
-
-  //生存类型
-  //存护通用类型 防御命中类型 杰帕德三月七开拓者火
-  'def_spd_sp_hit_res_hp': {
-    'def': 1,
-    'spd': 1,
-    'sp': 1,
-    'hit': 0.75,
-    'res': 0.75,
-    'hp': 0.5
-  },
-  //生命类型 符玄1208
-  'hp_spd_sp_res_def': {
-    'hp': 1,
-    'spd': 1,
-    'sp': 1,
-    'res': 0.75,
-    'def': 0.5
-  },
-  
-  //丰饶通用类型 生命类型 白露娜塔莎玲可藿藿
-  'hp_heal_spd_sp_res_def': {
-    'hp': 1,
-    'heal': 1,
-    'spd': 1,
-    'sp': 1,
-    'res': 0.75,
-    'def': 0.5
-  },
-  //攻击类型 罗刹1203
-  'atk_heal_spd_sp_res_hp_def': {
-    'atk': 1,
-    'heal': 1,
-    'spd': 1,
-    'sp': 1,
-    'res': 0.75,
-    'hp': 0.5,
-    'def': 0.5
-  }
-};
-
-export const recommendCharacterRelicFields: Record<string, RecommedKeys | undefined> = {
-  '1102': 'critRate_critDmg_spd_dmg_atk_sp',//希儿
-  '1204': 'critRate_critDmg_spd_dmg_atk_sp',//景元
-  '1205': 'critRate_critDmg_spd_dmg_hp_sp',//刃
-  '1206': 'critRate_critDmg_bk_spd_dmg_atk_sp',//素裳
-  '1214': 'critRate_critDmg_bk_spd_dmg_atk_sp',//雪衣
-  '1004': 'critRate_critDmg_hit_spd_dmg_sp_atk_bk',//瓦尔特
-  '1108': 'hit_atk_spd_dmg_sp_bk',//桑博
-  '1111': 'hit_atk_spd_dmg_sp_bk',//卢卡
-  '1210': 'hit_atk_spd_dmg_sp_bk',//桂乃芬
-  '1307': 'hit_atk_spd_dmg_sp_bk',//黑天鹅
-  '1005': 'atk_spd_dmg_sp_bk',//卡芙卡
-  '1101': 'critDmg_spd_sp_hp_atk_def_res',//布洛妮娅
-  '1306': 'critDmg_spd_sp_hp_atk_def_res',//花火
-  '1202': 'atk_spd_sp_hp_atk_def_res',//停云
-  '1207': 'critRate_critDmg_sp_spd_atk_hp_def_res',//驭空
-  '1303': 'bk_spd_sp_hp_def_res',//阮梅
-  '1208': 'hp_spd_sp_res_def',//符玄
-  '1203': 'atk_heal_spd_sp_res_hp_def'//罗刹
-};
-
-function getRecommendCharacterRelicFields(characterId: string, pathId: string): RecommendRelicFields {
-  const key = recommendCharacterRelicFields[characterId];
-  if (key) {
-    return recommendRelicFieldsRecord[key];
-  } else {
-    switch (pathId) {
-      case 'Shaman':
-        return recommendRelicFieldsRecord['spd_sp_hp_atk_def_res'];
-      case 'Warlock':
-        return recommendRelicFieldsRecord['hit_spd_dmg_sp_atk_critRate_critDmg'];
-      case 'Knight':
-        return recommendRelicFieldsRecord['def_spd_sp_hit_res_hp'];
-      case 'Priest':
-        return recommendRelicFieldsRecord['hp_heal_spd_sp_res_def'];
-      default:
-        return recommendRelicFieldsRecord['critRate_critDmg_dmg_spd_atk_sp'];
-    }
-  }
-}
-
 export function getDefaultWeights(characterId: string, pathId: string): Record<RelicFields, number> {
-  const fields = getRecommendCharacterRelicFields(characterId, pathId);
+  const fields = getRecommendFields(characterId, pathId);
   return Object.assign({}, zeroWeights, fields);
 }
 
@@ -394,10 +158,10 @@ export function getRecommendAffixes(
     if (localFields) {
       fields = localFields;
     } else {
-      fields = getRecommendCharacterRelicFields(characterId, pathId);
+      fields = getRecommendFields(characterId, pathId);
     }
   } else {
-    fields = getRecommendCharacterRelicFields(characterId, pathId);
+    fields = getRecommendFields(characterId, pathId);
   }
   const recommendAffixes: RecommendAffix[] = [];
   (Object.entries(fields) as [RelicFields, number][]).forEach(([field, weight]) => {
@@ -450,31 +214,58 @@ export function getRecommendAffixes(
   return recommendAffixes.sort((a, b) => b.weight - a.weight);
 }
 
-export function getRecommendAffixesText(recommendAffixes: RecommendAffix[], starRailData: StarRailData): string {
-  let text = '';
-  let prevWeight = 0;
+export function getRecommendPropertiesGroups(
+  recommendAffixes: RecommendAffix[],
+  starRailData: StarRailData
+): RecommendPropertiesGroup[] {
+  const groups: RecommendPropertiesGroup[] = [];
   const exclude = ['HPDelta', 'AttackDelta', 'DefenceDelta'];
+  let prevWeight = 0;
+  let index = 0;
   recommendAffixes.forEach(value => {
     if (exclude.indexOf(value.type) < 0) {
-      if (prevWeight === 0) {   
-        text += `(${value.weight}) `;
+      const property = starRailData.properties[value.type];
+      if (prevWeight === 0) {
+        prevWeight = value.weight;
+        groups[index] = { weight: prevWeight, properties: [property] };
+      } else if (prevWeight === value.weight) {
+        groups[index].properties.push(property);
       } else {
-        text += prevWeight === value.weight ? ' = ' : ` > (${value.weight}) `;  
+        index++;
+        prevWeight = value.weight;
+        groups[index] = { weight: prevWeight, properties: [property] };
       }
-      text += starRailData.properties[value.type].name;
-      prevWeight = value.weight;
     }
   });
-  if (text === '') {
-    text = '任意属性'
-  }
-  return text;
+  return groups;
 }
+
+// export function getRecommendAffixesText(recommendAffixes: RecommendAffix[], starRailData: StarRailData): string {
+//   let text = '';
+//   let prevWeight = 0;
+//   const exclude = ['HPDelta', 'AttackDelta', 'DefenceDelta'];
+//   recommendAffixes.forEach(value => {
+//     if (exclude.indexOf(value.type) < 0) {
+//       if (prevWeight === 0) {   
+//         text += `(${value.weight}) `;
+//       } else {
+//         text += prevWeight === value.weight ? ' = ' : ` > (${value.weight}) `;  
+//       }
+//       text += starRailData.properties[value.type].name;
+//       prevWeight = value.weight;
+//     }
+//   });
+//   if (text === '') {
+//     text = '任意属性'
+//   }
+//   return text;
+// }
 
 /*
 主词条: 10 * 4 = 40
 副词条：9 * 6 = 54
 套装效果: 2.725 * 3 = 8.175
+额外四件套效果：0.825
 */
 export const standardScore = {
   main: 10,
@@ -506,14 +297,15 @@ export function parseRelicScore(
   const isHeadOrHand = relic.type === 'HEAD' || relic.type === 'HAND';
   //主词条分数
   if (!isHeadOrHand) {
-    bestMainScore = standardScore.main;
     if (bestMainAffix) {
+      bestMainScore = new Decimal(standardScore.main).mul(bestMainAffix.weight).toNumber();
       const myMainAffix = recommendMainAffixes.find(value => value.type === relic.main_affix.type);
       if (myMainAffix != undefined) {
         myMainScore = new Decimal(standardScore.main)
           .mul(levelWeihgt.mul(relic.level).add(baseWeight)).div(levelWeihgt.mul(15).add(baseWeight))
           .mul(myMainAffix.weight).div(bestMainAffix.weight)
           .mul(relic.rarity).div(5)
+          .div(bestMainScore).mul(standardScore.main)
           .toNumber();
         isBestMain = myMainAffix.weight === bestMainAffix.weight;
       } else {
@@ -525,6 +317,7 @@ export function parseRelicScore(
         .mul(relic.rarity).div(5)
         .toNumber();
     }
+    bestMainScore = standardScore.main;
   }
   //副词条分数
   const recommendSubAffixes = recommendAffixes.filter(value => subAffixTypes.some(type => type === value.type));
@@ -569,8 +362,7 @@ export function parseRelicScore(
   }
   mySubScore = new Decimal(mySubScore)
     .mul(relic.rarity).div(5)
-    .div(bestSubScore)
-    .mul(standardScore.sub)
+    .div(bestSubScore).mul(standardScore.sub)
     .toNumber();
   bestSubScore = standardScore.sub;
   return {
