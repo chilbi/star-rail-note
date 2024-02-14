@@ -262,16 +262,16 @@ interface ScoreDisplayProps {
 function ScoreDisplay({ label, myScore, bestScore, score }: ScoreDisplayProps) {
   return (
     <Box display="flex" alignItems="center">
-      <Typography level="title-sm" textColor="text.secondary" width={70} mr={1}>{label}</Typography>
-      <Chip variant="outlined" color="primary" size="sm">
+      <Typography level="body-xs" width={50} mr={1}>{label}</Typography>
+      <Chip variant="solid" color="warning" size="sm">
         <Box component="span" display="inline-block" textAlign="center" width={48}>{myScore}</Box>
       </Chip>
       <Typography level="body-sm" px={0.5}>/</Typography>
-      <Chip variant="outlined" color="primary" size="sm">
+      <Chip variant="solid" color="success" size="sm">
         <Box component="span" display="inline-block" textAlign="center" width={48}>{bestScore}</Box>
       </Chip>
       <Typography level="body-sm" px={0.5}>=</Typography>
-      <Chip variant="outlined" color="danger" size="sm">
+      <Chip variant="solid" color="danger" size="sm">
         <Box component="span" display="inline-block" textAlign="center" width={48}>{score}</Box>
       </Chip>
     </Box>
@@ -290,26 +290,26 @@ function MyRelicsScore({ relicScoreRecord, totalRelicScore, open, onClose }: MyR
     <Modal open={open} onClose={onClose}>
       <ModalDialog size="lg" color="primary" sx={{ width: '100%', maxWidth: '640px' }}>
         <ModalClose size="lg" />
-        <DialogTitle>属性完成度详情</DialogTitle>
+        <DialogTitle>遗器属性完成度</DialogTitle>
         <DialogContent>
           <Divider sx={{ '--Divider-childPosition': '24px', my: 1 }}>
             <span>合计</span>
             <Typography level="h4" color="danger" ml={0.5}>{totalRelicScore.scoreDisplay}</Typography>
           </Divider>
           <ScoreDisplay
-            label="主词条："
+            label="主词条"
             myScore={totalRelicScore.myMainScoreDisplay}
             bestScore={totalRelicScore.bestMainScoreDisplay}
             score={totalRelicScore.mainScoreDisplay}
           />
           <ScoreDisplay
-            label="副词条："
+            label="副词条"
             myScore={totalRelicScore.mySubScoreDisplay}
             bestScore={totalRelicScore.bestSubScoreDisplay}
             score={totalRelicScore.subScoreDisplay}
           />
           <ScoreDisplay
-            label="套装效果："
+            label="套装效果"
             myScore={totalRelicScore.mySetScoreDisplay}
             bestScore={totalRelicScore.bestSetScoreDisplay}
             score={totalRelicScore.setScoreDisplay}
@@ -324,14 +324,14 @@ function MyRelicsScore({ relicScoreRecord, totalRelicScore, open, onClose }: MyR
                 </Divider>
                 {!relicScore.isHeadOrHand && (
                   <ScoreDisplay
-                    label="主词条："
+                    label="主词条"
                     myScore={relicScore.myMainScoreDisplay}
                     bestScore={relicScore.bestMainScoreDisplay}
                     score={relicScore.mainScoreDisplay}
                   />
                 )}
                 <ScoreDisplay
-                  label="副词条："
+                  label="副词条"
                   myScore={relicScore.mySubScoreDisplay}
                   bestScore={relicScore.bestSubScoreDisplay}
                   score={relicScore.subScoreDisplay}
@@ -400,7 +400,7 @@ function MyRelicsWeight({ recommendAffixes, characterId, pathId, elementId, open
     <Modal open={open} onClose={handleClose}>
       <ModalDialog layout="fullscreen" size="lg" color="primary">
         <ModalClose size="lg" />
-        <DialogTitle>遗器词条权重</DialogTitle>
+        <DialogTitle>遗器属性权重</DialogTitle>
         <DialogContent>
           <DialogActions>
             <Button
@@ -432,7 +432,7 @@ function MyRelicsWeight({ recommendAffixes, characterId, pathId, elementId, open
                 <Box key={field}>
                   <PropertyItem
                     icon={STATE.resUrl + property.icon}
-                    name={<Box component="span" display="inline-block" width="108px">{property.name}</Box>}
+                    name={<Box component="span" display="inline-block" width="110px">{property.name}</Box>}
                     value={null}
                     sx={backgroundStriped(false)}
                   >
@@ -450,6 +450,7 @@ function MyRelicsWeight({ recommendAffixes, characterId, pathId, elementId, open
                         step={0.25}
                         marks={marks}
                         onChange={(_, value) => setWeights(prev => Object.assign({}, prev, { [field]: value }))}
+                        sx={{ p: '18px 0' }}
                       />
                       <Typography
                         level="body-xs"
@@ -457,7 +458,7 @@ function MyRelicsWeight({ recommendAffixes, characterId, pathId, elementId, open
                         textAlign="center"
                         textColor="text.primary"
                         display="inline-block"
-                        width="60px"
+                        width="80px"
                       />
                     </Box>
                   </PropertyItem>
