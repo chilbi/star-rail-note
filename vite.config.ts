@@ -4,7 +4,7 @@ import { qrcode } from 'vite-plugin-qrcode';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/star-rail-note/',
+  base: process.env.BASE ?? '/star-rail-note/',
   plugins: [
     react(),
     qrcode()
