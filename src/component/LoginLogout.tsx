@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { useCallback, useState } from 'react';
 import { useFetcher } from 'react-router-dom';
 import Box from '@mui/joy/Box';
@@ -17,7 +16,6 @@ import ModalDialog from '@mui/joy/ModalDialog';
 import ModalClose from '@mui/joy/ModalClose';
 import DialogTitle from '@mui/joy/DialogTitle';
 import DialogContent from '@mui/joy/DialogContent';
-import Snackbar from '@mui/joy/Snackbar';
 import Stack from '@mui/joy/Stack';
 import Button from '@mui/joy/Button';
 import Divider from '@mui/joy/Divider';
@@ -42,18 +40,18 @@ export default function LoginLogout({ uidItems }: LoginLogoutProps) {
   const fetcher = useFetcher();
   const hasError = STATE.starRailInfo != undefined && STATE.starRailInfo.detail != undefined;
 
-  const handleCloseSnackbar = useCallback(() => {
+  const handleCloseInfoErrorDialog = useCallback(() => {
     STATE.errorOfFetchInfo = null;
     STATE.requestUid = STATE.localUid;
     updater(prev => !prev);
   }, []);
 
-  const handleOpenModal = useCallback(() => {
+  const handleOpenLoginDialog = useCallback(() => {
     setLoginUid(STATE.requestUid ?? STATE.localUid ?? '输入游戏UID');
-    handleCloseSnackbar();
-  }, [handleCloseSnackbar]);
+    handleCloseInfoErrorDialog();
+  }, [handleCloseInfoErrorDialog]);
 
-  const handleCloseModal = useCallback((_: unknown, reason: 'backdropClick' | 'escapeKeyDown' | 'closeClick') => {
+  const handleCloseLoginDialog = useCallback((_: unknown, reason: 'backdropClick' | 'escapeKeyDown' | 'closeClick') => {
     if (reason === 'backdropClick') return;
     setLoginUid('');
   }, []);
@@ -158,52 +156,50 @@ export default function LoginLogout({ uidItems }: LoginLogoutProps) {
           <FormHelperText>{hasError ? STATE.starRailInfo!.detail : <Box component="span" sx={{ opacity: 0 }}>ERROR</Box>}</FormHelperText>
         </FormControl>
       </fetcher.Form>
-      <InfoErrorSnackbar handleCloseSnackbar={handleCloseSnackbar} handleOpenModal={handleOpenModal} />
-      <InfoErrorModal loginUid={loginUid} handleCloseModal={handleCloseModal} />
+      <InfoErrorDialog onClose={handleCloseInfoErrorDialog} onOpen={handleOpenLoginDialog} />
+      <LoginDialog loginUid={loginUid} onClose={handleCloseLoginDialog} />
     </>
   );
 }
 
-interface InfoErrorSnackbarProps {
-  handleCloseSnackbar: () => void;
-  handleOpenModal: () => void;
+interface InfoErrorDialogProps {
+  onClose: () => void;
+  onOpen: () => void;
 }
 
-function InfoErrorSnackbar({ handleCloseSnackbar, handleOpenModal }: InfoErrorSnackbarProps) {
+function InfoErrorDialog({ onClose, onOpen }: InfoErrorDialogProps) {
   return (
-  <Snackbar
+    <Modal
       open={STATE.errorOfFetchInfo !== null}
-      size="lg"
-      variant="outlined"
-      color="danger"
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-      onClose={handleCloseSnackbar}
+      onClose={onClose}
     >
-      <div>
-        <Typography level="title-lg" color="danger">获取数据失败！</Typography>
-        <Typography level="body-md" sx={{ mt: 1, mb: 2 }}>跨域请求被浏览器的安全策略拦截，<br />是否要使用手动复制数据的方法？</Typography>
-        <Stack direction="row" spacing={2}>
-          <Button variant="solid" color="primary" onClick={handleOpenModal}>是</Button>
-          <Button variant="outlined" color="primary" onClick={handleCloseSnackbar}>否</Button>
-        </Stack>
-      </div>
-    </Snackbar>
+      <ModalDialog color="danger">
+        <div>
+          <Typography level="title-lg" color="danger">获取数据失败！</Typography>
+          <Typography level="body-md" sx={{ mt: 1, mb: 2 }}>跨域请求被浏览器的安全策略拦截，<br />是否要使用手动复制数据的方法？</Typography>
+          <Stack direction="row" spacing={2}>
+            <Button variant="solid" color="primary" onClick={onOpen}>是</Button>
+            <Button variant="outlined" color="primary" onClick={onClose}>否</Button>
+          </Stack>
+        </div>
+      </ModalDialog>
+    </Modal>
   );
 }
 
-interface InfoErrorModalProps {
+interface LoginDialogProps {
   loginUid: string;
-  handleCloseModal: (e: unknown, reason: 'backdropClick' | 'escapeKeyDown' | 'closeClick') => void;
+  onClose: (e: unknown, reason: 'backdropClick' | 'escapeKeyDown' | 'closeClick') => void;
 }
 
-function InfoErrorModal({ loginUid, handleCloseModal }: InfoErrorModalProps) {
+function LoginDialog({ loginUid, onClose }: LoginDialogProps) {
   return (
-    <Modal open={loginUid !== ''} onClose={handleCloseModal}>
+    <Modal open={loginUid !== ''} onClose={onClose}>
       <ModalDialog size="lg" color="primary">
         <ModalClose size="lg" />
         <DialogTitle>手动复制数据步骤</DialogTitle>
         <DialogContent>
-          <LoginWithJson loginUid={loginUid} onClose={handleCloseModal} />
+          <LoginWithJson loginUid={loginUid} onClose={onClose} />
         </DialogContent>
       </ModalDialog>
     </Modal>

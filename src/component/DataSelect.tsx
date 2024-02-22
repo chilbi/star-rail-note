@@ -4,7 +4,8 @@ import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 import IconButton from '@mui/joy/IconButton';
 import Typography from '@mui/joy/Typography';
-import Snackbar from '@mui/joy/Snackbar';
+import Modal from '@mui/joy/Modal';
+import ModalDialog from '@mui/joy/ModalDialog';
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
 import SyncRoundedIcon from '@mui/icons-material/SyncRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
@@ -80,26 +81,22 @@ export default function DataSelect({ starRailDataInfoItems }: DataSelectProps) {
           </Option>
         ))}
       </Select>
-      <Snackbar
+      <Modal
         open={STATE.messageOfFetchData !== null}
-        size="md"
-        variant="solid"
-        color="primary"
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         onClose={handleCloseMessage}
       >
-        <Typography level="body-md">{STATE.messageOfFetchData ?? ''}</Typography>
-      </Snackbar>
-      <Snackbar
+        <ModalDialog color="primary">
+          <Typography level="body-md">{STATE.messageOfFetchData ?? ''}</Typography>
+        </ModalDialog>
+      </Modal>
+      <Modal
         open={STATE.errorOfFetchData !== null}
-        size="md"
-        variant="solid"
-        color="danger"
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         onClose={handleCloseError}
       >
-        {STATE.errorOfFetchData && <FetchDataErrorMessage />}
-      </Snackbar>
+        <ModalDialog color="danger">
+          {STATE.errorOfFetchData && <FetchDataErrorMessage />}
+        </ModalDialog>
+      </Modal>
     </div>
   );
 }

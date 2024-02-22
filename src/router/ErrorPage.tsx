@@ -73,6 +73,7 @@ export default function ErrorPage() {
         <CardActions>
           {err?.stack && (
             <Button
+              children="异常堆栈"
               color="danger"
               onClick={() => setOpen(true)}
               sx={{
@@ -82,11 +83,10 @@ export default function ErrorPage() {
                 mx: 'auto',
                 px: 4
               }}
-            >
-              异常堆栈
-            </Button>
+            />
           )}
           <Button
+            children="跳到主页"
             component={Link}
             to="/"
             reloadDocument
@@ -99,9 +99,7 @@ export default function ErrorPage() {
               mx: 'auto',
               px: 4
             }}
-          >
-            跳到主页
-          </Button>
+          />
         </CardActions>
       </Card>
       {err?.stack && (

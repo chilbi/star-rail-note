@@ -51,6 +51,7 @@ export async function rootLayoutAction({ request }: ActionFunctionArgs): Promise
           if (starRailData) {
             STATE.requestTimestamp = starRailData.timestamp;
             STATE.setLocalTimestamp(starRailData.timestamp, starRailData);
+            STATE.messageOfFetchData = '更新成功';
             return true;
           } else {
             STATE.errorOfFetchData = new Error('Failed to updateStarRailData');

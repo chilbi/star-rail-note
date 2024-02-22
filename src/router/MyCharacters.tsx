@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Navigate, useFetcher, useLoaderData, useNavigate } from 'react-router-dom';
 import Box from '@mui/joy/Box';
-import Snackbar from '@mui/joy/Snackbar';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
 import Button from '@mui/joy/Button';
@@ -13,6 +12,7 @@ import ModalClose from '@mui/joy/ModalClose';
 import DialogTitle from '@mui/joy/DialogTitle';
 import DialogContent from '@mui/joy/DialogContent';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import SyncRoundedIcon from '@mui/icons-material/SyncRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
 import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
@@ -154,23 +154,21 @@ function NoCharacters() {
     });
   }, [fetcher]);
   return (
-    <Snackbar
+    <Modal
       open={true}
-      size="lg"
-      variant="outlined"
-      color="warning"
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       onClose={handleClose}
     >
-      <div>
-        <Typography level="title-lg" color="warning">没有展示角色</Typography>
-        <Typography level="body-md" sx={{ mt: 1, mb: 2 }}>请在游戏内设置展示角色，<br />设置大约3分钟后重新获取数据。</Typography>
-        <Stack direction="row" spacing={2} pt={1}>
-          <Button variant="solid" color="primary" onClick={handleClose}>返回首页</Button>
-          <Button variant="solid" color="primary" onClick={handleUpdate}>重新获取数据</Button>
-        </Stack>
-      </div>
-    </Snackbar>
+      <ModalDialog color="warning">
+        <div>
+          <Typography level="title-lg" color="warning">没有展示角色</Typography>
+          <Typography level="body-md" sx={{ mt: 1, mb: 2 }}>请在游戏内设置展示角色，<br />设置大约3分钟后重新获取数据。</Typography>
+          <Stack direction="row" spacing={2} pt={1}>
+            <Button variant="solid" color="primary" onClick={handleClose}>返回首页</Button>
+            <Button variant="solid" color="primary" onClick={handleUpdate}>重新获取数据</Button>
+          </Stack>
+        </div>
+      </ModalDialog>
+    </Modal>
   );
 }
 
@@ -266,9 +264,19 @@ function MyCharactersList({
   onDownIndex,
   onUpIndex
 }: MyCharactersListProps) {
+  const fetcher = useFetcher();
   const [open, setOpen] = useState(false);
   const handleOpen = useCallback(() => setOpen(true), []);
   const handleClose = useCallback(() => setOpen(false), []);
+  const handleUpdate = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    submitForm(fetcher, {
+      method: 'PUT',
+      action: '/',
+      type: 'star_rail_info/update',
+      value: e.currentTarget.value
+    });
+  }, [fetcher]);
 
   return (
     <>
@@ -295,6 +303,22 @@ function MyCharactersList({
           }
         }}
       >
+        <Tooltip title="更新角色" color="primary" arrow sx={{ mx: 1 }}>
+          <IconButton
+            variant="solid"
+            color="primary"
+            value={STATE.localUid!}
+            onClick={handleUpdate}
+            sx={{
+              zIndex: 5,
+              position: 'sticky',
+              top: 0,
+              left: '8px'
+            }}
+          >
+            <SyncRoundedIcon />
+          </IconButton>
+        </Tooltip>
         {starRailInfoParsed.characters.map((characterInfo, index) => {
           return (
             <AvatarIcon
@@ -314,6 +338,7 @@ function MyCharactersList({
             color="primary"
             onClick={handleOpen}
             sx={{
+              zIndex: 5,
               position: 'sticky',
               top: 0,
               right: '8px'
