@@ -43,13 +43,30 @@ export default function ImagePreview<T extends ImageLike>({ value, name, onClick
         }
       }}
     >
-      <AspectRatio ratio="374/512" variant="plain">
-        <img src={STATE.resUrl + value.preview} alt="" loading="lazy" />
+      <AspectRatio ratio="374/512" variant="plain" sx={{ borderTopRightRadius: '10px', overflow: 'hidden' }}>
+        <img src={(value.isTest ? STATE.hsrApiUrl : STATE.resUrl) + value.preview} alt="" loading="lazy" />
       </AspectRatio>
+      {value.isTest && (
+        <Typography
+          component="span"
+          level="title-sm"
+          variant="solid"
+          color="danger"
+          children="Test"
+          sx={{
+            position: 'absolute',
+            zIndex: 1,
+            top: '10px',
+            right: '10px',
+            display: 'inline-block'
+          }}
+        />
+      )}
       <Box
         sx={{
           // 属性和命途图标
           position: 'absolute',
+          zIndex: 1,
           top: 0,
           left: 0,
           ...(value.element ? ({

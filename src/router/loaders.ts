@@ -4,6 +4,7 @@ import {
   getStarRailData,
   getStarRailDataInfoItems,
   getStarRailInfo,
+  getStarRailTest,
   getUidItems
 } from '../data/local';
 import { errorMap } from '../common/utils';
@@ -24,6 +25,11 @@ export async function rootLayoutLoader(): Promise<RootLayoutData> {
   }
   if (starRailData == undefined) {
     throw new Error(errorMap['404'] + ' starRailData');
+  }
+  try {
+    await getStarRailTest(starRailData);
+  } catch {
+    console.log(errorMap['404'] + 'starRailTest');
   }
   const starRailDataInfoItems = await getStarRailDataInfoItems();
   let starRailInfo: StarRailInfo | undefined = undefined;

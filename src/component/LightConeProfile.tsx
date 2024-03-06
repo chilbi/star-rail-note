@@ -72,7 +72,7 @@ function LightConePortrait({ lightCone }: LightConeProfileProps) {
       }}
     >
       <img
-        src={STATE.resUrl + lightCone.portrait}
+        src={(lightCone.isTest ? STATE.hsrApiUrl : STATE.resUrl) + lightCone.portrait}
         alt={lightCone.name}
         style={{
           position: 'absolute',

@@ -2,6 +2,8 @@ import { Fragment, useCallback, useState } from 'react';
 import Box from '@mui/joy/Box';
 import Typography from '@mui/joy/Typography';
 import Slider from '@mui/joy/Slider';
+import IconButton from '@mui/joy/IconButton';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
 
 import BlackSheet from './BlackSheet';
 import { STATE } from '../common/state';
@@ -45,6 +47,9 @@ interface CharacterSkillProps {
 }
 
 function CharacterSkill({ isFirst, skill, level, onLevelChange }: CharacterSkillProps) {
+  const [show, setShow] = useState(false);
+  const handleToggleShow = useCallback(() => setShow(prev => !prev), []);
+
   return (
     <>
       <Box
@@ -82,7 +87,7 @@ function CharacterSkill({ isFirst, skill, level, onLevelChange }: CharacterSkill
           <Box
             sx={{
               display: 'flex',
-              alignItems: 'center',
+              alignItems: 'flex-end',
               width: '100%'
             }}
           >
@@ -94,11 +99,28 @@ function CharacterSkill({ isFirst, skill, level, onLevelChange }: CharacterSkill
                 {'等级 ' + (skill.max_level > 1 ? `${level}/${skill.max_level}` : skill.max_level)}
               </Typography>
             }
+            {isFirst && skill.max_level > 1 &&
+              <IconButton
+                variant="soft"
+                color="primary"
+                size="sm"
+                onClick={handleToggleShow}
+                sx={{ ml: 1 }}
+              >
+                <EditRoundedIcon />
+              </IconButton>
+            }
           </Box>
         </Box>
       </Box>
       {isFirst && skill.max_level > 1 &&
-        <Box px={3} pt={1}>
+        <Box
+          sx={{
+            px: 3,
+            pt: 1,
+            display: show ? 'block' : 'none'
+          }}
+        >
           <Slider
             min={1}
             max={skill.max_level}

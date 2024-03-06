@@ -5,9 +5,10 @@ import { imageTheme } from '../common/theme';
 
 interface CharacterPortraitProps {
   portrait: string;
+  isTest?: boolean;
 }
 
-export default function CharacterPortrait({ portrait }: CharacterPortraitProps) {
+export default function CharacterPortrait({ portrait, isTest }: CharacterPortraitProps) {
   return (
     <Box
       sx={{
@@ -22,7 +23,7 @@ export default function CharacterPortrait({ portrait }: CharacterPortraitProps) 
       }}
     >
       <img
-        src={STATE.resUrl + portrait}
+        src={(isTest ? STATE.hsrApiUrl : STATE.resUrl) + portrait}
         alt=""
         width={imageTheme.portraitSize}
         height={imageTheme.portraitSize}

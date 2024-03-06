@@ -3,13 +3,8 @@ import { decodeBase64 } from '../common/utils';
 
 let fetchError: Error | null = null;
 
-const jsonRequest = {
-  method: 'GET',
-  headers: { 'Content-Type': 'application/json' }
-};
-
-export function fetchJson<T>(url: string): Promise<T> {
-  return fetch(url, jsonRequest)
+export function fetchDecoedContent<T>(url: string): Promise<T> {
+  return fetch(url)
     .then(response => response.json())
     .then<T>(json => JSON.parse(decodeBase64(json.content)));
 }
@@ -20,9 +15,9 @@ export async function fetchStarRailInfo(uid: string): Promise<StarRailInfo> {
     throw fetchError;
   } else {
     try {
-      const json = await fetch(STATE.apiUrl + 'sr_info/' + uid, jsonRequest)
-        .then(response => response.json() as StarRailInfo);
-      return json;
+      const info = await fetch(STATE.apiUrl + 'sr_info/' + uid)
+        .then<StarRailInfo>(response => response.json());
+      return info;
     } catch (e) {
       fetchError = e as Error;
       throw e;
@@ -36,7 +31,7 @@ export async function fetchStarRailInfo(uid: string): Promise<StarRailInfo> {
 //     throw fetchError;
 //   } else {
 //     try {
-//       const json = await fetch(STATE.apiUrl + 'sr_info_parsed/' + uid, jsonRequest)
+//       const json = await fetch(STATE.apiUrl + 'sr_info_parsed/' + uid)
 //         .then(response => response.json());
 //       return json;
 //     } catch (e) {
@@ -48,7 +43,7 @@ export async function fetchStarRailInfo(uid: string): Promise<StarRailInfo> {
 
 /** 获取游戏数据的版本信息 */
 export function fetchStarRailDataInfo(): Promise<StarRailDataInfo> {
-  return fetchJson<StarRailDataInfo>(STATE.dataUrl + 'info.json');
+  return fetchDecoedContent<StarRailDataInfo>(STATE.dataUrl + 'info.json');
   // return fetchJson<StarRailDataInfo>('./mirror/info.json');
 }
 
@@ -58,26 +53,26 @@ export async function fetchStarRailData(starRailDataInfo?: StarRailDataInfo): Pr
   const { version, folder, timestamp } = latestStarRailDataInfo;
   const url = STATE.dataUrl + folder + '/cn/';
   return Promise.all([
-    fetchJson<DataRecord<Character>>(url + 'characters.json'),
-    fetchJson<DataRecord<CharacterRank>>(url + 'character_ranks.json'),
-    fetchJson<DataRecord<CharacterPromotion>>(url + 'character_promotions.json'),
-    fetchJson<DataRecord<CharacterSkill>>(url + 'character_skills.json'),
-    fetchJson<DataRecord<CharacterSkillTree>>(url + 'character_skill_trees.json'),
+    fetchDecoedContent<DataRecord<Character>>(url + 'characters.json'),
+    fetchDecoedContent<DataRecord<CharacterRank>>(url + 'character_ranks.json'),
+    fetchDecoedContent<DataRecord<CharacterPromotion>>(url + 'character_promotions.json'),
+    fetchDecoedContent<DataRecord<CharacterSkill>>(url + 'character_skills.json'),
+    fetchDecoedContent<DataRecord<CharacterSkillTree>>(url + 'character_skill_trees.json'),
 
-    fetchJson<DataRecord<LightCone>>(url + 'light_cones.json'),
-    fetchJson<DataRecord<LightConeRank>>(url + 'light_cone_ranks.json'),
-    fetchJson<DataRecord<LightConePromotion>>(url + 'light_cone_promotions.json'),
+    fetchDecoedContent<DataRecord<LightCone>>(url + 'light_cones.json'),
+    fetchDecoedContent<DataRecord<LightConeRank>>(url + 'light_cone_ranks.json'),
+    fetchDecoedContent<DataRecord<LightConePromotion>>(url + 'light_cone_promotions.json'),
 
-    fetchJson<DataRecord<Property>>(url + 'properties.json'),
-    fetchJson<DataRecord<Path>>(url + 'paths.json'),
-    fetchJson<DataRecord<ElementAttack>>(url + 'elements.json'),
-    fetchJson<DataRecord<Item>>(url + 'items.json'),
-    fetchJson<DataRecord<Avatar>>(url + 'avatars.json'),
+    fetchDecoedContent<DataRecord<Property>>(url + 'properties.json'),
+    fetchDecoedContent<DataRecord<Path>>(url + 'paths.json'),
+    fetchDecoedContent<DataRecord<ElementAttack>>(url + 'elements.json'),
+    fetchDecoedContent<DataRecord<Item>>(url + 'items.json'),
+    fetchDecoedContent<DataRecord<Avatar>>(url + 'avatars.json'),
 
-    fetchJson<DataRecord<Relic>>(url + 'relics.json'),
-    fetchJson<DataRecord<RelicSet>>(url + 'relic_sets.json'),
-    fetchJson<DataRecord<RelicMainAffix>>(url + 'relic_main_affixes.json'),
-    fetchJson<DataRecord<RelicSubAffix>>(url + 'relic_sub_affixes.json')
+    fetchDecoedContent<DataRecord<Relic>>(url + 'relics.json'),
+    fetchDecoedContent<DataRecord<RelicSet>>(url + 'relic_sets.json'),
+    fetchDecoedContent<DataRecord<RelicMainAffix>>(url + 'relic_main_affixes.json'),
+    fetchDecoedContent<DataRecord<RelicSubAffix>>(url + 'relic_sub_affixes.json')
   ])
     .then<StarRailData>(([
       characters,
@@ -118,4 +113,45 @@ export async function fetchStarRailData(starRailDataInfo?: StarRailDataInfo): Pr
       relic_main_affixes,
       relic_sub_affixes
     }));
+}
+
+/** 获取测试数据 */
+export function fetchStarRailTest(): Promise<StarRailTest> {
+  return fetch(STATE.hsrApiUrl + 'new.json')
+    .then(response => response.json());
+}
+
+export function fetchStarRailTestData(
+  starRailTest: StarRailTest
+): Promise<[
+  StarRailTestCharacter[],
+  StarRailTestLightCone[],
+  StarRailTestRelicSet[]
+]> {
+  return Promise.all([
+    Promise.all(starRailTest.character.map(id =>
+      fetch(STATE.hsrApiUrl + `data/cn/character/${id}.json`)
+        .then<StarRailTestCharacter>(response => response.json())
+        .then(json => {
+          json.Id = id;
+          return json;
+        })
+    )),
+    Promise.all(starRailTest.lightcone.map(id =>
+      fetch(STATE.hsrApiUrl + `data/cn/lightcone/${id}.json`)
+        .then<StarRailTestLightCone>(response => response.json())
+        .then(json => {
+          json.Id = id;
+          return json;
+        })
+    )),
+    Promise.all(starRailTest.relicset.map(id =>
+      fetch(STATE.hsrApiUrl + `data/cn/relicset/${id}.json`)
+        .then<StarRailTestRelicSet>(response => response.json())
+        .then(json => {
+          json.Id = id;
+          return json;
+        })
+    ))
+  ]);
 }

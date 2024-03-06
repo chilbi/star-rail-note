@@ -58,6 +58,8 @@ class State {
   readonly dataUrl: string = 'https://api.github.com/repos/Mar-7th/StarRailRes/contents/';
   /** 用户数据的api */
   readonly apiUrl: string = 'https://api.mihomo.me/';
+  /** 测试数据的api */
+  readonly hsrApiUrl: string = 'https://api.hakush.in/hsr/';
 
   /** 当前使用的图片源 */
   get resUrl(): string {

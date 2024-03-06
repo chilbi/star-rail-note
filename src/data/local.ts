@@ -1,8 +1,9 @@
 import { Mark } from '@mui/base/useSlider';
 
 import Database from './Database';
-import { fetchJson, fetchStarRailData, fetchStarRailDataInfo, fetchStarRailInfo } from './remote';
+import { fetchDecoedContent, fetchStarRailData, fetchStarRailDataInfo, fetchStarRailInfo, fetchStarRailTest, fetchStarRailTestData } from './remote';
 import Decimal from 'decimal.js';
+import { parseTest } from './parseTest';
 
 interface DataCache {
   starRailData: Record<number/*timestamp*/, StarRailData | undefined>;
@@ -30,7 +31,7 @@ starRailDataDB.keys().then(keys => {
       }
       if (data && data.avatars == undefined) {
         fetchStarRailDataInfo().then(info => {
-          fetchJson<DataRecord<Avatar>>(
+          fetchDecoedContent<DataRecord<Avatar>>(
             `https://api.github.com/repos/Mar-7th/StarRailRes/contents/${info.folder}/cn/avatars.json`
           ).then(avatars => {
             data.avatars = avatars;
@@ -218,6 +219,24 @@ export async function getStarRailInfo(uid: string): Promise<StarRailInfo | undef
     });
 }
 
+export async function getStarRailTest(starRailData: StarRailData): Promise<StarRailTest | null> {
+  try {
+    const starRailTest = await fetchStarRailTest();
+    if (starRailTest == undefined) return null;
+    if (starRailTest.version !== starRailData.test_version) {
+      const starRailTestData = await fetchStarRailTestData(starRailTest);
+      const starRailTestParsed = parseTest(starRailTest, starRailTestData, starRailData);
+      await starRailDataDB.set(starRailTestParsed.timestamp, starRailTestParsed)
+        .then(() => {
+          cache.starRailData[starRailTestParsed.timestamp] = starRailTestParsed;
+        });
+    }
+    return starRailTest;
+  } catch {
+    return null;
+  }
+}
+
 // *************************************************************************
 // 处理游戏数据的一些方法
 // *************************************************************************
@@ -228,7 +247,7 @@ export function versionDate(timestamp: number): string {
 }
 
 function percentValue(value: number): number {
-  return new Decimal(value).mul(100).toNumber();
+  return new Decimal(value).mul(100).round().toNumber();
 }
 
 function toFixed(decimal: Decimal, decimalPlaces: number): string {
@@ -428,6 +447,7 @@ export interface ImageLike {
   preview: string;
   path: string;
   element?: string;
+  isTest?: boolean;
 }
 
 const nicknameRegExp = /{NICKNAME}/gi;
@@ -559,7 +579,7 @@ export function getTotalSkillTreeProperties(skillTrees: CharacterSkillTree[]): P
       skillTree.levels[0].properties.forEach(property => {
         const index = result.findIndex(item => item.type === property.type);
         if (index > -1) {
-          result[index].value += property.value;
+          result[index].value = new Decimal(result[index].value).add(property.value).toNumber();
         } else {
           result.push(Object.assign({}, property));
         }

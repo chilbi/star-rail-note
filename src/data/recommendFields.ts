@@ -13,7 +13,7 @@ type RecommedKeys =
   'atk_spd_dmg_sp_bk' |
 
   'spd_sp_hp_atk_def_res' |
-  'critDmg_spd_sp_hp_atk_def_res' |
+  'critDmg_spd_sp_hp_def_res' |
   'atk_spd_sp_hp_atk_def_res' |
   'critRate_critDmg_sp_spd_atk_hp_def_res' |
   'bk_spd_sp_hp_def_res' |
@@ -117,12 +117,11 @@ const recommendRelicFieldsRecord: RecommendRelicFieldsRecord = {
     'res': 0.5
   },
   //爆伤辅助 布洛妮娅1101花火1306
-  'critDmg_spd_sp_hp_atk_def_res': {
+  'critDmg_spd_sp_hp_def_res': {
     'critDmg': 1,
     'spd': 1,
     'sp': 1,
     'hp': 0.5,
-    'atk': 0.5,
     'def': 0.5,
     'res': 0.5
   },
@@ -208,8 +207,8 @@ const recommendCharacterRelicFields: Record<string, RecommedKeys | undefined> = 
   '1210': 'hit_atk_spd_dmg_sp_bk',//桂乃芬
   '1307': 'hit_atk_spd_dmg_sp_bk',//黑天鹅
   '1005': 'atk_spd_dmg_sp_bk',//卡芙卡
-  '1101': 'critDmg_spd_sp_hp_atk_def_res',//布洛妮娅
-  '1306': 'critDmg_spd_sp_hp_atk_def_res',//花火
+  '1101': 'critDmg_spd_sp_hp_def_res',//布洛妮娅
+  '1306': 'critDmg_spd_sp_hp_def_res',//花火
   '1202': 'atk_spd_sp_hp_atk_def_res',//停云
   '1207': 'critRate_critDmg_sp_spd_atk_hp_def_res',//驭空
   '1303': 'bk_spd_sp_hp_def_res',//阮梅

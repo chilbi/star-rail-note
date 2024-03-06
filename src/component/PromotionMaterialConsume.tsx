@@ -32,7 +32,13 @@ export default function PromotionMaterialConsume({ promotion, totalMaterial }: P
         }}
       >
         {totalMaterial.map(item => {
-          const itemData = STATE.starRailData.items[item.id];
+          let itemData = STATE.starRailData.items[item.id];
+          if (itemData == undefined) {
+            itemData = {
+              rarity: 1,
+              icon: 'icon/path/None.png',
+            } as Item;
+          }
           return (
             <Box
               key={item.id}

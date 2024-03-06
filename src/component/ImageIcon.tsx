@@ -46,12 +46,29 @@ export default function ImageIcon<T extends ImageLike>({ value, name, onClick }:
         }}
       >
         <img
-          src={STATE.resUrl + value.icon}
+          src={(value.isTest ? STATE.hsrApiUrl : STATE.resUrl) + value.icon}
           alt=""
           width={imageTheme.iconSize}
           height={imageTheme.iconSize}
+          style={{ objectFit: 'cover' }}
         />
       </Box>
+      {value.isTest && (
+        <Typography
+          component="span"
+          level="body-xs"
+          variant="solid"
+          color="danger"
+          children="Test"
+          sx={{
+            position: 'absolute',
+            zIndex: 1,
+            top: '5px',
+            right: '5px',
+            display: 'inline-block'
+          }}
+        />
+      )}
       <Box
         sx={{
           // 属性和命途图标

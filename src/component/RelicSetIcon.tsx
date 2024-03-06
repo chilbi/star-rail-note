@@ -43,12 +43,29 @@ export default function RelicSetIcon({ relicSet, onClick }: RelicSetIconProps) {
         }}
       >
         <img
-          src={STATE.resUrl + relicSet.icon}
+          src={(relicSet.isTest ? STATE.hsrApiUrl : STATE.resUrl) + relicSet.icon}
           alt=""
           width={100}
           height={100}
+          style={{ objectFit: 'cover' }}
         />
       </Box>
+      {relicSet.isTest && (
+        <Typography
+          component="span"
+          level="body-xs"
+          variant="solid"
+          color="danger"
+          children="Test"
+          sx={{
+            position: 'absolute',
+            zIndex: 1,
+            top: '6px',
+            right: '6px',
+            display: 'inline-block'
+          }}
+        />
+      )}
       <Typography
         level="title-sm"
         children={relicSet.name}

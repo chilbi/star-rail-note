@@ -91,7 +91,7 @@ interface CharacterSkillTree {
 }
 
 /** 技能类型 */
-type SkillType = 'Normal' | 'BPSkill' | 'Ultra' | 'Talent' | 'Maze' | 'MazeNormal'
+type SkillType = 'Normal' | 'BPSkill' | 'Ultra' | 'Talent' | 'Maze' | 'MazeNormal';
 
 /** 技能 */
 interface CharacterSkill {
@@ -126,6 +126,7 @@ interface Character {
   portrait: string;
   guide_overview: string[];
   guide_material: string[];
+  isTest?: boolean;
 }
 
 /** 描述 */
@@ -194,6 +195,7 @@ interface LightCone {
   preview: string;
   portrait: string;
   guide_overview: string[];
+  isTest?: boolean;
 }
 
 /** 别名 */
@@ -288,6 +290,7 @@ interface RelicSet {
   properties: PromotionProperty[][];
   icon: string;
   guide_overview: string;
+  isTest?: boolean;
 }
 
 type RelicTypes = 'HEAD' | 'HAND' | 'BODY' | 'FOOT' | 'NECK' | 'OBJECT';
@@ -303,6 +306,7 @@ interface Relic {
   main_affix_id: string;
   sub_affix_id: string;
   icon: string;
+  isTest?: boolean;
 }
 
 /** 模拟宇宙祝福 */
@@ -349,6 +353,7 @@ interface StarRailDataInfo {
 }
 
 interface StarRailData {
+  test_version?: string;
   version: string;
   timestamp: number;
   characters: DataRecord<Character>;

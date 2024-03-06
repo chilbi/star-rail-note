@@ -70,7 +70,7 @@ function SetsDetail({ relicSet }: SetsDetailProps) {
     <FlexItem>
       <BlackSheet>
         <Box display="flex" alignItems="center" gap={1} px={1} pt={2} pb={1}>
-          <img src={STATE.resUrl + relicSet.icon} alt="" width={42} height={42} />
+          <img src={(relicSet.isTest ? STATE.hsrApiUrl : STATE.resUrl) + relicSet.icon} alt="" width={42} height={42} />
           <Typography level="h4" mr="auto">{relicSet.name}</Typography>
         </Box>
         <Divider sx={{ '--Divider-childPosition': '24px', px: 1.5 }}>套装效果</Divider>
@@ -115,7 +115,7 @@ function SetsDetail({ relicSet }: SetsDetailProps) {
                     backgroundImage: imageTheme.getItemRarityImageColor(relic.rarity)
                   }}
                 >
-                  <img src={STATE.resUrl + relic.icon} alt="" width="100%" height="100%" />
+                  <img src={(relic.isTest ? STATE.hsrApiUrl : STATE.resUrl) + relic.icon} alt="" width="100%" height="100%" />
                 </Box>
                 <div>
                   <Typography level="title-sm" whiteSpace="nowrap">{relic.name}</Typography>
