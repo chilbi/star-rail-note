@@ -136,7 +136,7 @@ export default function MyLightCone({ lightCone, characterPath }: MyLightConePro
           <Box px={3}>
             <Typography component="h5" level="title-md" pt={1} pb={0.5}>{lightConeRank.skill}</Typography>
             {lightConeRank.desc !== '' &&
-              <Typography component="p" level="body-sm" textColor="#18ffcd" lineHeight="2em">
+              <Typography component="p" level="body-sm" textColor={imageTheme.rankColor} lineHeight="2em">
                 {formatSkill(lightConeRank, lightCone.rank).map((descChunk, index) => (
                   <Fragment key={index}>
                     {descChunk.param === null ? (

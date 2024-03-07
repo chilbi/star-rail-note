@@ -7,6 +7,7 @@ import { Mark } from '@mui/base/useSlider';
 
 import { STATE } from '../common/state';
 import { formatParam, formatSkill } from '../data/local';
+import { imageTheme } from '../common/theme';
 
 const marks: Mark[] = [2, 3, 4].map(value => ({ value }));
 
@@ -42,7 +43,7 @@ export default function LightConeRanks({ lightCone }: LightConeRanksProps) {
         <Typography level="title-md" textColor="warning.300">叠影{level}阶</Typography>
         <Typography component="h5" level="title-md" pt={1} pb={0.5}>{lightConeRank.skill}</Typography>
         {lightConeRank.desc !== '' &&
-          <Typography component="p" level="body-sm" textColor="#18ffcd" lineHeight="2em">
+          <Typography component="p" level="body-sm" textColor={imageTheme.rankColor} lineHeight="2em">
             {formatSkill(lightConeRank, level).map((descChunk, index) => (
               <Fragment key={index}>
                 {descChunk.param === null ? (

@@ -135,7 +135,7 @@ function CharacterSkill({ isFirst, skill, level, onLevelChange }: CharacterSkill
         </Box>
       }
       {skill.desc !== '' &&
-        <Typography component="p" level="body-sm" textColor="text.primary" px={3} pt={1}>
+        <Typography component="p" level="body-sm" textColor="text.primary" lineHeight="2em" px={3} pt={1}>
           {formatSkill(skill, level).map((descChunk, index) => (
             <Fragment key={index}>
               {descChunk.param === null ? (

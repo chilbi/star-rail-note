@@ -11,8 +11,15 @@ export const theme = extendTheme({
     }
   },
   fontFamily: {
-    body: '"SdkScWeb"',
-    display: '"SdkScWeb"'
+    body: '-apple-system,BlinkMacSystemFont,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif',
+    display: '-apple-system,BlinkMacSystemFont,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif'
+  },
+  fontWeight: {
+    xs: 300,
+    sm: 400,
+    md: 600,
+    lg: 700,
+    xl: 800
   },
   colorSchemes: {
     light: {
@@ -58,6 +65,7 @@ export const imageTheme = {
   materialSize: 36,
   iconSize: 72,
   iconElementSize: 14,
+  rankColor: '#18ffcd',
   itemRarityColors: [
     ['#494b58', '#878790'],
     ['#3f4f66', '#418183'],

@@ -79,7 +79,7 @@ function SetsDetail({ relicSet }: SetsDetailProps) {
             <Typography
               key={i}
               level="body-sm"
-              textColor="#18ffcd"
+              textColor={imageTheme.rankColor}
               px={3}
               py={1}
               display={desc === '' ? 'none' : 'block'}

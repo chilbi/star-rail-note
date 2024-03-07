@@ -117,7 +117,13 @@ export default function MyRelics({ character, updater }: MyRelicsProps) {
                       <Typography level="title-md" ml={1}>{relicSet.name}</Typography>
                     </Box>
                   )}
-                  <Typography level="body-sm" textColor="#18ffcd" pl={2} pr={1}>{setMap[relicSet.num] + relicSet.desc}</Typography>
+                  <Typography
+                    level="body-sm"
+                    textColor={imageTheme.rankColor}
+                    pl={2}
+                    pr={1}
+                    children={setMap[relicSet.num] + relicSet.desc}
+                  />
                 </Box>
               );
             })}
@@ -496,7 +502,7 @@ function MyRelic({ relic, relicScore, recommendAffixes }: MyRelicProps) {
         <Box flexGrow={1}>
           <Typography level="title-sm">{relic.name}</Typography>
           <Box display="flex" alignItems="center">
-            <Typography level="body-sm">{relicTypeMap[relic.type]}</Typography>
+            <Typography level="body-sm" component="span">{relicTypeMap[relic.type]}</Typography>
             <Typography level="body-xs" color="warning" ml={0.25}>{'+' + relic.level}</Typography>
             <Typography level="body-xs" color="danger" ml="auto">{relicScore.scoreDisplay}</Typography>
           </Box>

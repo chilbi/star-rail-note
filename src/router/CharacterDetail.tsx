@@ -45,7 +45,6 @@ export default function CharacterDetail() {
                   <CharacterSkills skills={categorizedSkills['Talent']} />
                 </FlexItem>
                 <FlexItem>
-                  <CharacterSkills skills={categorizedSkills['MazeNormal']} />
                   <CharacterSkills skills={categorizedSkills['Maze']} />
                   <CharacterSkills skills={categorizedSkills['Normal']} />
                 </FlexItem>

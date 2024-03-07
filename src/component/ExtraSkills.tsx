@@ -57,7 +57,7 @@ function ExtraSkill({ skillTree }: ExtraSkillProps) {
         <Typography component="p" level="title-lg">{skillTree.name}</Typography>
       </Box>
       {skillTree.desc !== '' &&
-        <Typography component="p" level="body-sm" textColor="text.primary" pt={1}>
+        <Typography component="p" level="body-sm" textColor="text.primary" lineHeight="2em" pt={1}>
           {formatSkill(skillTree, 1).map((descChunk, index) => (
             <Fragment key={index}>
               {descChunk.param === null ? (

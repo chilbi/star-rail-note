@@ -1,7 +1,7 @@
-@font-face {
+/* @font-face {
   font-family: "SdkScWeb";
   src: url(/SDK_SC_Web.ttf) format("truetype");
-}
+} */
 
 body {
   background-image: url(/bg.png);

@@ -4,6 +4,7 @@ import Typography from '@mui/joy/Typography';
 
 import BlackSheet from './BlackSheet';
 import { STATE } from '../common/state';
+import { imageTheme } from '../common/theme';
 
 interface CharacterRanksProps {
   character: Character;
@@ -30,7 +31,7 @@ function CharacterRank({ rank }: CharacterRankProps) {
         display: 'flex',
         alignItems: 'flex-start',
         px: 3,
-        py: 1.5
+        py: 0.5
       }}
     >
       <Box
@@ -57,9 +58,9 @@ function CharacterRank({ rank }: CharacterRankProps) {
           {'星魂' + rank.rank}
         </Typography>
       </Box>
-      <Box>
-        <Typography level="title-lg" py={1}>{rank.name}</Typography>
-        <Typography component="p" level="body-sm" textColor="text.primary">
+      <div>
+        <Typography level="title-lg" pt={1}>{rank.name}</Typography>
+        <Typography component="p" level="body-sm" textColor={imageTheme.rankColor} lineHeight="2em">
           {rank.desc.split('\\n').map((text, i, arr) => (
             <Fragment key={i}>
               {text}
@@ -67,7 +68,7 @@ function CharacterRank({ rank }: CharacterRankProps) {
             </Fragment>
           ))}
         </Typography>
-      </Box>
+      </div>
     </Box>
   );
 }
