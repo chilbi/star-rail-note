@@ -247,7 +247,7 @@ export function versionDate(timestamp: number): string {
 }
 
 function percentValue(value: number): number {
-  return new Decimal(value).mul(100).round().toNumber();
+  return new Decimal(value).mul(10000).round().div(100).toNumber();
 }
 
 function toFixed(decimal: Decimal, decimalPlaces: number): string {
@@ -315,12 +315,10 @@ interface ReplacementParam {
 export function formatParam(param: ReplacementParam): string {
   let value: number | string;
   if (param.format === 'i') {
-    value = param.percent ? percentValue(param.value) : param.value;
+    value = param.percent ? percentValue(param.value) : new Decimal(param.value).round().toNumber();
   } else if (param.format.startsWith('f')) {
     value = param.percent ? percentValue(param.value) : param.value;
     const fractionDigits = parseInt(param.format.slice(1));
-    // const pow = Math.pow(10, isNaN(fractionDigits) ? 0 : fractionDigits);
-    // value = Math.floor(value * pow) / pow;
     value = toFixed(new Decimal(value), isNaN(fractionDigits) ? 0 : fractionDigits);
   } else {
     throw new Error('unkonw format: ' + param.format);
