@@ -24,42 +24,14 @@ export default function Sidebar({ uidItems, starRailDataInfoItems }: SidebarProp
       className="Sidebar"
       sx={{
         position: { xs: 'fixed', md: 'sticky' },
+        zIndex: 900,
+        width: 'var(--Sidebar-width)',
+        height: '100dvh',
         transform: {
           xs: 'translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)))',
           md: 'none'
         },
-        transition: 'transform 0.4s, width 0.4s',
-        zIndex: 900,
-        height: '100dvh',
-        width: 'var(--Sidebar-width)',
-        top: 0,
-        p: 2,
-        flexShrink: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 1,
-        borderRight: '1px solid',
-        borderColor: 'divider',
-        backgroundColor: { md: '#00000066' },
-        // '&::before, &::after': {
-        //   content: '""',
-        //   position: 'absolute',
-        //   bottom: 16,
-        //   left: 16,
-        //   display: 'block',
-        //   width: '100%',
-        //   height: '110px',
-        //   backgroundSize: 'auto 110px',
-        //   backgroundRepeat: 'no-repeat',
-        // },
-        // '&::before': {
-        //   zIndex: -2,
-        //   backgroundImage: `url(${STATE.resUrl + 'icon/logo/bg.png'})`,
-        // },
-        // '&::after': {
-        //   zIndex: -1,
-        //   backgroundImage: `url(${STATE.resUrl + 'icon/logo/cn.png'})`,
-        // }
+        transition: 'transform 0.4s, width 0.4s'
       }}
     >
       <GlobalStyles
@@ -91,12 +63,27 @@ export default function Sidebar({ uidItems, starRailDataInfoItems }: SidebarProp
           }
         }}
       />
-      <LoginLogout uidItems={uidItems} />
-      <NavMenu />
-      {isStickySidebar && <div><ElementPathFilter /></div>}
-      <Box mt="auto">
-        <DataSelect starRailDataInfoItems={starRailDataInfoItems} />
-        <ResUrlSelect />
+      <Box
+        sx={{
+          flexShrink: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1,
+          p: 2,
+          height: '100%',
+          borderRight: '1px solid',
+          borderColor: 'divider',
+          backgroundColor: { md: '#00000066' },
+          overflow: 'hidden auto'
+        }}
+      >
+        <LoginLogout uidItems={uidItems} />
+        <NavMenu />
+        {isStickySidebar && <div><ElementPathFilter /></div>}
+        <Box mt="auto">
+          <DataSelect starRailDataInfoItems={starRailDataInfoItems} />
+          <ResUrlSelect />
+        </Box>
       </Box>
     </Sheet>
   );

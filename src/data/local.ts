@@ -223,6 +223,7 @@ export async function getStarRailTest(starRailData: StarRailData): Promise<StarR
   try {
     const starRailTest = await fetchStarRailTest();
     if (starRailTest == undefined) return null;
+    // starRailTest.version = 'v9';
     if (starRailTest.version !== starRailData.test_version) {
       const starRailTestData = await fetchStarRailTestData(starRailTest);
       const starRailTestParsed = parseTest(starRailTest, starRailTestData, starRailData);

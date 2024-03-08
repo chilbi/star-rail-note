@@ -56,7 +56,7 @@ export default function RelicSetIcon({ relicSet, onClick }: RelicSetIconProps) {
           level="body-xs"
           variant="solid"
           color="danger"
-          children="Test"
+          children={'ver.' + STATE.starRailData.test_version!.slice(-1)}
           sx={{
             position: 'absolute',
             zIndex: 1,
