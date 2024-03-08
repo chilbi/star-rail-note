@@ -4,6 +4,7 @@ import Database from './Database';
 import { fetchDecoedContent, fetchStarRailData, fetchStarRailDataInfo, fetchStarRailInfo, fetchStarRailTest, fetchStarRailTestData } from './remote';
 import Decimal from 'decimal.js';
 import { parseTest } from './parseTest';
+import { STATE } from '../common/state';
 
 interface DataCache {
   starRailData: Record<number/*timestamp*/, StarRailData | undefined>;
@@ -225,6 +226,7 @@ export async function getStarRailTest(starRailData: StarRailData): Promise<StarR
     if (starRailTest == undefined) return null;
     // starRailTest.version = 'v9';
     if (starRailTest.version !== starRailData.test_version) {
+      STATE.messageOfFetchData = '新测试数据 ver.' + starRailTest.version;
       const starRailTestData = await fetchStarRailTestData(starRailTest);
       const starRailTestParsed = parseTest(starRailTest, starRailTestData, starRailData);
       await starRailDataDB.set(starRailTestParsed.timestamp, starRailTestParsed)
