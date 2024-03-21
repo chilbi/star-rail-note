@@ -117,7 +117,7 @@ export async function fetchStarRailData(starRailDataInfo?: StarRailDataInfo): Pr
 
 /** 获取测试数据 */
 export function fetchStarRailTest(): Promise<StarRailTest> {
-  return fetch(STATE.hsrApiUrl + 'new.json')
+  return fetch(STATE.hsrApiUrl + 'new.json?time=' + new Date().getTime())
     .then(response => response.json());
 }
 
@@ -130,7 +130,7 @@ export function fetchStarRailTestData(
 ]> {
   return Promise.all([
     Promise.all(starRailTest.character.map(id =>
-      fetch(STATE.hsrApiUrl + `data/cn/character/${id}.json`)
+      fetch(STATE.hsrApiUrl + `data/cn/character/${id}.json?time=${new Date().getTime()}`)
         .then<StarRailTestCharacter>(response => response.json())
         .then(json => {
           json.Id = id;
@@ -138,7 +138,7 @@ export function fetchStarRailTestData(
         })
     )),
     Promise.all(starRailTest.lightcone.map(id =>
-      fetch(STATE.hsrApiUrl + `data/cn/lightcone/${id}.json`)
+      fetch(STATE.hsrApiUrl + `data/cn/lightcone/${id}.json?time=${new Date().getTime()}`)
         .then<StarRailTestLightCone>(response => response.json())
         .then(json => {
           json.Id = id;
@@ -146,7 +146,7 @@ export function fetchStarRailTestData(
         })
     )),
     Promise.all(starRailTest.relicset.map(id =>
-      fetch(STATE.hsrApiUrl + `data/cn/relicset/${id}.json`)
+      fetch(STATE.hsrApiUrl + `data/cn/relicset/${id}.json?time=${new Date().getTime()}`)
         .then<StarRailTestRelicSet>(response => response.json())
         .then(json => {
           json.Id = id;

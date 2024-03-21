@@ -220,6 +220,7 @@ export async function getStarRailInfo(uid: string): Promise<StarRailInfo | undef
     });
 }
 
+/** 从远程获取测试数据，写入indexedDB中的游戏数据，并更新内存缓存的游戏数据 */
 export async function getStarRailTest(starRailData: StarRailData): Promise<StarRailTest | null> {
   try {
     const starRailTest = await fetchStarRailTest();
