@@ -4,24 +4,28 @@ const BlackSheet = styled('div', { name: 'BlackSheet' })({
   position: 'relative',
   zIndex: 1,
   width: '100%',
+  borderTopRightRadius: '24px',
+  backgroundColor: '#00000088',
   '&::before, &::after': {
     content: '""',
     display: 'block',
-    width: '100%',
-    height: '100%',
     position: 'absolute',
+    left: '-5px',
     zIndex: -1,
-    borderTopRightRadius: '24px'
+    borderColor: '#ffffff55',
+    borderStyle: 'solid'
   },
   '&::before': {
     top: '5px',
-    left: '-5px',
-    border: '1px solid #ffffff55'
+    width: '5px',
+    height: '100%',
+    borderWidth: '1px 0 0 1px'
   },
   '&::after': {
-    top: 0,
-    left: 0,
-    backgroundColor: '#00000088'
+    bottom: '-5px',
+    width: '100%',
+    height: '5px',
+    borderWidth: '0 1px 1px 0'
   }
 });
 
