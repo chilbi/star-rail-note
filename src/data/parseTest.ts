@@ -80,7 +80,7 @@ function parseCharacter(
       characterRank = {
         materials: [],
         level_up_skills: [],
-        icon: 'icon/path/None.png'
+        icon: 'icon/sign/RiddleIcon.png'
       } as unknown as CharacterRank;
     }
     const descChunks = formatSkill({
@@ -110,7 +110,7 @@ function parseCharacter(
       characterSkill = {
         element: '',
         simple_desc: '',
-        icon: 'icon/path/None.png'
+        icon: 'icon/sign/RiddleIcon.png'
       } as CharacterSkill;
     }
     const params: DescParam[] = [];
@@ -140,7 +140,7 @@ function parseCharacter(
     let characterSkillTree = starRailData.character_skill_trees[skillTreeId];
     if (characterSkillTree == undefined) {
       characterSkillTree = {
-        icon: 'icon/path/None.png'
+        icon: 'icon/sign/RiddleIcon.png'
       } as CharacterSkillTree;
     }
     const params: DescParam[] = [];
@@ -154,7 +154,7 @@ function parseCharacter(
           .map<PromotionProperty>(item => ({ type: item.PropertyType, value: item.Value })),
         materials: testSkillTreeItem.MaterialList
           .map<MaterialConsume>(item => ({ id: item.ItemID?.toString() ?? '0', num: item.ItemNum })),
-        icon: 'icon/path/None.png'
+        icon: 'icon/sign/RiddleIcon.png'
       });
     });
     starRailData.character_skill_trees[skillTreeId] = Object.assign(characterSkillTree, {
