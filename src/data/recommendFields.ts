@@ -7,6 +7,7 @@ type RecommedKeys =
   'critRate_critDmg_bk_spd_dmg_atk_sp' |
 
   'critRate_critDmg_hit_spd_dmg_sp_atk_bk' |
+  'critRate_critDmg_dmg_atk_spd' |
 
   'hit_spd_dmg_sp_atk_critRate_critDmg' |
   'hit_atk_spd_dmg_sp_bk' |
@@ -20,9 +21,11 @@ type RecommedKeys =
 
   'def_spd_sp_hit_res_hp' |
   'hp_spd_sp_res_def' |
+  'def_spd_critRate_critDmg_sp_res' |
 
   'hp_heal_spd_sp_res_def' |
-  'atk_heal_spd_sp_res_hp_def';
+  'atk_heal_spd_sp_res_hp_def' |
+  'bk_heal_spd_sp_res_atk_hp_def';
 
 type RecommendRelicFieldsRecord = Record<RecommedKeys, RecommendRelicFields>;
 
@@ -76,6 +79,14 @@ const recommendRelicFieldsRecord: RecommendRelicFieldsRecord = {
     'sp': 0.75,
     'atk': 0.75,
     'bk': 0.5
+  },
+  //黄泉1308
+  'critRate_critDmg_dmg_atk_spd': {
+    'critRate': 1,
+    'critDmg': 1,
+    'dmg': 1,
+    'atk': 1,
+    'spd': 1
   },
 
   //虚无通用类型 佩拉1106银狼1006
@@ -173,6 +184,15 @@ const recommendRelicFieldsRecord: RecommendRelicFieldsRecord = {
     'res': 0.75,
     'def': 0.5
   },
+  //砂金1304
+  'def_spd_critRate_critDmg_sp_res': {
+    'def': 1,
+    'spd': 1,
+    'critRate': 1,
+    'critDmg': 1,
+    'sp': 1,
+    'res': 0.75
+  },
 
   //丰饶通用类型 生命类型 白露娜塔莎玲可藿藿
   'hp_heal_spd_sp_res_def': {
@@ -192,6 +212,17 @@ const recommendRelicFieldsRecord: RecommendRelicFieldsRecord = {
     'res': 0.75,
     'hp': 0.5,
     'def': 0.5
+  },
+  //击破类型 加拉赫1301
+  'bk_heal_spd_sp_res_atk_hp_def': {
+    'bk': 1,
+    'heal': 1,
+    'spd': 1,
+    'sp': 1,
+    'res': 0.75,
+    'atk': 0.5,
+    'hp': 0.5,
+    'def': 0.5
   }
 };
 
@@ -202,6 +233,7 @@ const recommendCharacterRelicFields: Record<string, RecommedKeys | undefined> = 
   '1206': 'critRate_critDmg_bk_spd_dmg_atk_sp',//素裳
   '1214': 'critRate_critDmg_bk_spd_dmg_atk_sp',//雪衣
   '1004': 'critRate_critDmg_hit_spd_dmg_sp_atk_bk',//瓦尔特
+  '1308': 'critRate_critDmg_dmg_atk_spd',//黄泉
   '1108': 'hit_atk_spd_dmg_sp_bk',//桑博
   '1111': 'hit_atk_spd_dmg_sp_bk',//卢卡
   '1210': 'hit_atk_spd_dmg_sp_bk',//桂乃芬
@@ -213,7 +245,9 @@ const recommendCharacterRelicFields: Record<string, RecommedKeys | undefined> = 
   '1207': 'critRate_critDmg_sp_spd_atk_hp_def_res',//驭空
   '1303': 'bk_spd_sp_hp_def_res',//阮梅
   '1208': 'hp_spd_sp_res_def',//符玄
-  '1203': 'atk_heal_spd_sp_res_hp_def'//罗刹
+  '1304': 'def_spd_critRate_critDmg_sp_res',//砂金
+  '1203': 'atk_heal_spd_sp_res_hp_def',//罗刹
+  '1301': 'bk_heal_spd_sp_res_atk_hp_def'//加拉赫
 };
 
 
