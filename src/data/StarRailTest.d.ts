@@ -32,7 +32,7 @@ interface StarRailTestSkill {
 
 interface StarRailTestMaterial {
   $type: string;
-  ItemID: number;
+  ItemID?: number;
   ItemNum: number;
 }
 

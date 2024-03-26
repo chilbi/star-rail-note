@@ -52,7 +52,7 @@ export default function ImagePreview<T extends ImageLike>({ value, name, onClick
           level="title-sm"
           variant="solid"
           color="danger"
-          children={'ver.' + STATE.starRailData.test_version!.slice(-1)}
+          children={'ver.' + (STATE.starRailData.test_version?.slice(-1) ?? '?')}
           sx={{
             position: 'absolute',
             zIndex: 1,

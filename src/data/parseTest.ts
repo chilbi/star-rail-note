@@ -153,7 +153,7 @@ function parseCharacter(
         properties: testSkillTreeItem.StatusAddList
           .map<PromotionProperty>(item => ({ type: item.PropertyType, value: item.Value })),
         materials: testSkillTreeItem.MaterialList
-          .map<MaterialConsume>(item => ({ id: item.ItemID.toString(), num: item.ItemNum })),
+          .map<MaterialConsume>(item => ({ id: item.ItemID?.toString() ?? '0', num: item.ItemNum })),
         icon: 'icon/path/None.png'
       });
     });
@@ -188,7 +188,7 @@ function parseCharacter(
       crit_dmg: { base: testStat.CriticalDamage, step: 0 }
     });
     promotionMaterials.push(testStat.Cost.map(item => ({
-      id: item.ItemID.toString(),
+      id: item.ItemID?.toString() ?? '0',
       num: item.ItemNum
     })));
   });
@@ -263,8 +263,9 @@ function parseLightCone(
       atk: { base: testStat.BaseAttack, step: testStat.BaseAttackAdd },
       def: { base: testStat.BaseDefence, step: testStat.BaseDefenceAdd }
     });
+    console.log(testStat.PromotionCostList)
     promotionMaterials.push(testStat.PromotionCostList.map(item => ({
-      id: item.ItemID.toString(),
+      id: item.ItemID?.toString() ?? '0',
       num: item.ItemNum
     })));
   });
