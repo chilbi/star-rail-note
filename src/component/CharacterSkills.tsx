@@ -26,7 +26,7 @@ export default function CharacterSkills({ skills }: CharacterSkillsProps) {
 
   return (
     <BlackSheet sx={{ py: 1.5 }}>
-      {skills.map((skill, index) => (
+      {skills.filter(skill => skill.desc !== '').map((skill, index) => (
         <CharacterSkill
           key={skill.id}
           isFirst={index === 0}
