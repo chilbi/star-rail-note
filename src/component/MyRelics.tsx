@@ -517,16 +517,19 @@ function MyRelic({ relic, relicScore, recommendAffixes }: MyRelicProps) {
           textColor={!relicScore.isHeadOrHand && recommendAffixes.some(value => value.type === relic.main_affix.type) ? 'warning.400' : undefined }
           sx={{ backgroundColor: imageTheme.previewRarityColors[relic.rarity] + '66' }}
         />
-        {relic.sub_affix.map((affix, i) => (
-          <PropertyItem
-            key={i}
-            icon={STATE.resUrl + affix.icon}
-            name={<>{affix.name}<SubAffixRate count={affix.count} step={affix.step} /></>}
-            value={affix.display}
-            textColor={recommendAffixes.some(value => value.type === affix.type) ? 'warning.400' : undefined}
-            sx={backgroundStriped(i % 2 !== 0)}
-          />
-        ))}
+        {relic.sub_affix.map((affix, i) => {
+          const isRecommend = recommendAffixes.some(value => value.type === affix.type);
+          return (
+            <PropertyItem
+              key={i}
+              icon={STATE.resUrl + affix.icon}
+              name={<>{affix.name}<SubAffixRate count={affix.count} step={affix.step} isRecommend={isRecommend} /></>}
+              value={affix.display}
+              textColor={isRecommend ? 'warning.400' : 'neutral.400'}
+              sx={backgroundStriped(i % 2 !== 0)}
+            />
+          );
+        })}
       </div>
     </Box>
   );

@@ -6,9 +6,10 @@ import Box from '@mui/joy/Box';
 interface SubAffixRateProps {
   count: number;
   step: number;
+  isRecommend: boolean;
 }
 
-export default function SubAffixRate({ count, step }: SubAffixRateProps) {
+export default function SubAffixRate({ count, step, isRecommend }: SubAffixRateProps) {
   return (
     <Box component="span" display="inline-flex" ml="3.5px">
       {Array(count).fill(null).map((_, i) => {
@@ -17,8 +18,7 @@ export default function SubAffixRate({ count, step }: SubAffixRateProps) {
         return (
           <Icon
             key={i}
-            color="warning"
-            sx={{ ml: '-3.5px', width: '12px', height: '12px' }}
+            sx={{ ml: '-3.5px', width: '12px', height: '12px', color: isRecommend ? 'warning.400' : 'neutral.400' }}
           />
         );
       })}
