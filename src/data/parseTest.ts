@@ -24,6 +24,7 @@ const skillEffectTextMap: Record<string, string> = {
   'Impair': '妨害',
   'Defence': '防御',
   'Restore': '回复',
+  'Passive': '被动',
   'MazeAttack': ''
 };
 
