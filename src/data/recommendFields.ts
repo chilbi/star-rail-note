@@ -13,6 +13,7 @@ type RecommedKeys =
   'hit_spd_dmg_sp_atk_critRate_critDmg' |
   'hit_atk_spd_dmg_sp_bk' |
   'atk_spd_dmg_sp_bk' |
+  'hit_spd_sp_bk_hp_def_res' |
 
   'sp_spd_hp_atk_def_res' |
   'sp_spd_critDmg_hp_def_res' |
@@ -97,7 +98,7 @@ const recommendRelicFieldsRecord: RecommendRelicFieldsRecord = {
     'spd': 1
   },
 
-  //虚无通用类型 佩拉1106银狼1006
+  //虚无通用类型 佩拉1106银狼1006椒丘1218
   'hit_spd_dmg_sp_atk_critRate_critDmg': {
     'hit': 1,
     'spd': 1,
@@ -123,6 +124,16 @@ const recommendRelicFieldsRecord: RecommendRelicFieldsRecord = {
     'dmg': 1,
     'sp': 1,
     'bk': 0.5
+  },
+  //忘归人1225
+  'hit_spd_sp_bk_hp_def_res': {
+    'hit': 1,
+    'spd': 1,
+    'sp': 1,
+    'bk': 1,
+    'hp': 0.5,
+    'def': 0.5,
+    'res': 0.5
   },
 
   //辅助类型
@@ -219,7 +230,7 @@ const recommendRelicFieldsRecord: RecommendRelicFieldsRecord = {
     'hp': 0.5,
     'def': 0.5
   },
-  //击破类型 加拉赫1301
+  //击破类型 加拉赫1301灵砂1222
   'heal_spd_sp_bk_res_hp_def': {
     'heal': 1,
     'spd': 1,
@@ -239,6 +250,7 @@ const recommendCharacterRelicFields: Record<string, RecommedKeys | undefined> = 
   '1214': 'critRate_critDmg_bk_spd_dmg_atk_sp',//雪衣
   '1315': 'critRate_critDmg_bk_spd_dmg_atk_sp',//波提欧
   '1310': 'spd_bk_atk_res',//流萤
+  '1317': 'spd_bk_atk_res',//乱破
   '1004': 'critRate_critDmg_hit_spd_dmg_sp_atk_bk',//瓦尔特
   '1308': 'critRate_critDmg_dmg_atk_spd',//黄泉
   '1108': 'hit_atk_spd_dmg_sp_bk',//桑博
@@ -246,8 +258,10 @@ const recommendCharacterRelicFields: Record<string, RecommedKeys | undefined> = 
   '1210': 'hit_atk_spd_dmg_sp_bk',//桂乃芬
   '1307': 'hit_atk_spd_dmg_sp_bk',//黑天鹅
   '1005': 'atk_spd_dmg_sp_bk',//卡芙卡
+  '1225': 'hit_spd_sp_bk_hp_def_res',
   '1101': 'sp_spd_critDmg_hp_def_res',//布洛妮娅
   '1306': 'sp_spd_critDmg_hp_def_res',//花火
+  '1313': 'sp_spd_critDmg_hp_def_res',//星期日
   '1202': 'sp_spd_atk_hp_def_res',//停云
   '1309': 'sp_spd_atk_hp_def_res',//知更鸟
   '1303': 'sp_spd_bk_hp_def_res',//阮梅
@@ -256,7 +270,8 @@ const recommendCharacterRelicFields: Record<string, RecommedKeys | undefined> = 
   '1208': 'hp_spd_sp_heal_res_def',//符玄
   '1304': 'def_spd_sp_critRate_critDmg_res',//砂金
   '1203': 'heal_spd_sp_atk_res_hp_def',//罗刹
-  '1301': 'heal_spd_sp_bk_res_hp_def'//加拉赫
+  '1301': 'heal_spd_sp_bk_res_hp_def',//加拉赫
+  '1222': 'heal_spd_sp_bk_res_hp_def'//灵砂
 };
 
 
