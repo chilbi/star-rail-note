@@ -105,12 +105,12 @@ export default function MyCharacterSimplified({ character, onToggle }: MyCharact
                 cursor: 'pointer'
               }}
             >
-              <img src={STATE.resUrl + character.path.icon} alt="" width={30} height={30} />
+              <img src={STATE.resUrl + character.path?.icon} alt="" width={30} height={30} />
             </Box>
             <ElementsPaths
               activeTab={activeTab}
               element={character.element.id}
-              path={character.path.id}
+              path={character.path?.id ?? ''}
               onClose={handleClose}
             />
           </Box>

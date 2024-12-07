@@ -134,7 +134,7 @@ export default function MyRelics({ character, updater }: MyRelicsProps) {
       <MyRelicsWeight
         recommendAffixes={character.recommendAffixes}
         characterId={character.id}
-        pathId={character.path.id}
+        pathId={character.path?.id ?? ''}
         elementId={character.element.id}
         open={weightOpen}
         onClose={handleWeightClose}

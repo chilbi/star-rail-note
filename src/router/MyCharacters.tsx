@@ -115,7 +115,7 @@ export default function MyCharacters() {
                 <FlexItem>
                   <MyLightCone
                     lightCone={activeCharacter.light_cone}
-                    characterPath={activeCharacter.path.id}
+                    characterPath={activeCharacter.path?.id ?? ''}
                   />
                 </FlexItem>
               )}

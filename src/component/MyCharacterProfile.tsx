@@ -48,7 +48,7 @@ export default function MyCharacterProfile({ character, onToggle }: MyCharacterP
           name={nickname(character.name)}
           rarity={character.rarity}
           element={character.element.id}
-          path={character.path.id}
+          path={character.path?.id ?? ''}
           onNameClick={handleNameClick}
         />
 

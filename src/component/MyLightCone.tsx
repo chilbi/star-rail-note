@@ -30,9 +30,9 @@ export default function MyLightCone({ lightCone, characterPath }: MyLightConePro
 
   const handlePathClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    STATE.selectedElementPath = [lightCone.path.id];
+    STATE.selectedElementPath = [lightCone.path?.id ?? ''];
     navigate('/light-cones');
-  }, [lightCone.path.id, navigate]);
+  }, [lightCone.path?.id, navigate]);
   
   return (
     <BlackSheet>
@@ -94,7 +94,7 @@ export default function MyLightCone({ lightCone, characterPath }: MyLightConePro
               sx={{ cursor: 'pointer' }}
             />
           </Tooltip>
-          <Tooltip title={`查看所有${lightCone.path.name}光锥图鉴`} color="primary" arrow>
+          <Tooltip title={`查看所有${lightCone.path?.name}光锥图鉴`} color="primary" arrow>
             <Box
               onClick={handlePathClick}
               sx={{
@@ -103,8 +103,8 @@ export default function MyLightCone({ lightCone, characterPath }: MyLightConePro
                 cursor: 'pointer'
               }}
             >
-              <img src={STATE.resUrl + lightCone.path.icon} alt="" width="24px" height="24px" />
-              <Typography level="title-md" ml={0.5}>{lightCone.path.name}</Typography>
+              <img src={STATE.resUrl + lightCone.path?.icon} alt="" width="24px" height="24px" />
+              <Typography level="title-md" ml={0.5}>{lightCone.path?.name}</Typography>
             </Box>
           </Tooltip>
         </Box>
@@ -130,7 +130,7 @@ export default function MyLightCone({ lightCone, characterPath }: MyLightConePro
         })}
       </Box>
 
-      {characterPath === lightCone.path.id && (
+      {characterPath === lightCone.path?.id && (
         <>
           <Divider sx={{ '--Divider-childPosition': '24px', mt: 1 }}>光锥技能</Divider>
           <Box px={3}>
