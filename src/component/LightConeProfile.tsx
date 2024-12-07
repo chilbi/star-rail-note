@@ -120,8 +120,8 @@ function LightConeNameRarityPath({ lightCone }: LightConeProfileProps) {
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', py: '2px' }}>
-          <img src={STATE.resUrl + path.icon} alt={path.name} width="24px" height="24px" />
-          <Typography level="title-lg" ml={0.5}>{path.name}</Typography>
+          <img src={STATE.resUrl + path?.icon} alt={path?.name} width="24px" height="24px" />
+          <Typography level="title-lg" ml={0.5}>{path?.name}</Typography>
         </Box>
       </Box>
     </>

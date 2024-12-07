@@ -78,8 +78,8 @@ export default function CharacterIntro({ name, rarity, element, path, onNameClic
         onClick={handleOpenPath}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', py: '2px' }}>
-          <img src={STATE.resUrl + pathData.icon} alt={pathData.name} width="24px" height="24px" />
-          <Typography level="title-lg" ml={0.5}>{pathData.name}</Typography>
+          <img src={STATE.resUrl + pathData?.icon} alt={pathData?.name} width="24px" height="24px" />
+          <Typography level="title-lg" ml={0.5}>{pathData?.name}</Typography>
         </Box>
         <Box
           component="span"

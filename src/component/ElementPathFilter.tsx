@@ -77,8 +77,8 @@ export default function ElementPathFilter() {
               data-value={key}
               onClick={handleClick}
             >
-              <img src={STATE.resUrl + path.icon} width={24} height={24} />
-              <Typography level="body-sm">{path.name}</Typography>
+              <img src={STATE.resUrl + path?.icon} width={24} height={24} />
+              <Typography level="body-sm">{path?.name}</Typography>
             </MenuItem>
           );
         })}

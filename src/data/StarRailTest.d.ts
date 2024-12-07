@@ -23,7 +23,7 @@ interface StarRailTestSkill {
   Name: string;
   Desc: string;//<color=#f29e38ff><unbreak>#1[i]%</unbreak></color>
   Type: string | null;//Normal, BPSkill, Ultra, null/*天赋*/, MazeNormal, Maze
-  Tag: string;//SingleAttack, Blast, AoEAttack, Enhance, MazeAttack, Bounce
+  Tag: string;//SingleAttack, Blast, AoEAttack, Enhance, MazeAttack, Bounce, Summon
   SPBase: number | null;
   ShowStanceList: number[];
   SkillComboValueDelta: null;
@@ -74,6 +74,19 @@ interface StarRailTestCharacterStats {
   Cost: StarRailTestMaterial[];
 }
 
+interface StarRailTestMemosprite {
+  Name: string;
+  Icon: string;
+  HPBase: string;
+  HPInherit: string;
+  HPSkill: number;
+  SpeedBase: string;
+  SpeedInherit: string;
+  SpeedSkill: number;
+  Aggro: number;
+  Skills: Record<string, StarRailTestSkill>;
+}
+
 // https://api.hakush.in/hsr/data/cn/character/1308.json
 interface StarRailTestCharacter {
   Id: number;
@@ -88,6 +101,7 @@ interface StarRailTestCharacter {
   Skills: Record<string, StarRailTestSkill>;
   SkillTrees: Record<string/*Point01*/, Record<string/*行迹等级*/, StarRailTestSkillTree>>
   Stats: Record<string/*promotionLevel*/, StarRailTestCharacterStats>;
+  Memosprite: StarRailTestMemosprite | Record<string, never>;
 }
 
 interface StarRailTestRefinementsLevel {

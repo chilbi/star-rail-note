@@ -365,7 +365,7 @@ interface StarRailData {
   light_cone_ranks: DataRecord<LightConeRank>;
   light_cone_promotions: DataRecord<LightConePromotion>;
   properties: DataRecord<Property>;
-  paths: DataRecord<Path>;
+  paths: DataRecord<Path | undefined>;
   elements: DataRecord<ElementAttack>;
   items: DataRecord<Item>;
   avatars: DataRecord<Avatar>;

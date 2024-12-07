@@ -91,7 +91,7 @@ export default function ImageIcon<T extends ImageLike>({ value, name, onClick }:
               backgroundImage: `url(${STATE.resUrl + STATE.starRailData.elements[value.element].icon})`
             },
             '&::after': {
-              backgroundImage: `url(${STATE.resUrl + STATE.starRailData.paths[value.path].icon})`
+              backgroundImage: `url(${STATE.resUrl + STATE.starRailData.paths[value.path]?.icon})`
             }
           }) : ({
             '&::after': {
@@ -103,7 +103,7 @@ export default function ImageIcon<T extends ImageLike>({ value, name, onClick }:
               height: imageTheme.iconElementSize,
               backgroundRepeat: 'no-repeat',
               backgroundSize: `${imageTheme.iconElementSize}px ${imageTheme.iconElementSize}px`,
-              backgroundImage: `url(${STATE.resUrl + STATE.starRailData.paths[value.path].icon})`
+              backgroundImage: `url(${STATE.resUrl + STATE.starRailData.paths[value.path]?.icon})`
             }
           }))
         }}

@@ -63,7 +63,7 @@ interface TabPanelItemProps {
   valueText: string;
   keys: string[];
   selectedKey: string;
-  dataRecord: DataRecord<ElementAttack | Path>;
+  dataRecord: DataRecord<ElementAttack | Path | undefined>;
 }
 
 function TabPanelItem({ value, valueText, keys, selectedKey, dataRecord }: TabPanelItemProps) {
@@ -82,10 +82,10 @@ function TabPanelItem({ value, valueText, keys, selectedKey, dataRecord }: TabPa
                 backgroundColor: key === selectedKey ? 'var(--joy-palette-neutral-softBg)' : undefined
               }}
             >
-              <img src={STATE.resUrl + item.icon} width={36} height={36} />
+              <img src={STATE.resUrl + item?.icon} width={36} height={36} />
               <Box flexGrow={1}>
                 <Box display="flex" alignItems="center">
-                  <Typography level="title-lg">{item.name}</Typography>
+                  <Typography level="title-lg">{item?.name}</Typography>
                   {key === selectedKey &&
                     <Typography
                       level="body-sm"
@@ -97,7 +97,7 @@ function TabPanelItem({ value, valueText, keys, selectedKey, dataRecord }: TabPa
                     />
                   }
                 </Box>
-                <Typography level="body-sm" textColor="text.primary" mt={1}>{item.desc}</Typography>
+                <Typography level="body-sm" textColor="text.primary" mt={1}>{item?.desc}</Typography>
               </Box>
             </Box>
             {index !== keys.length - 1 && <Divider sx={{ my: 1 }} />}

@@ -98,7 +98,7 @@ interface LightConeInfo {
   icon: string;
   preview: string;
   portrait: string;
-  path: PathInfo;
+  path: PathInfo | undefined;
   attributes: AttributeInfo[];
   properties: PropertyInfo[];
 }
@@ -193,7 +193,7 @@ interface CharacterInfo {
   preview: string;
   portrait: string;
   rank_icons: string[];
-  path: PathInfo;
+  path: PathInfo | undefined;
   element: ElementInfo;
   skills: SkillInfo[];
   skill_trees: SkillTreeInfo[];
